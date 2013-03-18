@@ -139,7 +139,7 @@
 
     (Feb-11-2007)
 
-v1.14
+1.14
     - Content-disposition can be changed to attachment or inline.
     Example: -a "file.gif,image/gif,i". The default is attachment.
     -a "file.gif,image.gif,a" is same as a "file.gif,image/gif"
@@ -147,7 +147,7 @@ v1.14
 
     - Bcc was broken
     (Nov-03-2006)
-v1.13
+1.13
     - If no subject is specified with -sub, it'll be empty. Before
     the default subject was "hello!"
     (Jun-25-2006)
@@ -159,14 +159,14 @@ v1.13
     be attachment.  Thanks to Danny Casier.
     (May-21-2006)
 
-v1.12
+1.12
     - mailsend was not adding Date header. Some SMTP servers does not add it
     either. Now by default it'll add the Date header (make sure your clock
     is set properly). If you don't want mailsend to add Date header, use the
     flag +D. Thanks to Mr S J Hannan for the bug report.
     (May-20-2006)
 
-v 1.11
+1.11
     - Attachment seperator character is changed to a , from :. Because in
     Windows drive is specified with :. Thanks to Jeppe Teglgaard Mohr for
     pointing it out. Example:  -a "c:\file.gif,image/gif" 
@@ -184,7 +184,7 @@ v 1.11
     - New flag -rt to add Reply-To header.
       (May-14-2006)
 
-v 1.10
+1.10
    - If the attachment type was text/plain, <CR><LF> was not added after
      Content-Disposition line which caused attachment to be ignored by
     some mail readers. 
@@ -200,17 +200,17 @@ v 1.10
     - For Cc or Bcc the flags must be at least -cc and -bc
     (Apr-02-2006)
 
-v1.09
+1.09
     - new flag -w to wait for Carriage Return after sending the mail.
     (Mar-29-2006)
 
-v1.08
+1.08
     - remove mailto: from To field. Now the program can be used 
     (if configured) as the external mailsender from web browsers
     when clicked on the mailto link.
     (Mar-26-2006);
 
-v1.07
+1.07
     - The flag -m is gone. Any kind of file can be attached with -a.
 
     - One line message can be attached at the top with -M along with
@@ -219,7 +219,7 @@ v1.07
     - srand() was not called, so the MIME tag was always the same.
     (Mar-19-2006)
 
-v1.06
+1.06
     - The flag -y is gone. Now multiple attachments can be specified 
     with -a.  Example: -a file.txt:plain/text -a file.gif:image/gif 
                        -a file.jpg:image/jpeg
@@ -234,11 +234,11 @@ v1.06
     - qmail compatibily patch sent by Vinicio Montagnoli.
     (Aug-20-2005)
 
-v1.05
+1.05
     - ported to Unix.
     (Feb-24-2004)
 
-v1.04
+1.04
     - Added Content-Disposition: attachment; filename="xyz". So that the
     name of the attachment shows up in the mail.
     (Jul-09-2003)
