@@ -1,4 +1,1 @@
-- add ESMTP authentication support - done
-
-- Use double quotes in Example. In windows single quote does not
-work
+- add \r\n at the end of each lines for text and html attachments.
