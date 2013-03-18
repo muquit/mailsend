@@ -1,12 +1,12 @@
 1.17b9
-	- There was a bug if multiple attachments are specified. The temp file was
+	- There was a bug if multiple attachments were specified. The temp file was
 	created only once and was removed. The bug shows up in Windows.
 
 	- The flag -l is changed to -list.
 
 	- A new flag -log is added for logging status messages to a file. 
-    It is very alpha at the moment. User -v to see anything useful. Timestamp
-    the log messages.
+    It is very alpha at the moment. User -v to see anything useful. The log
+    messages are time stamped.
     (Mar-16-2013)
 
 1.17b8
