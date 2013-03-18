@@ -5,30 +5,31 @@ mailsend - A command line program to send mail via SMTP protocol
 =head1 SYNOPSYS
 
 
- Version: @(#) mailsend v1.17b3
+ Version: @(#) mailsend v1.17b10
 
  Copyright: GNU GPL. It is illegal to use this software for Spamming
 
- (OpenSSL version: OpenSSL 1.0.0g 18 Jan 2012)
+ (OpenSSL version: OpenSSL 0.9.8r 8 Feb 2011)
  usage: mailsend [options]
  Where the options are:
-  -smtp hostname/IP*    - of the SMTP server
+  -smtp hostname/IP*    - Hostname/IP address of the SMTP server
   -port SMTP port       - SMTP port
   -d    domain          - domain name for SMTP HELO/EHLO
-  -t    to,to..*        - email address/es of the reciepient/s
+  -t    to,to..*        - email address/es of the recipient/s
   -cc   cc,cc..         - Carbon copy address/es
-  +cc                   - don't ask for Carbon Copy
-  -ct   seconds         - Connect timeout. Default is 10 seconds
+  +cc                   - do not ask for Carbon Copy
+  -ct   seconds         - Connect timeout. Default is 5 seconds
   -bc   bcc,bcc..       - Blind carbon copy address/es
-  +bc                   - don't ask for Blind carbon copy
-  +D                    - don't add Date header
+  +bc                   - do not ask for Blind carbon copy
+  +D                    - don not add Date header
   -f    address*        - email address of the sender
-  -genc plaintext       - generate encrypted password
   -sub  subject         - subject
-  -l    file            - a file containing the email addresses
+  -lilst file           - a file containing a list of email addresses
+  -log file             - write log messages to this file
   -attach file,mime_type,[i/a] (i=inline,a=attachment)
                         - attach this file as attachment or inline
   -cs   character set   - for text/plain attachments (default is us-ascii)
+  -H    "header"        - Add custom Header
   -M    "one line msg"  - attach this one line text message
   -name "Full Name"     - add name in the From header
   -v                    - verbose mode
@@ -44,7 +45,6 @@ mailsend - A command line program to send mail via SMTP protocol
   -auth-login           - use AUTH LOGIN authentication
   -user username        - username for ESMTP authentication
   -pass password        - password for ESMTP authentication
-  -encpass pasword      - encrypted password for ESMTP authentication
   -example              - show examples
   -ehlo                 - force EHLO
   -info                 - show SMTP server information
@@ -54,7 +54,6 @@ mailsend - A command line program to send mail via SMTP protocol
  The options with * must be specified
  Environment variables:
   SMTP_USER_PASS for plain text password (-pass)
-  SMTP_USER_PASS_ENC for encrypted password (-encpass)
 
 
 =head1 DESCRIPTION
@@ -71,9 +70,9 @@ L<http://muquit.com/muquit/software/mailsend/mailsend.html>
  Example (Note: type without newline):
  Show server info
  ================
-   mailsend -info -port 587 -smtp smtp.gmail.com
-   mailsend -info -ssl -port 465 -smtp smtp.gmail.com
-   mailsend -info -smtp smtp.example.com -ct 2
+ mailsend -v -info -port 587 -smtp smtp.gmail.com
+ mailsend -v -info -ssl -port 465 -smtp smtp.gmail.com
+ mailsend -v -info -smtp smtp.example.com -ct 2
 
  STARTTLS + AUTHENTICATION
  =========================
