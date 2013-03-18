@@ -1,0 +1,32 @@
+#--------------------------------------------
+# Makefile for MS Visual C++
+# muquit@muquit.com
+#--------------------------------------------
+
+CC= cl /MD
+OPENSSL_DIR=c:\openssl
+OPENSSL_INC=-I$(OPENSSL_DIR)/include
+OPENSSL_LIBS=$(OPENSSL_DIR)/lib/libeay32.lib $(OPENSSL_DIR)/lib/ssleay32.lib
+
+DEFS=  -DWINNT=1 -DSTRICT_MODE=1 -DHAVE_STRING_H=1 -DHAVE_FCNTL_H=1 -DHAVE_OPENSSL=1
+
+INCLUDES=  -I. $(OPENSSL_INC)
+LIBRARY=msock.lib
+
+DEFINES= $(INCLUDES) $(DEFS)
+#CFLAGS=  $(cvars) $(cdebug) -nologo -G4 $(DEFINES)
+CFLAGS= $(DEFINES)
+
+SRCS = msock.c
+OBJS = msock.obj
+
+.c.obj:
+	$(CC) $(CFLAGS) -c $< -Fo$@
+
+all: $(LIBRARY)
+
+$(LIBRARY): $(OBJS)
+	link /lib /OUT:$(LIBRARY) $(OBJS) 
+
+clean:
+	del $(OBJS) $(LIBRARY) *.bak

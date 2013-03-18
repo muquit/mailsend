@@ -1,0 +1,32 @@
+#--------------------------------------------
+# Makefile for MS Visual C++
+# ma_muquit@fccc.edu
+# Jan-09-1999, Saturday, for Count 2.5
+# Aug-08-1999
+#--------------------------------------------
+
+CC= cl /MD
+DEFS=  -DWINNT=1 -DSTRICT_MODE=1 -DHAVE_STRING_H=1 -DHAVE_FCNTL_H=1 -DHAVE_STDLIB_H=1
+
+INCLUDES=  -I. -I..
+
+# replace -O with -g in order to debug
+
+DEFINES= $(INCLUDES) $(DEFS) 
+CFLAGS=  $(cvars) $(cdebug) -nologo -G4 $(DEFINES)
+
+SRCS = string.c mutils.c mime.c
+OBJS = string.obj mutils.obj mime.obj
+
+.c.obj:
+	$(CC) $(CFLAGS) -c $< -Fo$@
+
+all: utils.lib
+
+utils.lib: $(OBJS)
+	link /lib /OUT:mutils.lib $(OBJS) 
+
+utils.obj: mutils.h
+
+clean:
+	del $(OBJS) mutils.lib *.bak

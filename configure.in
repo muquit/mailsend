@@ -1,0 +1,120 @@
+dnl --------------------------------------------------------------------
+dnl Process this file with autoconf to produce a configure script.
+dnl lots of m4 macros are borrowed from php configure
+dnl muquit@muquit.com Jan-12-2003 
+dnl --------------------------------------------------------------------
+
+AC_INIT(mailsend.h)
+
+AC_PROG_RANLIB
+AC_PROG_MAKE_SET
+
+dnl Checks for programs.
+AC_PROG_CC
+test "$GCC" = yes && CFLAGS="$CFLAGS -Wall"
+
+AC_STDC_HEADERS
+AC_CHECK_HEADERS(string.h strings.h memory.h malloc.h unistd.h ctype.h)
+AC_CHECK_HEADERS(stdint.h sys/types.h stdlib.h fcntl.h sys/file.h)
+AC_CHECK_HEADERS(limits.h sys/syslimits.h)
+AC_PATH_TOOL([STRIP], [strip])
+
+PHP_CHECK_FUNC(flock)
+PHP_CHECK_FUNC(socket, socket)
+PHP_CHECK_FUNC(htonl, socket)
+PHP_CHECK_FUNC(gethostname, nsl)
+PHP_CHECK_FUNC(gethostbyaddr, nsl)
+PHP_CHECK_FUNC(yp_get_default_domain, nsl)
+
+dnl Check for resolver routines.
+dnl Need to check for both res_search and __res_search
+dnl in -lc, -lbind, -lresolv and -lsocket
+PHP_CHECK_FUNC(res_search, resolv, bind, socket)
+
+dnl Check for inet_aton and dn_skipname
+dnl in -lc, -lbind and -lresolv
+PHP_CHECK_FUNC(inet_aton, resolv, bind)
+PHP_CHECK_FUNC(dn_skipname, resolv, bind)
+PHP_CHECK_FUNC(mkstemp)
+PHP_CHECK_FUNC(getaddrinfo)
+
+use_open_ssl="no"
+OPENSSL_LIBS=""
+AC_MSG_CHECKING(for OpenSSL)
+OPENSSL_DO_IT_ALL
+if test ."$OPENSSL_DIR" != . -a ."$OPENSSL_INC" != . -a ."$OPENSSL_LIBS" != . ; then
+    AC_DEFINE(HAVE_OPENSSL)
+    AC_MSG_RESULT(yes)
+    use_open_ssl="yes"
+    MKEY_HEX="a02abc222"
+    OPENSSL_LIBS="-L$OPENSSL_DIR/lib -lssl -lcrypto"
+else
+    AC_MSG_RESULT(no)
+fi
+DL_LIB=""
+if test ".$use_open_ssl" = ".yes"; then
+dnl following borrowed from bind 9.3.2's configure.in
+AC_MSG_CHECKING(whether linking with OpenSSL requires -ldl)
+        AC_TRY_LINK([
+#include <openssl/err.h>],
+[ DSO_METHOD_dlfcn(); ],
+        [AC_MSG_RESULT(no)],
+        [LIBS="$LIBS $OPENSSL_LIBS -ldl"
+        AC_TRY_LINK([
+#include <openssl/err.h>
+],[ DSO_METHOD_dlfcn(); ],
+        [AC_MSG_RESULT(yes)
+        OPENSSL_LIBS="-L$OPENSSL_DIR/lib -lssl -lcrypto -ldl"
+        ],
+         [AC_MSG_RESULT(unknown)
+         AC_MSG_RESULT(OpenSSL has unsupported dynamic loading)],
+        [AC_MSG_RESULT(assuming it does work on target platform)])
+        ],
+        [AC_MSG_RESULT(assuming it does work on target platform)]
+        )
+
+fi
+AC_SUBST(OPENSSL_LIBS)
+AC_SUBST(DL_LIB)
+
+MKEY_HEX=""
+IV_HEX=""
+MKEY_GENERATED=`date`
+if test ".$use_open_ssl" = ".yes"; then
+AC_MSG_CHECKING(if masterkey should be generated)
+AC_ARG_WITH(genmkey, [  --with-genmkey=yes,no   If master key should be generated],
+        [ openssl_cv_genmkey=`eval echo "$withval"` ])
+    if test ".$openssl_cv_genmkey" = ".yes"; then
+        bin=openssl
+        OPENSSL=''
+        for i in $OPENSSL_DIR/bin/$bin /usr/bin/ssl/bin/$bin /usr/local/bin/$bin /bin/$bin /usr/sbin/$bin /opt/bin/$bin
+        do
+            if test -f $i; then
+                OPENSSL=$i
+                MKEY_HEX=`$OPENSSL rand 24 -hex`
+                IV_HEX=`$OPENSSL rand 8 -hex`
+                AC_MSG_RESULT(yes $OPENSSL)
+                break
+            fi
+        done
+        if test ."$OPENSSL" = "."; then
+            AC_MSG_ERROR(no, openssl binary not found)
+        fi
+    else
+        AC_MSG_RESULT(no)
+    fi
+fi
+AC_SUBST(MKEY_GENERATED)
+AC_SUBST(MKEY_HEX)
+AC_SUBST(IV_HEX)
+
+
+AC_CONFIG_FILES([
+    Makefile
+    libs/libmsock/Makefile
+    libs/libmutils/mkey.c
+    libs/libmutils/Makefile
+    libs/libsll/Makefile
+])
+
+AC_OUTPUT

@@ -1,0 +1,5 @@
+mailsend (1.17-ubuntu) unstable; urgency=low
+
+  * Built debian binary package for mailsend v1.17
+
+ -- Muhammad Muquit <muquit@muquit.com>  Fri, 11 May 2012 13:54:10 -0400

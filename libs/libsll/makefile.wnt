@@ -1,0 +1,30 @@
+#--------------------------------------------
+# Makefile for MS Visual C++
+# muquit@muquit.com
+#--------------------------------------------
+
+CC= cl /MD
+DEFS=  -DWINNT=1 -DSTRICT_MODE=1 -DHAVE_STRING_H=1 -DHAVE_FCNTL_H=1
+
+INCLUDES=  -I.
+LIBRARY=sll.lib
+
+# replace -O with -g in order to debug
+
+DEFINES= $(INCLUDES) $(DEFS) 
+#CFLAGS=  $(cvars) $(cdebug) -nologo -G4 $(DEFINES)
+
+
+SRCS = sll.c
+OBJS = sll.obj
+
+.c.obj:
+	$(CC) $(CFLAGS) -c $< -Fo$@
+
+all: $(LIBRARY)
+
+$(LIBRARY): $(OBJS)
+	link /lib /OUT:$(LIBRARY) $(OBJS) 
+
+clean:
+	del $(OBJS) $(LIBRARY) *.bak

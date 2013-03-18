@@ -1,0 +1,100 @@
+This file may be obsolete, please read the web page:
+    http://www.muquit.com/muquit/software/mailsend/mailsend.hmtl
+
+A simple mail sender via SMTP protocol (RFC-821) for MS Windows NT/2000.
+
+I needed to send a piece of alert mail from a program in a networked NT 
+machine, but could not find a simple program like this installed. So I 
+wrote one. You might find it useful in some situations.
+
+I don't have any plan to port it to Unix. Unix has many nifty little tools
+like this.
+
+Version: @(#) mailsend 1.3 http://www.muquit.com/
+
+usage: mailsend [options]
+Where the options are:
+   -d     domain*      - domain name for SMTP Helo
+   -smtp  hostname/IP* - of the SMTP server
+   -p     SMTP port    - SMTP port
+   -t     to,to..*     - email address/es of the reciepient/s
+   -c     cc,cc..      - Carbon copy address/es
+   -b     bcc,bcc..    - Blind carbon copy address/es
+   -f     address*     - email address of the sender
+   -sub   subject      - subject
+   -l     file         - a file containing the email addresses
+   -a     file         - attach this file
+   -y     mime type    - MIME type for the attached file
+   -m     file         - include this text file
+   -v                  - verbose mode
+   -help               - shows this help
+
+The options with * must the specified
+Example:
+mailsend -f muquit@muquitcom -d example.com -smtp mail.example.com -t muquit@
+muquit.com -sub test -a file.gif -y 'image/gif'
+
+The options with * must the specified
+
+Interactive usage:
+If you run the program  without any argument, it will ask for
+SMTP server address/IP, Domain, From, To, Cc, Bcc, Subject and mail body.
+Type the mail and press . in a line and press Enter to end the mail.
+Press Ctrl+C to abort.
+
+Non-interactive usage:
+The program reads the message from stdin. so you can write your message in a
+file and specify the file with -m flag or feed it from stdin.
+
+Example:
+    mailsend -d muquit.com -smtp 1.2.3.4 -t muquit@muquit.com -f muquit@muquit.com  -sub "test" -m msg.txt
+
+    or
+
+    mailsend -d muquit.com -smtp 1.2.3.4 -t muquit@muquit.com -f muquit@muquit.com  -sub "test" < msg.txt
+
+A file can also be used as an address list containing one address in 
+each line, which can be specified with -l flag.
+
+Also a file can be created with smtp server, from, to, cc, bcc, subject
+and mail body which can be used as a single input to the prgram. For
+example, if you create a file like below:
+
+
+1.2.3.4
+example.com
+foo@example.com
+bar@example.com
+Mail body starts here.
+This file can be used to feed to the mailsend program.
+
+The first line is the smtp server addess or IP address.
+The second line is the domain used in SMTP HELO. 
+The third line is the From address.
+The fourth line the To address/es. They can be command separated.
+Right after the From, the mail body starts.
+
+
+Now this file can be fed to the program as follows:
+mailsend -v < msg.txt
+
+Note: No Cc, Bcc or Subject can be specified in this file. Use the 
+appropriate flags if you want to use them.
+
+You can see the mail getting delivered if you specify the -v flag.
+
+If you find the program useful, please let me know.
+
+Copyright: GNU GPL
+
+ChangeLog:
+
+    * minimal MIME support. Mar-08-2002 
+
+    * If no message file specified and if nothing is fed from stdin, only
+       then ask for Cc, Bcc and subject.
+       (Apr-11-2001)
+--
+Muhammad A Muquit
+muquit@muquit.com
+updated: Mar-08-2002 

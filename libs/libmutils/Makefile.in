@@ -1,0 +1,35 @@
+# jul-29-1999
+
+CC= @CC@
+DEFS= @DEFS@
+AR= ar cq
+RANLIB= @RANLIB@
+LIBNAME= libmutils.a
+
+OPENSSL_DIR=@OPENSSL_DIR@
+OPENSSL_INC=@OPENSSL_INC@
+OPENSSL_LIBS=@OPENSSL_LIBS@ @DL_LIB@
+
+INCLUDES=  -I. $(OPENSSL_INC)
+
+DEFINES= $(INCLUDES) $(DEFS) -DSYS_UNIX=1
+CFLAGS= -O $(DEFINES)
+
+SRCS = string.c mutils.c mutils_mime.c mutils_blob.c \
+	   mutils_error.c mutils_temp.c mutils_time.c
+OBJS = string.o mutils.o mutils_mime.o mutils_blob.o \
+	   mutils_error.o mutils_temp.o mutils_time.o
+
+.c.o:
+	rm -f $@
+	$(CC) $(CFLAGS) -c $*.c
+
+all: $(LIBNAME)
+
+$(LIBNAME): $(OBJS)
+	rm -f $@
+	$(AR) $@ $(OBJS)
+	$(RANLIB) $@
+
+clean:
+	rm -f $(OBJS) $(LIBNAME) core

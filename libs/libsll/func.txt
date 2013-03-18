@@ -1,0 +1,79 @@
+function description of singly linked list library
+
+
+Data structure
+--------------
+
+typedef struct _Sll
+{
+    void
+        *data;          /* void pointer for user data */
+
+    struct _Sll
+        *next;          /* pointer to next node */
+} Sll;
+
+Functions description
+=====================
+
+void initList   (Sll **list);
+    Initializes *list by setting the list pointer to NULL.
+
+Sll *allocateNode (void *data);
+    Allocates space for a new node and initializes the data fields. The user
+    is responsible for passing a valid pointer to data. The pointer to data
+    can be anything.  If a large amount data needs to used, put all the data
+    in a structure and send pointer to a structure.
+
+void appendNode(Sll **head,Sll **new)
+    Appends a node to the end of a list. list gets modified and new is the
+    node to be appended.
+
+void appendNodeSorted(Sll **head,Sll **new,Ifunc compFunc);
+    Appends a node to the end of a list sorted. The data of two lists are
+    passwd to the user defined function compFunction for sorting. The function
+    returns an integer 0 or > 0.
+
+void insertNode(Sll **head,Sll **new)
+    Insert a node at the beginning of a list. Insert node new at the beginning
+    of list "list". Note, the list "list" gets modified.
+
+Bool emptyList(Sll *list)
+    Checks if a list is empty.
+
+void delNode(Sll **head,Sll *node)
+    Deletes a node from the list. "lsit" is the list to modify and node is the 
+    node to remove.
+
+void freeNode(Sll **list)
+    Frees a node. It does not do free the data. It checks before freeing if
+    the list is NULL or not. If not NULL, it will be freed. Therefore, list
+    must point to a valid location in memory.
+
+Sll *getNthNode(Sll *head,int n)
+    Returns the nth node in a list. Node starts at 1. If there is no such
+    node, NULL is returned.
+
+void destroyNode(Sll **head,Sll *node,void (*freeFunc)(void **))
+    head     -- the entire list, gets modifed
+    node     -- the node to destroy
+    freeFunc -- the function to call to free the data.
+
+    Frees memory allocated for a node and the data associated with the
+    node. The caller is responsible to write the function to free the memory 
+    for the data. 
+
+void destroyNodes(Sll **head,void (*freeFunc)(void **))
+    head  -- the head node of the list
+    freeFunc - function to free data 
+
+    Fress the entire list and the data. The caller is responsible to write the
+    function to free data and pass it in the function.
+
+int numNodes(Sll **head)
+    Returns number of nodes in the list.
+
+--
+Muhammad  A Muquit
+Aug-09-1998
+Saturday

@@ -1,0 +1,27 @@
+/*
+ * Styles for the base documents used by the CGI RFC project.
+ */
+
+BODY
+    {
+        background-color: #FFFFFF;
+    }
+
+/*
+ * Standard styles for marking up drafts and RFC documents.
+ */
+
+.shabuj
+    {
+        color: green;
+    }
+
+.lal
+    {
+        color: red;
+    }
+
+.fuchsia
+    {
+        color: fuchsia;
+    }

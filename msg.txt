@@ -1,0 +1,14 @@
+bfish
+muquit.com
+muquit@muquit.com
+muquit@localhost
+This is the subject
+Mail body starts here.
+This file can be used to feed to the mailsend program.
+
+The first line is the smtp server addess or IP address.
+The second line is the domain used in SMTP HELO.
+The third line is the From address.
+The fourth line the To address/es. They can be command separated.
+Right after the From, the mail body starts.
+

@@ -1,0 +1,32 @@
+#--------------------------------------------
+# Makefile for MS Visual C++
+# muquit@muquit.com
+# updated for MS Visual Studio 10.0 Feb-27-2012 
+#--------------------------------------------
+
+OPENSSL_DIR=c:/openssl
+OPENSSL_INC=/I$(OPENSSL_DIR)/include
+
+CFLAGS= /DWINNT /DWIN32 /DHAVE_MALLOC_H /DHAVE_STRING_H /DHAVE_FCNTL_H /DHAVE_CTYPE_H /DHAVE_STDLIB_H /DHAVE_OPENSSL /I. $(OPENSSL_INC)
+CFLAGS=$(CFLAGS) /Ox /W3 /wd4996 /nologo
+LIBFLAGS=/nologo
+LIBRARY=mutils.lib
+
+# replace -O with -g in order to debug
+
+DEFINES= $(INCLUDES) $(DEFS) 
+#CFLAGS=  $(cvars) $(cdebug) -nologo -G4 $(DEFINES)
+
+
+SRCS = string.c mutils.c muilts_mime.c mutils_error.c mutils_blob.c \
+       mutils_temp.c mutils_time.c
+OBJS = string.obj mutils.obj mutils_mime.obj mutils_error.obj mutils_blob.obj \
+       mutils_temp.obj mutils_time.obj
+
+all: $(LIBRARY)
+
+$(LIBRARY): $(OBJS)
+	lib $(LIBFLAGS) $(OBJS) /out:$(LIBRARY)
+
+clean:
+	del $(OBJS) $(LIBRARY) *.bak

@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <Meta http-equiv="Content-Type" Content="text/html; charset=iso-8859-1">
+    <Meta Name="Author"             Content="Muhammad Muquit muquit@muquit.com">
+    <Meta Name="Generator"          Content="vim on Linux http://www.vim.org and genpage perl program http://www.freddyfrog.com/hacks/genpage/">
+    <Meta Name="description"        Content="Muquit's homepage. Mostly about free software I wrote. Tips and Tricks abut Unix, X11, Internet etc">
+    <Meta Name="keywords"           Content="muquit, x11, motif, image, internet, cgi, unix, security, tcp, ip, client, server, java, perl">
+    <title>
+    mailsend - send mail via SMTP
+
+    </title>
+</head>
+
+
+
+
+
+<!-- Using menu.gp -->
+<!-- Genpage recipe getModTime included -->
+<!-- Using download.gp -->
+<!-- Using download.gp -->
+<!-- Genpage recipe pageURL included -->
+<body bgcolor="#ffffff" text="#000000">
+<table border=0 cellpadding=4 cellspacing=0 width="100%">
+    <tr>
+        <td bgcolor="#84bc7c"> <!-- uppler left corner -->
+        <font size="2">
+<A HREF="./../../../muquit/whoami.html">(mm)</A>
+        </font>
+        </td>
+
+        <td bgcolor="#84bc7c" align="left"> <!-- top bar -->
+        <font color="#000099" size="+1">
+<b>
+mailsend - send mail via SMTP
+
+</b>
+        </font>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#cccccc" colspan=2> <!-- menubar -->
+
+
+<font size="2">
+        <A HREF="./../../../search.html">Search</A>
+|
+        <A HREF="http://www.muquit.com/">Home</A>
+|
+        <A HREF="./../../../muquit/software/software.html">Software</A>
+|        
+        <A HREF="./../../../muquit/software/Count/Count.html">Count</A>
+</font>
+
+
+       </td>
+    </tr>
+
+    <tr>
+        <td valign="top" bgcolor="#99ccff" nowrap> <!-- left side bar -->
+
+
+<!-- Using menu.gp -->
+
+<font size="2">
+<b>Software</b>:<br>
+X/Motif<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/ansi_xterm/ansi_xterm.html">ansi xterm</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/grabc/grabc.html">grabc</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mdgclock/mdgclock.html">mdgclock</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/miv/miv.html">miv</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mplaymidi/mplaymidi.html">mplaymidi</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mppp/mppp.html">mppp</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mxascii/mxascii.html">mxascii</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mcmap/mcmap.html">mcmap</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mxcmap/mxcmap.html">mxcmap</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mxconsole/mxconsole.html">mxconsole</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mxkill/mxkill.html">mxkill</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mxshowfont/mxshowfont.html">mxshowfont</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/qtip/qtip.html">qtip</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/xmastm/xmastm.html">xmastm</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/yrolo/yrolo.html">yrolo</A>
+<br>
+Web<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mhttpd/mhttpd.html">mhttpd</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/Count/Count.html">web counter</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/upload_pl/upload_pl.html">upload.pl</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/mod_auth_ldap/mod_auth_ldap.html">mod_auth_ldap</A>
+<br>
+Java<br>
+&nbsp;&nbsp;&nbsp;<A HREF="./../../../muquit/software/cdcl/cdcl.html">cdcl</A>
+<br>
+&nbsp;&nbsp;&nbsp;<A HREF="./../../../muquit/software/jdgclock/jdgclock.html">jdgclock</A>
+<br>
+Libraries<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/libcalen/libcalen.html">libcalen</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/libmcfg/libmcfg.html">libmcfg</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/libsll/libsll.html">libsll</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/libmsock/libmsock.html">libmsock</A>
+<br>
+Misc<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/bangla_font/bangla_font.html">bangla font</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/dpr/dpr.html">dpr</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/genmake/genmake.html">genmake</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/hod/hod.html">hod</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/smtp_pl/smtp_pl.html">smtp.pl</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/vhtml/vhtml.html">vhtml</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/phones_ldap/phones_ldap.html">phones_ldap</A>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/showpic_ldap/showpic_ldap.html">showpic_ldap</A>
+<br>
+MS Windows<br>
+&nbsp;&nbsp;<font color="#006633"><b>mailsend</b></font>
+<br>
+&nbsp;&nbsp;<A HREF="./../../../muquit/software/wiv/wiv.html">wiv</A>
+</font>
+
+
+        </td>
+
+        <td valign="top" height="100%"> <!-- content -->
+<center>
+<table border=0 cellpadding=10>
+<tr align="center">
+<td bgcolor="#eeeeee">
+<font size="+1"><b>mailsend</b></font>
+send mail via 
+<a href="http://www.ietf.org/rfc/rfc0821.txt?number=821" target="_new">SMTP</a>
+<br>
+(For MS NT/2000)<br>
+by<br>
+<a href="http://www.muquit.com/">Muhammad A Muquit</a>
+</td>
+</tr>
+</table>
+</center>
+<p>
+<h3>[mailsend Release 1.2]</h3>
+<p>
+<table>
+    <tr>
+        <td align=right>
+        <a href="#changelog">Last Updated</a>:
+        </td>
+        <td>
+        <font color="brown">
+        <b>Apr 11, 2001</b>
+        </font>
+        </td>
+
+    </tr>
+</table>
+<p>
+<font size="+1"><b>Table of Contents</b></font><br>
+<ul>
+<li><a href="#introduction">Introduction</a>
+<li><a href="#synopsis">Synopsis</a>
+<li><a href="#download">Download</a>
+<ul>
+    <li>Download compiled binary
+    <li>Download source
+</ul>
+<li><A href="#howtouse">How to use</a>
+<ul>
+    <li><a href="#interactive">Interactive use</a>
+    <li><a href="#noninteractive">Non-interactive use</a>
+</ul>
+<li><a href="#copyright">Copyright</a>
+<li><a href="#changelog">ChangeLog</a>
+</ul>
+<p>
+<a name="introduction">
+<font size="+1"><b>Introduction</b></font>
+</a>
+<br>
+mailsend is a simple program to send mail via 
+<a href="http://www.ietf.org/rfc/rfc0821.txt?number=821" target="_new">SMTP</a>
+for MS Windows NT/2000.
+I needed to send a piece of alert mail from a program in a networked NT 
+machine, but could not find a simple program like this installed. So I 
+wrote one. You might find it useful in some situations.
+At this time I don't have any plan to port it to Unix. Unix has many nifty 
+little tools like this.
+<p>
+<a name="synopsis">
+<font size="+1"><b>Synopsis</b></font>
+</a>
+<br>
+<font color="#000099"><pre>
+Version: @(#) mailsend 1.1 http://www.muquit.com/
+
+usage: mailsend [options]
+Where the options are:
+   -d     domain<font color="#ff0000">*</font>      - domain name for SMTP Helo
+   -smtp  hostname/IP<font color="#ff0000">*</font> - of the SMTP server
+   -p     SMTP port    - SMTP port
+   -t     to,to..<font color="#ff0000">*</font>     - email address/es of the recipient/s
+   -c     cc,cc..      - Carbon copy address/es
+   -b     bcc,bcc..    - Blind carbon copy address/es
+   -f     address<font color="#ff0000">*</font>     - email address of the sender
+   -sub   subject      - subject
+   -l     file         - a file containing the email addresses
+   -m     file         - the file to read message from
+   -v                  - verbose mode
+   -help               - shows this help
+
+The options with <font color="#ff0000">*</font> must the specified
+</pre></font>
+You must know the address or IP address of the SMTP server you use.
+The file you specify with -l contains email address one per line.
+<p>
+<a name="download">
+<font size="+1"><b>Download</b></font>
+</a>
+<br>
+You can download source if you need to look at the source for some reason or
+modify it. Download the compiled binary otherwise.
+<ul>
+<li>
+Download compiled binary:
+<A href="mailsend.exe">mailsend.exe</A> (<font size="2">57344 bytes</font>) <font size="2">(md5=641c3763dec97951db7b834110c92341)</font>
+<br>
+<font size="2">(Last updated: <b>Apr-06-2001</b></font>)
+<br>
+<li>
+Download zipped source:
+<A href="mailsend.zip">mailsend.zip</A> (<font size="2">87131 bytes</font>) <font size="2">(md5=00381588f043f97bd808e40963b0633c)</font>
+<br>
+<font size="2">(Last updated: <b>Apr-06-2001</b></font>)
+</ul>
+<p>
+<a name="howtouse">
+<font size="+1"><b>How to use</b></font>
+</a>
+<br>
+This is a console application, you can run it from command shell
+or by clicking on the app from file explorer. You can use it in many ways.
+I'm using 1.2.3.4 as the IP address of the SMTP server as an example, 
+change this to your valid one.
+Some example are shown below:
+<p>
+<a name="interactive">
+<b>Interactive usage</b>
+</a>
+<br>
+<font color="#000099"><pre>
+    c:&gt;\ mailsend
+    <b>SMTP server address/IP:</b> 1.2.3.4
+    <b>Domain:</b> muquit.com
+    <b>From:</b> muquit@muquit.com
+    <b>To:</b> muquit@example.com,foo@example.com
+    <b>Carbon copy:</b> bar@example.com
+    <b>Blind Carbon copy:</b>
+    <b>Subject:</b> This is a test
+    <b>=========================================================================
+    Type . in a new line and press Enter to end the message, CTRL+C to abort
+    =========================================================================</b>
+    this is a test
+    this is a test
+    .
+</pre></font>
+<p>
+<a name="noninteractive">
+<b>Non-interactive usage</b>
+</a>
+<br>
+Everything the program needs can be fed from stdin or from a file. 
+
+<br>
+Examples:
+<font color="#000099"><pre>
+    mailsend -d muquit.com -smtp 1.2.3.4 -t muquit@muquit.com 
+      -f muquit@muquit.com -sub "test" -m msg.txt
+</pre></font>
+
+message can be passed from stdin as well:
+<font color="#000099"><pre>
+    mailsend -d muquit.com -smtp 1.2.3.4 -t muquit@muquit.com
+        -f muquit@muquit.com -sub "test" &lt; msg.txt
+</pre></font>
+If no message file is specified, it will ask to type the message:
+<font color="#000099"><pre>
+    mailsend -d muquit.com -smtp 1.2.3.4 -t muquit@muquit.com
+        -f muquit@muquit.com -sub "test"
+    =========================================================================
+    Type . in a new line and press Enter to end the message, CTRL+C to abort
+    =========================================================================
+    test. test.
+    .
+</pre></font>
+Also a file can be created with smtp server, from, to, cc, bcc, subject
+and mail body which can be used as a single input to the program. For
+example, if you create a file like below:
+<font color="#000099"><pre>
+1.2.3.4
+example.com
+foo@example.com
+bar@example.com
+Mail body starts here.
+This file can be used to feed to the mailsend program.
+
+The first line is the smtp server address or IP address.
+The second line is the domain used in SMTP HELO.
+The third line is the From address.
+The fourth line the To address/es. They can be command separated.
+Right after the To the mail body starts.
+</pre></font>
+Now this file can be fed as follows:
+<font color="#000099"><pre>
+    mailsend -v &lt; msg.txt
+</pre></font>
+You can see the mail getting delivered if you specify the -v flag.
+Note: in non-interative mode, you can not specify Cc, Bcc or Subject in 
+the file. If you need any of them specify with appropriate flags.
+<p>
+If you find the program useful, 
+<a href="mailto:muquit@muquit.com">please let me know</a>
+<p>
+<a name="copyright">
+<font size="+1"><b>Copyright</b></font>
+</a>
+<br>
+<a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>
+<p>
+<a name="changelog">
+<font size="+1"><b>ChangeLog</b></font>
+</a>
+<ul>
+<p>
+<li> The headers Cc, Bcc and Subject are not asked in the message file is
+specified with -m or if anything is passed from stdin. If you need any of
+them in non-interactive mode, specify them with appropriate flags.<br>
+(Apr-11-2001)
+<p>
+<li> version 1.1 released.
+<br>
+(Apr-07-2001)
+</ul>
+<br>
+<p>
+<font size="2">URL of this page:<a href="http://www.muquit.com/muquit/software/mailsend/mailsend.html"><em>http://www.muquit.com/muquit/software/mailsend/mailsend.html</em></a></font>
+        </td>
+    </tr>
+    <tr>
+        <td bgcolor="#99ccff" align="left">
+<font size="2">
+<a href="javascript:history.go(-1)">back</a>
+</font>
+
+        </td>
+        <td bgcolor="#99ccff">
+<font size="2">
+Page updated:
+<font color="#000099">
+Thu Apr 12 01:20:53 2001 GMT
+</font>
+&nbsp;
+Copyright &copy; 2001
+<em>
+<a href="mailto:muquit@muquit.com">muquit@muquit.com</a>.
+</em>
+</font>
+
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

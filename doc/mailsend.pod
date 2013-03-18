@@ -1,0 +1,137 @@
+=head1 NAME
+
+mailsend - A command line program to send mail via SMTP protocol
+
+=head1 SYNOPSYS
+
+
+ Version: @(#) mailsend v1.17b3
+
+ Copyright: GNU GPL. It is illegal to use this software for Spamming
+
+ (OpenSSL version: OpenSSL 1.0.0g 18 Jan 2012)
+ usage: mailsend [options]
+ Where the options are:
+  -smtp hostname/IP*    - of the SMTP server
+  -port SMTP port       - SMTP port
+  -d    domain          - domain name for SMTP HELO/EHLO
+  -t    to,to..*        - email address/es of the reciepient/s
+  -cc   cc,cc..         - Carbon copy address/es
+  +cc                   - don't ask for Carbon Copy
+  -ct   seconds         - Connect timeout. Default is 10 seconds
+  -bc   bcc,bcc..       - Blind carbon copy address/es
+  +bc                   - don't ask for Blind carbon copy
+  +D                    - don't add Date header
+  -f    address*        - email address of the sender
+  -genc plaintext       - generate encrypted password
+  -sub  subject         - subject
+  -l    file            - a file containing the email addresses
+  -attach file,mime_type,[i/a] (i=inline,a=attachment)
+                        - attach this file as attachment or inline
+  -cs   character set   - for text/plain attachments (default is us-ascii)
+  -M    "one line msg"  - attach this one line text message
+  -name "Full Name"     - add name in the From header
+  -v                    - verbose mode
+  -V                    - show version info
+  -w                    - wait for a CR after sending the mail
+  -rt  email_address    - add Reply-To header
+  -rrr email_address    - request read receipts to this address
+  -ssl                  - SMTP over SSL
+  -starttls             - Check for STARTTLS and if server supports, do it
+  -auth                 - Try CRAM-MD5,LOGIN,PLAIN in that order
+  -auth-cram-md5        - use AUTH CRAM-MD5 authentication
+  -auth-plain           - use AUTH PLAIN authentication
+  -auth-login           - use AUTH LOGIN authentication
+  -user username        - username for ESMTP authentication
+  -pass password        - password for ESMTP authentication
+  -encpass pasword      - encrypted password for ESMTP authentication
+  -example              - show examples
+  -ehlo                 - force EHLO
+  -info                 - show SMTP server information
+  -help                 - shows this help
+  -q                    - quiet
+
+ The options with * must be specified
+ Environment variables:
+  SMTP_USER_PASS for plain text password (-pass)
+  SMTP_USER_PASS_ENC for encrypted password (-encpass)
+
+
+=head1 DESCRIPTION
+
+mailsend is a simple command line program to send mail via SMTP protocol 
+for Windows, Linux/Unix.
+
+For deatils, please look at the web page:
+
+L<http://muquit.com/muquit/software/mailsend/mailsend.html>
+
+=head1 EXAMPLES
+
+ Example (Note: type without newline):
+ Show server info
+ ================
+   mailsend -info -port 587 -smtp smtp.gmail.com
+   mailsend -info -ssl -port 465 -smtp smtp.gmail.com
+   mailsend -info -smtp smtp.example.com -ct 2
+
+ STARTTLS + AUTHENTICATION
+ =========================
+ mailsend -to user@gmail.com -from user@gmail.com
+ -starttls -port 587 -auth
+ -smtp smtp.gmail.com
+ -sub test +cc +bc -v
+ -user you -pass "your_password"
+ Note: Password can be set by env var SMTP_USER_PASS instead of -pass
+
+ SSL + AUTHENTICATION
+ ====================
+ mailsend -to user@gmail.com -from user@gmail.com
+ -ssl -port 465 -auth
+ -smtp smtp.gmail.com
+ -sub test +cc +bc -v
+ -user you -pass "your_password"
+
+ As -auth is specified, CRAM-MD5, LOGIN, PLAIN will be tried in that order.
+ Use -auth-cram-md5, -auth-plan, -auth-login for specific auth mechanism.
+
+ Note: Password can be set by env var SMTP_USER_PASS instead of -pass
+
+ Attachments
+ ===========
+ mailsend -f user@example.com -smtp 10.100.30.1
+  -t user@example.com -sub test -attach "file.txt,text/plain"
+  -attach "/usr/file.gif,image/gif" -attach "file.jpeg,image/jpg"
+
+ mailsend -f user@example.com -smtp 192.168.0.2
+  -t user@example.com -sub test +cc +bc
+  -attach "c:\file.gif,image/gif" -M "Sending a GIF file"
+
+ mailsend -f user@example.com -smtp 192.168.0.2
+  -t user@example.com -sub test +cc +bc -cs "ISO-8859-1"
+  -attach "file2.txt,text/plain"
+
+ Inline Attachment
+ =================
+ mailsend -f user@example.com -d example.com -smtp 10.100.30.1
+  -t user@example.com -sub test -attach "nf.jpg,image/jpeg,i"
+  -M "body line1: content disposition is inline"
+  -M "body line2: this is line2 of the body"
+
+
+
+=head1 SEE ALSO
+
+Please look at the web page for latest version and documentation:
+L<http://muquit.com/muquit/software/mailsend/mailsend.html>
+
+
+=head1 LICENSE
+
+GNU GPL
+
+=head1 AUTHOR
+
+mailsend is written by Muhammad Muquit E<lt>muquit@muquit.comE<gt>.
+Homepage: L<http://www.muquit.com/>.
+

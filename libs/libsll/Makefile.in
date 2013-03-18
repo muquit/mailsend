@@ -1,0 +1,43 @@
+#
+# for Singly linked list package.
+# muhammad a muquit
+# Aug-07-1998
+#
+CC= @CC@
+DEFS= @DEFS@
+AR= ar cq
+RANLIB= @RANLIB@
+LIBNAME= libsll.a
+
+INCLUDES=  -I. 
+
+# replace -O with -g in order to debug
+
+DEFINES= $(INCLUDES) $(DEFS) -DSYS_UNIX=1
+CFLAGS= -O $(DEFINES)
+
+SRCS = sll.c
+OBJS = sll.o
+
+.c.o:
+	rm -f $@
+	$(CC) $(CFLAGS) -c $*.c
+
+all: $(LIBNAME)
+
+$(LIBNAME): $(OBJS)
+	rm -f $@
+	$(AR) $@ $(OBJS)
+	$(RANLIB) $@
+
+sll.o: sll.h
+
+clean:
+	rm -f $(OBJS) $(LIBNAME) core a.out
+
+realclean:
+	rm -f $(OBJS) $(LIBNAME) core a.out config.cache config.log config.status
+	(cd examples/append;make clean)
+	(cd examples/append_sorted;make clean)
+	(cd examples/delete;make clean)
+	(cd examples/insert;make clean)

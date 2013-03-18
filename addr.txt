@@ -1,0 +1,12 @@
+# File can contain address to send mail to
+# A line can start with To: email_address,
+# Cc: email_address, BCc: email_address or
+# just addresses
+# Any line starts with a # or ; is considered a comment
+#muquit
+
+#muquit@muquit.com
+To: blah@example.com
+Cc: foo@bar.com
+jdoe@gmail.com
+mjane@yahoo.com

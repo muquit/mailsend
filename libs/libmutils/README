@@ -1,0 +1,9 @@
+A utility library. All the functions starts with mtutils, for example:
+mutilsSafeStrcpy(), mutilsMalloc() etc. The library can be compiled with
+an ANSI  or non-ANSI C compiler.
+
+/* ANSIfiled, muquit@muquit.com, Mar-27-2001 */
+
+--
+Muhammad Muquit
+Jul-29-199
