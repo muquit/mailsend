@@ -213,6 +213,7 @@ int         validateMusts(char *from,char *to,char *smtp_server,
 char        *askFor(char *buf,int buflen,char *label,int loop);
 int         isInConsole(int fd);
 int         add_one_line_to_list(char *line);
+int         add_msg_body_files_to_list(char *file_path);
 int         add_customer_header_to_list(char *line);
 int         add_attachment_to_list(char *file_path_mime);
 int         add_server_cap_to_list(char *capability);
@@ -220,6 +221,7 @@ Sll         *get_one_line_list(void);
 Sll         *get_custom_header_list(void);
 Sll         *get_attachment_list(void);
 Sll         *get_server_caps_list(void);
+Sll         *get_msg_body_files_list(void);
 void        print_attachemtn_list(void);
 char        *fix_to(char *to);
 int         isInteractive(void);

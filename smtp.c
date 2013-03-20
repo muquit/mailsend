@@ -792,9 +792,16 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
 
-                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
+                    if (strcmp(a->content_disposition,"body") == 0)
+                    {
+                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n","inline");
+                    }
+                    else
+                    {
+                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
                                     a->content_disposition,
                                     a->file_name);
+                    }
                     msock_puts(buf);
                     showVerbose(buf);
 
@@ -803,28 +810,31 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 }
                 else
                 {
-                    if (strcmp(a->content_disposition,"inline") == 0)
+                    if ((strcmp(a->content_disposition,"inline") == 0) || 
+                        (strcmp(a->content_disposition,"body") == 0))
+                    {
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s\r\n",a->mime_type);
+                    }
                     else
+                    {
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; name=%s\r\n",a->mime_type,a->file_name);
+                    }
+
                     msock_puts(buf);
                     showVerbose(buf);
 
-                    /*
-                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                    a->content_disposition,
-                                    a->file_name);
-                                    */
-                    if (strcmp(a->content_disposition,"inline") == 0)
+                    if (strcmp(a->content_disposition,"body") == 0)
                     {
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n",a->content_disposition);
+                        /* inline but no filename */
+                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n","inline");
                     }
                     else
                     {
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                    a->content_disposition,
-                                    a->file_name);
+                                a->content_disposition,
+                                a->file_name);
                     }
+
                     msock_puts(buf);
                     showVerbose(buf);
 
