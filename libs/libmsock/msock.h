@@ -76,6 +76,7 @@ void   msock_close(void);
 void   msock_make_socket_nonblocking(SOCKET sock_fd);
 void   msock_make_socket_blocking(SOCKET sock_fd);
 void   msock_print_error(void);
+void   msock_set_logfp(FILE *logfp);
 void   msock_set_debug(int debug);
 
 #ifdef WINNT

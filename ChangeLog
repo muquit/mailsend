@@ -1,3 +1,8 @@
+1.17b10
+	- If there are some kind of socket error, print the error message. If
+	a log file is specified with -log, the error will be written there.
+	(Mar-23-2013)
+
 1.17b9
 	- There was a bug if multiple attachments were specified. The temp file was
 	created only once and was removed. The bug shows up in Windows.

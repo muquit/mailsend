@@ -493,7 +493,11 @@ int main(int argc,char **argv)
                                     strerror(errno));
                             return(1);
                         }
-                         mutilsSafeStrcpy(g_log_file,argv[i],sizeof(g_log_file)-1);
+                        /*
+                        ** tell msock lib to write error message to log file
+                        */
+                        msock_set_logfp(g_log_fp);
+                        mutilsSafeStrcpy(g_log_file,argv[i],sizeof(g_log_file)-1);
                     }
                 }
                 break;

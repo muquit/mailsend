@@ -9,6 +9,7 @@ static SSL      *s_ssl=NULL;
 
 static SOCKET   s_sock;
 static int      ssl_status=0;
+static FILE     *s_logfp = NULL;
 
 #ifdef WINNT
 #undef UNICODE
@@ -16,6 +17,17 @@ static int      ssl_status=0;
 
 static int debug = 0;
 
+void msock_set_logfp(FILE *logfp)
+{
+    if (logfp != NULL)
+    {
+        s_logfp = logfp;
+    }
+    else
+    {
+        s_logfp = stderr;
+    }
+}
 void msock_set_debug(int d)
 {
     debug = d;
@@ -84,6 +96,11 @@ void msock_print_winsock_error(void)
     LPSTR
         error_string = NULL;
 
+    if (s_logfp == NULL)
+    {
+        s_logfp = stderr;
+    }
+
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
                   FORMAT_MESSAGE_FROM_SYSTEM,
                   NULL,
@@ -92,7 +109,7 @@ void msock_print_winsock_error(void)
                   (LPSTR) &error_string,
                   0,
                   0);
-    (void) fprintf(stderr,"Winsock error[%d]: %s\n",
+    (void) fprintf(s_logfp,"Winsock error[%d]: %s\n",
             error_code,
             error_string);
     LocalFree(error_string);
@@ -147,10 +164,14 @@ int msock_get_errno(SOCKET sock_fd)
 
 void msock_print_error(void)
 {
+    if (s_logfp == NULL)
+    {
+        s_logfp = stderr;
+    }
 #ifdef WINNT
     msock_print_winsock_error();
 #else
-    (void) fprintf(stderr,"Error: [%d]: %s\n",
+    (void) fprintf(s_logfp,"Socket Error: [%d]: %s\n",
             errno,
             strerror(errno));
 #endif /* WINNT */
@@ -195,7 +216,7 @@ void msock_print_ipaddr(struct addrinfo *res)
     }
     else
     {
-        (void) fprintf(stderr," IPv6 address: %s\n",ipstringbuffer);
+        (void) fprintf(stderr," IP address: %s\n",ipstringbuffer);
     }
 #else
     sa = (struct sockaddr *) res->ai_addr;
@@ -346,7 +367,7 @@ SOCKET clientSocket(char *address,int port, int connect_timeout)
                     rc = 0;
                     if (debug)
                     {
-                        (void) fprintf(stderr," Try socket %d\n",sock_fd);
+                        (void) fprintf(stderr,"(Debug) Try socket %d\n",sock_fd);
                     }
                     break;
                 }
@@ -514,6 +535,8 @@ int sockGets(SOCKET sockfd,char *str,size_t count)
             /*
             ** the other side may have closed unexpectedly
             */
+            msock_print_error();
+            (void) fprintf(stderr,"Error: Connection is closed unexpectedly\n");
             return (-1);
         }
         lastRead=buf[0];
@@ -556,6 +579,8 @@ int sockGetsSSL(SSL *ssl,char *str,size_t count)
             /*
             ** the other side may have closed unexpectedly
             */
+            msock_print_error();
+            (void) fprintf(stderr,"Error: Connection is closed unexpectedly\n");
             return (-1);
         }
         lastRead=buf[0];
