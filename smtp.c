@@ -14,6 +14,8 @@
 
 #include "mailsend.h"
 
+unsigned char *mutils_encode_base64(void *src,unsigned long srcl,unsigned long *len);
+
 static char buf[BUFSIZ];
 static int  break_out=0;
 
@@ -223,11 +225,9 @@ static int smtp_MAIL_FROM(char *from)
 /* SMTP: quit */
 static int smtp_QUIT(void)
 {
-    int
-        rc=(-1);
     showVerbose("[C] QUIT\r\n");
     msock_puts("QUIT\r\n");
-    rc=read_smtp_line();
+    read_smtp_line();
     /*
     ** google does not seem to write anything back in response to QUIT
     ** command. I'll ignore it anyway
@@ -600,8 +600,6 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 
         if (msg_body_file)
         {  
-            int
-                rc;
             char
                 mime_type[32],
                 filename[1024];
@@ -609,7 +607,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             FILE
                 *fp;
 
-            rc=get_filepath_mimetype(msg_body_file,filename,
+            get_filepath_mimetype(msg_body_file,filename,
                     sizeof(filename)-1,mime_type,sizeof(mime_type)-1);
            /*
             * The file should not have binary characters it it.
@@ -792,16 +790,9 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
 
-                    if (strcmp(a->content_disposition,"body") == 0)
-                    {
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n","inline");
-                    }
-                    else
-                    {
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
+                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
                                     a->content_disposition,
                                     a->file_name);
-                    }
                     msock_puts(buf);
                     showVerbose(buf);
 
@@ -810,31 +801,28 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 }
                 else
                 {
-                    if ((strcmp(a->content_disposition,"inline") == 0) || 
-                        (strcmp(a->content_disposition,"body") == 0))
-                    {
+                    if (strcmp(a->content_disposition,"inline") == 0)
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s\r\n",a->mime_type);
-                    }
                     else
-                    {
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; name=%s\r\n",a->mime_type,a->file_name);
-                    }
-
                     msock_puts(buf);
                     showVerbose(buf);
 
-                    if (strcmp(a->content_disposition,"body") == 0)
+                    /*
+                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
+                                    a->content_disposition,
+                                    a->file_name);
+                                    */
+                    if (strcmp(a->content_disposition,"inline") == 0)
                     {
-                        /* inline but no filename */
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n","inline");
+                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n",a->content_disposition);
                     }
                     else
                     {
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                a->content_disposition,
-                                a->file_name);
+                                    a->content_disposition,
+                                    a->file_name);
                     }
-
                     msock_puts(buf);
                     showVerbose(buf);
 
@@ -1037,8 +1025,10 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
 
     char
         *mech=NULL,
-        *b64=NULL,
         *auth=NULL;
+
+    unsigned char
+		*b64=NULL;
 
     unsigned long
         b64len=0;

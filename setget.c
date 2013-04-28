@@ -13,7 +13,6 @@
 #include "mailsend.h"
 
 static Sll
-    *msg_body_files_head = NULL,
     *one_line_head = NULL,
     *custom_headers_head = NULL,
     *attachment_head=NULL,
@@ -48,6 +47,7 @@ void print_one_lines(void)
 
 void printAddressList2(Sll *list)
 {
+/*
     Sll
         *l;
 
@@ -58,10 +58,12 @@ void printAddressList2(Sll *list)
     {
         addr=(Address *) l->data;
     }
+*/
 }
 
 void print_attachemtn_list()
 {
+/*
     Sll
         *l;
 
@@ -71,14 +73,13 @@ void print_attachemtn_list()
     for (l=attachment_head; l; l=l->next)
     {
         a=(Attachment *) l->data;
-        /*
         (void) fprintf(stderr,"File path: %s\n",a->file_path);
         (void) fprintf(stderr,"File name: %s\n",a->file_name);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         (void) fprintf(stderr,"\n");
-        */
     }
+*/
 }
 
 
@@ -198,33 +199,6 @@ int add_one_line_to_list(char *line)
     return(0);
 }
 
-/*
-** Add the files to a list which were specified as body like
-** -attach "file,mime_type,b"
-** These files will be attached without filename as some mail
-** readers do not seem to respect inline disposition.
-*/
-int add_msg_body_files_to_list(char *file_path)
-{
-    Sll
-        *nl = NULL;
-
-    char
-        *l;
-
-    if (file_path == NULL || *file_path == '\0')
-    {
-        return (-1);
-    }
-    l = strdup(file_path);
-    CHECK_MALLOC(l);
-    nl = allocateNode((void *) l);
-    CHECK_MALLOC(nl);
-    appendNode(&msg_body_files_head, &nl);
-
-    return(0);
-}
-
 
 /**
  * add the file to attachment_list
@@ -304,8 +278,6 @@ int add_attachment_to_list(char *file_path_mime)
                 a->content_disposition=xStrdup("attachment");
             else if (*content_disposition == 'i')
                 a->content_disposition=xStrdup("inline");
-            else if (*content_disposition == 'b')
-                a->content_disposition=xStrdup("body");
             else
                 a->content_disposition=xStrdup("attachment");
             break;
@@ -547,11 +519,6 @@ Sll *getAddressList(void)
 Sll *get_one_line_list(void)
 {
     return (one_line_head);
-}
-
-Sll *get_msg_body_files_list(void)
-{
-    return (msg_body_files_head);
 }
 
 Sll *get_custom_header_list(void)

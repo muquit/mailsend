@@ -245,6 +245,7 @@ int validateMusts(char *from,char *to,char *smtp_server,char *helo_domain)
 
 char *askFor(char *buf,int buflen,char *label,int ask)
 {
+	char *s;
 
     if (label == NULL || *label == '\0')
         return (NULL);
@@ -257,8 +258,8 @@ again:
         (void) fflush(stderr);
     }
 
-    (void) fgets(buf,buflen,stdin);
-    if (*buf == '\0' || *buf == '\n')
+	s = fgets(buf,buflen,stdin);
+    if (s == NULL || *buf == '\0' || *buf == '\n')
     {
         if (ask == EMPTY_NOT_OK)
             goto again;
@@ -532,6 +533,7 @@ ExitProcessing:
     
 }
 
+/*
 static int unix2dos(FILE *ifp,FILE *ofp)
 {
     int
@@ -547,7 +549,7 @@ static int unix2dos(FILE *ifp,FILE *ofp)
         return(-1);
 #ifdef WINNT
         _setmode(_fileno(ofp),_O_BINARY);
-#endif /* WINNT */
+#endif
         while(!feof(ifp))
         {
             n=fread(buf,1,BUFSIZ,ifp);
@@ -571,7 +573,7 @@ static int unix2dos(FILE *ifp,FILE *ofp)
             }
         }
 }
-
+*/
 
 #ifdef HAVE_OPENSSL
 void print_cert_info(SSL *ssl)

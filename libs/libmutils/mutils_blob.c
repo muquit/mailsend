@@ -454,7 +454,7 @@ unsigned short mutils_read_blob_msb_short(MutilsBlob *blob,int *err_no)
     {
         mutils_error("%s (%d) - mutils_read_blob_msb_short() could not read 2 bytes from blob\n",MUTILS_CFL);
         *err_no=(-1);
-        return((unsigned long) ~0);
+        return((unsigned short) ~0);
     }
 
     /*

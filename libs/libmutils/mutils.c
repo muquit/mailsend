@@ -453,9 +453,7 @@ int
 
     /* initialize */
     *port=80;
-    *hostname='\0';
-    *page='\0';
-    *tmpbuf='\0';
+    *hostname = *page = *tmpbuf = '\0';
 
     tmpbuf_len=sizeof(tmpbuf);
 
@@ -547,7 +545,7 @@ int
 **
 **  Development History:
 **      who                  when           why
-**      muquit@muquit.com    Mar-27-2001    first cut
+**      muquit@lucent.com    Mar-27-2001    first cut
 */
 char *mutilsSpacesToChar(char *str,int c)
 {
