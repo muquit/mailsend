@@ -39,9 +39,9 @@ OBJS = main.o smtp.o utils.o setget.o
 	rm -f $@
 	$(CC) $(CFLAGS) -c $*.c
 
-all: mlibs $(PROGNAME)
+all: $(PROGNAME)
 
-$(PROGNAME) : $(OBJS) $(MSOCK_LIB)
+$(PROGNAME) : mlibs $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(PROGNAME) $(LIBS)
 
 install:
@@ -60,13 +60,19 @@ help:
 docs:
 	@ruby mk_doc.rb
 
-mlibs:
-	(cd libs/libmsock && make)
-	(cd libs/libmutils && make)
-	(cd libs/libsll && make)
+libmsock: libmutils
+	+make -C libs/libmsock
+
+libmutils:
+	+make -C libs/libmutils
+
+libsll:
+	+make -C libs/libsll
+
+mlibs: libmsock libsll
 
 clean:
-	(cd libs/libmsock && make clean)
-	(cd libs/libmutils && make clean)
-	(cd libs/libsll && make clean)
+	+(cd libs/libmsock && make clean)
+	+(cd libs/libmutils && make clean)
+	+(cd libs/libsll && make clean)
 	rm -f *.o *~ core $(PROGNAME)
