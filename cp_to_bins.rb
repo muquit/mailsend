@@ -17,13 +17,13 @@ begin
   end
 
   if version
-    to_dir = "../../mailsend_bins/#{version}"
+    to_dir = "../mailsend_bins/#{version}"
     if !File.exists?(to_dir)
       puts "Creating dir: #{to_dir}"
       FileUtils.mkdir_p(to_dir)
     end
     files = []
-    files << "mailsend#{version}.tar.gz"
+    files << "mailsend-#{version}.tar.gz"
     files << "mailsend#{version}.exe.zip"
     files << "mailsend_#{version}-ubuntu_i386.deb"
 

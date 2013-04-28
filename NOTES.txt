@@ -1,0 +1,29 @@
+My Personal notes
+=================
+How to release
+--------------
+* pixel
+  - compile windows binary
+  - test by running test_gmail.sh
+
+* t105
+  - compile. run make docs
+  - test by running test_gmail.sh
+  - run mk_release_svn_google.rb to branch and tag the release and create the tgz file.
+  - use googlecode_upload.pl to upload the tgz file
+
+  - create debian package by running mk_debian_package.rb
+  - use googlecode_upload.pl to upload the dev file
+
+  - cp mailsend.exe mailsendV.exe
+  - zip mailsendV.zip mailsendV.exe
+  - use googlecode_upload.pl to upload the zip file
+
+  - deprecate old versions in google code
+
+  - run cp_to_bins.rb
+  - cd ../mailsend_bins
+  - add the latest directory to local svn
+
+--
+Apr-28-2013 
