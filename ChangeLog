@@ -2,6 +2,8 @@
 	- If there are some kind of socket error, print the error message. If
 	a log file is specified with -log, the error will be written there.
 	(Mar-23-2013)
+	- modified Makefile.in to support make -j
+	- fixed several warnings
 
 1.17b9
 	- There was a bug if multiple attachments were specified. The temp file was
