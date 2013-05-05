@@ -11,15 +11,18 @@ How to release
   - test by running test_gmail.sh
   - do a check-in 
   - run mk_release_svn_google.rb to branch and tag the release and create the tgz file.
-  - use googlecode_upload.pl to upload the tgz file
-  - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
 
   - create debian package by running mk_debian_package.rb
+
+  - use googlecode_upload.pl to upload the tgz file
   - use googlecode_upload.pl to upload the deb file
+
 
   - cp mailsend.exe mailsendV.exe
   - zip mailsendV.zip mailsendV.exe
   - use googlecode_upload.pl to upload the zip file
+  - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
+  - update version numbers in main page
 
   - deprecate old versions in google code
 

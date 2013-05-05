@@ -1,4 +1,4 @@
-1.17b100
+1.17b11
 	- mailsend writes "Mail sent successfully" message on stdout in
 	interactive mode even if -quiet flag is used. Fixes Issue 6.
 	(May-05-2013)
