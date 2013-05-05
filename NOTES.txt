@@ -23,7 +23,8 @@ How to release
   - use googlecode_upload.pl to upload the zip file
   - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
   - update version numbers in main page
-  - update issue.
+  - update issue. Well if svn comment has Fixes Issue 6, it will be closed
+automatically. Very clever!
 
   - deprecate old versions in google code
 
