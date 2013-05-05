@@ -23,6 +23,7 @@ How to release
   - use googlecode_upload.pl to upload the zip file
   - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
   - update version numbers in main page
+  - update issue.
 
   - deprecate old versions in google code
 
