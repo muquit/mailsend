@@ -1048,10 +1048,16 @@ int main(int argc,char **argv)
     {
         if (isInteractive())
         {
-            (void) printf("Mail sent successfully\n");
-            (void) fflush(stdout);
+            if (!g_quiet)
+            {
+                (void) printf("Mail sent successfully\n");
+                (void) fflush(stdout);
+            }
         }
-        write_log("Mail sent successfully\n");
+        if (!g_quiet)
+        {
+            write_log("Mail sent successfully\n");
+        }
     }
     else
     {

@@ -9,6 +9,7 @@ How to release
 * t105
   - compile. run make docs
   - test by running test_gmail.sh
+  - do a check-in 
   - run mk_release_svn_google.rb to branch and tag the release and create the tgz file.
   - use googlecode_upload.pl to upload the tgz file
   - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
