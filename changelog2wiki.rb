@@ -23,10 +23,14 @@ class ChangeLogToWiki
   end
 
   def doit
-    f = File.open("ChangeLog")
+    file = ''
+    file = "ChangeLog" if File.exists?("ChangeLog")
+    file = "ChangeLog.txt" if File.exists?("ChangeLog.txt")
+    f = File.open(file)
     list_found = false
+    project=File.basename(Dir.pwd)
     puts <<EOD
-#summary ChangeLog of mailasend
+#summary ChangeLog of #{project}
 #sidebar Toc
 #labels Featured
 <wiki:toc />
@@ -34,6 +38,10 @@ EOD
     while ((line = f.gets))
       line.chomp!
       line.strip!
+      if line =~ /^=/
+        puts line
+        next
+      end
       if line =~ /^[0-9]+\..*$/
         puts "=#{line}="
         next
