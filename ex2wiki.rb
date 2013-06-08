@@ -24,7 +24,6 @@ class GenerateMailsendExample
     end
     mhash = {}
     a = []
-
     last_header = nil
     block_found = false
     mailsend_found = false
@@ -79,6 +78,18 @@ class GenerateMailsendExample
 #labels Featured
 <wiki:toc />
 EOD
+# print version info first
+    v = `mailsend -V 2>&1`.chomp
+    v = v.gsub('^\s+','')
+    puts <<-EOS
+=VERSION=
+These examples are generated using 
+{{{
+  $ mailsend -V
+#{v}
+}}}
+EOS
+
 
     headers.each do |h|
     puts "=#{h}="
