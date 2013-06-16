@@ -588,7 +588,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 for (l = one_line_list; l; l = l->next)
                 {
                     msock_puts((char *) l->data);
-                    msock_puts("\n");
+                    msock_puts("\r\n");
                     showVerbose("[C] %s\n",(char *) l->data);
                 }
 

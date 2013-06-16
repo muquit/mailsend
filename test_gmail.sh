@@ -44,5 +44,7 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
  -log /tmp/mailsend.log \
+ -M "one line attachment 1" \
+ -M "one line attachment 2" \
  -attach "test.txt,text/plain,i" \
  -attach "x.gif,image/gif,i" -v
