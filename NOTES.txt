@@ -8,6 +8,7 @@ How to release
 
 * t105
   - compile. run make docs
+  - ldd mailsend to make sure libs are ok.
   - test by running test_gmail.sh
   - do a check-in 
   - run mk_release_svn_google.rb to branch and tag the release and create the tgz file.
