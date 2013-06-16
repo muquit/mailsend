@@ -133,6 +133,7 @@ EXTERN char g_userpass[64];
 EXTERN char g_from_name[64];
 EXTERN FILE *g_log_fp;
 EXTERN char g_log_file[MUTILS_PATH_MAX];
+EXTERN int  g_show_attachment_in_log;
 
 typedef struct _Address
 {

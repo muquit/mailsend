@@ -1,3 +1,11 @@
+1.17b12
+	- Add \r\n to multiple one line messages specified by -M.
+	Possible Fix for Issue 12.
+
+	- Do not show attachments in verbose mose. The -show_attach will
+	enable it. Fixes Issue 13.
+	(Jun-16-2013)
+
 1.17b11
 	- mailsend writes "Mail sent successfully" message on stdout in
 	interactive mode even if -quiet flag is used. Fixes Issue 6.
@@ -7,7 +15,9 @@
 	- If there are some kind of socket error, print the error message. If
 	a log file is specified with -log, the error will be written there.
 	(Mar-23-2013)
+
 	- modified Makefile.in to support make -j. Fixes Issue 4.
+
 	- fixed several warnings
 	(Apr-27-2013)
 

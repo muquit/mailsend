@@ -47,6 +47,7 @@ static void usage(void)
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
+"  -show_attach          - show attachment in verbose mode, default is no",
 "  -V                    - show version info",
 "  -w                    - wait for a CR after sending the mail",
 "  -rt  email_address    - add Reply-To header",
@@ -206,6 +207,8 @@ int main(int argc,char **argv)
     g_do_ssl=0;
     g_do_starttls=0;
     g_log_fp = NULL;
+    g_show_attachment_in_log = 0;
+
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
     memset(g_userpass,0,sizeof(g_userpass));
@@ -664,6 +667,10 @@ int main(int argc,char **argv)
                     return(1);
                     
 #endif /* HAVE_OPENSSL */
+                }
+                else if (strncmp("show_attach", option + 1, 9) == 0)
+                {
+                    g_show_attachment_in_log = 1;
                 }
                 else
                 {

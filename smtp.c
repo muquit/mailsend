@@ -583,18 +583,27 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 showVerbose(buf);
 
                 msock_puts("\r\n");
-                showVerbose("\r\n");
 
+                if (g_show_attachment_in_log)
+                {
+                    showVerbose("\r\n");
+                }
                 for (l = one_line_list; l; l = l->next)
                 {
                     msock_puts((char *) l->data);
                     msock_puts("\r\n");
-                    showVerbose("[C] %s\n",(char *) l->data);
+                    if (g_show_attachment_in_log)
+                    {
+                        showVerbose("[C] %s\n",(char *) l->data);
+                    }
                 }
 
                 (void) snprintf(buf,sizeof(buf)-1,"\r\n\r\n");
                 msock_puts(buf);
-                showVerbose(buf);
+                if (g_show_attachment_in_log)
+                {
+                    showVerbose(buf);
+                }
             }
         }
 
@@ -635,12 +644,18 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             showVerbose(buf);
 
             msock_puts("\r\n");
-            showVerbose("\r\n");
+            if (g_show_attachment_in_log)
+            {
+                showVerbose("\r\n");
+            }
 
             while (fgets(mbuf,sizeof(mbuf)-1,fp))
             {
                 msock_puts(mbuf);
-                showVerbose("[C] %s",mbuf); 
+                if (g_show_attachment_in_log)
+                {
+                    showVerbose("[C] %s",mbuf); 
+                }
             }
             (void) fclose(fp);
 
@@ -845,9 +860,17 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 while (fgets(mbuf,sizeof(mbuf)-1,fp))
                 {
                     msock_puts(mbuf);
-                    showVerbose("[C] %s",mbuf); /* new line is there */
+                    if (g_show_attachment_in_log)
+                    {
+                        showVerbose("[C] %s",mbuf); /* new line is there */
+                    }
                 }
                 (void) fclose(fp);
+                if (!g_show_attachment_in_log)
+                {
+                    showVerbose("<not showing attachment by policy>\n"); /* new line is there */
+                }
+
                 showVerbose("%s (%d) - Done creating MIME message, removing Temp file %s\n",
                         MFL,
                         mime_tmpfile);

@@ -5,11 +5,11 @@ mailsend - A command line program to send mail via SMTP protocol
 =head1 SYNOPSYS
 
 
- Version: @(#) mailsend v1.17b11
+ Version: @(#) mailsend v1.17b12
 
  Copyright: GNU GPL. It is illegal to use this software for Spamming
 
- (OpenSSL version: OpenSSL 1.0.0g 18 Jan 2012)
+ (OpenSSL version: OpenSSL 1.0.0e 6 Sep 2011)
  usage: mailsend [options]
  Where the options are:
   -smtp hostname/IP*    - Hostname/IP address of the SMTP server
@@ -33,6 +33,7 @@ mailsend - A command line program to send mail via SMTP protocol
   -M    "one line msg"  - attach this one line text message
   -name "Full Name"     - add name in the From header
   -v                    - verbose mode
+  -show_attach          - show attachment in verbose mode, default is no
   -V                    - show version info
   -w                    - wait for a CR after sending the mail
   -rt  email_address    - add Reply-To header
