@@ -2,8 +2,8 @@
 	- Add \r\n to multiple one line messages specified by -M.
 	Possible Fix for Issue 12.
 
-	- Do not show attachments in verbose mose. The -show_attach will
-	enable it. Fixes Issue 13.
+	- Do not show attachments in verbose mode. The option -show_attach 
+	will enable it. Fixes Issue 13.
 	(Jun-16-2013)
 
 1.17b11
