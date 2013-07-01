@@ -116,9 +116,12 @@ do \
 
 #define ERR_STR strerror(errno)
 
+/* only suport base64 at this time */
+/* as of Jul-01-2013 */
 #define ENCODE_7BIT             0x01 /* default for text/plain */
-#define ENCODE_BASE64           0x02
-#define ENCODE_QUOTED_PRINTABLE 0x03
+#define ENCODE_8BIT             0x02
+#define ENCODE_BASE64           0x03
+#define ENCODE_QUOTED_PRINTABLE 0x04
 
 EXTERN int  g_verbose;
 EXTERN int  g_connect_timeout;

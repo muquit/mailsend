@@ -378,6 +378,29 @@ static BOOL WINAPI CntrlHandler(DWORD CtrlEvent)
     return (TRUE);
 }
 #endif /* WINNT */
+/*
+** Add the encoding type if it is supported
+**/
+static void add_encoding_type(void)
+{
+    memset(buf,0,sizeof(buf));
+    switch(g_encoding_type)
+    {
+        case ENCODE_BASE64:
+        {
+            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n");
+            msock_puts(buf);
+            showVerbose(buf);
+            break;
+        }
+
+        case ENCODE_QUOTED_PRINTABLE:
+        {
+            errorMsg("quoted-printable encoding is not supported yet");
+            break;
+        }
+    }
+}
 
 /* SMTP: mail */
 static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,char *rt,
@@ -582,6 +605,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 msock_puts(buf);
                 showVerbose(buf);
 
+                add_encoding_type();
+
                 msock_puts("\r\n");
 
                 if (g_show_attachment_in_log)
@@ -590,12 +615,26 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 }
                 for (l = one_line_list; l; l = l->next)
                 {
-                    msock_puts((char *) l->data);
-                    msock_puts("\r\n");
-                    if (g_show_attachment_in_log)
+                    if (g_encoding_type == ENCODE_BASE64)
                     {
-                        showVerbose("[C] %s\n",(char *) l->data);
+                        unsigned long blen = 0;
+                        unsigned char *b64str = mutils_encode_base64(l->data, strlen((char*) l->data), &blen);
+                        msock_puts((char *) b64str);
+                        msock_puts("\r\n");
+                        if (g_show_attachment_in_log)
+                        {
+                            showVerbose("[C] %s\n",(char *) b64str);
+                        }
                     }
+                    else
+                    {
+                        msock_puts((char *) l->data);
+                        if (g_show_attachment_in_log)
+                        {
+                            showVerbose("[C] %s\n",(char *) l->data);
+                        }
+                    }
+
                 }
 
                 (void) snprintf(buf,sizeof(buf)-1,"\r\n\r\n");
@@ -643,6 +682,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             (void) strcpy(buf,"Content-Disposition: inline\r\n");
             msock_puts(buf);
             showVerbose(buf);
+
+            add_encoding_type();
 
             msock_puts("\r\n");
             if (g_show_attachment_in_log)
@@ -811,6 +852,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                                     a->file_name);
                     msock_puts(buf);
                     showVerbose(buf);
+  
+                    add_encoding_type();
 
                     msock_puts("\r\n");
                     showVerbose("\r\n");
