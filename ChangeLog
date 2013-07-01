@@ -1,3 +1,6 @@
+1.17b13
+	- Command line option for Content-Transfer-Encoding 
+
 1.17b12
 	- Add \r\n to multiple one line messages specified by -M.
 	Possible Fix for Issue 12.

@@ -41,7 +41,7 @@
 
 #define MFL __FILE__,__LINE__
 
-#define MAILSEND_VERSION    "@(#) mailsend v1.17b12"
+#define MAILSEND_VERSION    "@(#) mailsend v1.17b13"
 #define MAILSEND_PROG       "mailsend"
 #define MAILSEND_AUTHOR     "muquit@muquit.com"
 #define MAILSEND_URL        "http://www.muquit.com/"
@@ -116,6 +116,10 @@ do \
 
 #define ERR_STR strerror(errno)
 
+#define ENCODE_7BIT             0x01 /* default for text/plain */
+#define ENCODE_BASE64           0x02
+#define ENCODE_QUOTED_PRINTABLE 0x03
+
 EXTERN int  g_verbose;
 EXTERN int  g_connect_timeout;
 EXTERN int  g_wait_for_cr;
@@ -134,6 +138,7 @@ EXTERN char g_from_name[64];
 EXTERN FILE *g_log_fp;
 EXTERN char g_log_file[MUTILS_PATH_MAX];
 EXTERN int  g_show_attachment_in_log;
+EXTERN int  g_encoding_type;
 
 typedef struct _Address
 {

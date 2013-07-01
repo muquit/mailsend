@@ -1,2 +1,4 @@
 - add \r\n at the end of each lines for text and html attachments.
 - encode non-ascii headers as per RFC2047
+- implement encoding type to one line message. command line -enc added
+(Jun-30-2013)

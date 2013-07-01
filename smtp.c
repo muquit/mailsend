@@ -635,7 +635,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             msock_puts(buf);
             showVerbose(buf);
 
-            (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; charset=%s\r\n",mime_type,g_charset);
+            (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; charset=%s\r\n",
+                    mime_type,g_charset);
             msock_puts(buf);
             showVerbose(buf);
 
