@@ -676,6 +676,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
         secret == NULL || *secret == '\0')
         return(NULL);
 
+    showVerbose("Server Challenge: %s\n",challenge);
     OpenSSL_add_all_digests();
 
     /* decode the challenge */
@@ -685,7 +686,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
         errorMsg("Could not base64 decode CRAM-MD5 challenge: %s",challenge);
         return(NULL);
     }
-    (void) fprintf(stderr,"MMM data: %s\n",data);
+    showVerbose("Challenge After decoding: %s\n",data);
 
     /* take HMAC-MD5 of the challenge*/
     md5=EVP_get_digestbyname("md5");
@@ -700,8 +701,11 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     {
         (void) sprintf(hex+2*i,"%02x",hmac_md5[i]);
     }
+    showVerbose("HMAC-MD5 of challenge: %s\n",hex);
 
     (void) snprintf(buf,sizeof(buf)-1,"%s %s",user,hex);
+    showVerbose("base64 encode: %s\n",buf);
+    showVerbose("Taking base64 of \"%s\"\n",buf);
     /* base64 encode "user hex_digest" */
 #if 0
     b64=mutils_encode_base64((unsigned char *) buf,strlen(buf),&b64len);
@@ -717,7 +721,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
         errorMsg("Could not base64 encode: %s",buf);
         return (NULL);
     }
-    (void) fprintf(stderr," MMm %s\n",b64);
+    showVerbose("base64: %s\n",b64);
 
     return(b64);
 }
