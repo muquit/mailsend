@@ -10,7 +10,7 @@
 	I wasted tons of valuable time trying to configure postfix with cram-
 	md5 but it was a disaster. In past, it was very simple to configure 
 	postfix, looks like it has become a monster and depends on too many 
-	third party implementations, unfortunately I do not thave that much 
+	third party implementations, unfortunately I do not have that much 
 	time to play.  It was a breeze to configure exim with cram-md5 however 
 	and that's how I verified the fix.  Fixes Issue 22.
 	(Oct-12-2013)
