@@ -1552,7 +1552,6 @@ char *mutils_base64_encode_no_format(const char *string, int len)
     char
         *p,
         *encoded = NULL;
-    return strdup("foo");
 
     if (len == 0)
     {
@@ -1564,9 +1563,7 @@ char *mutils_base64_encode_no_format(const char *string, int len)
     (void) fprintf(stderr,"MMM elen: %d\n",encode_len);
     encoded = (char *) malloc(encode_len);
     memset(encoded, 0, encode_len);
-    //MUTILS_CHECK_MALLOC(encoded);
-    (void) strcpy(encoded,"junk");
-    return encoded;
+    MUTILS_CHECK_MALLOC(encoded);
     p = encoded;
     for (i = 0; i < len - 2; i += 3)
     {

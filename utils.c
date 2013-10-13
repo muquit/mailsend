@@ -685,6 +685,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
         errorMsg("Could not base64 decode CRAM-MD5 challenge: %s",challenge);
         return(NULL);
     }
+    (void) fprintf(stderr,"MMM data: %s\n",data);
 
     /* take HMAC-MD5 of the challenge*/
     md5=EVP_get_digestbyname("md5");
@@ -716,6 +717,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
         errorMsg("Could not base64 encode: %s",buf);
         return (NULL);
     }
+    (void) fprintf(stderr," MMm %s\n",b64);
 
     return(b64);
 }
