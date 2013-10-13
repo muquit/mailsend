@@ -1543,61 +1543,6 @@ ExitProcessing:
     return strdup("fuck");
 }
 
-char *mutils_base64_encode_no_format(const char *string, int len)
-{
-    int
-        encode_len,
-        i;
-
-    char
-        *p,
-        *encoded = NULL;
-
-    if (len == 0)
-    {
-        return NULL;
-    }
-
-    (void) fprintf(stderr,"MMM %s len: %d\n", string, len);
-    encode_len = mutils_base64_encode_len(len) * 2;
-    (void) fprintf(stderr,"MMM elen: %d\n",encode_len);
-    encoded = (char *) malloc(encode_len);
-    memset(encoded, 0, encode_len);
-    MUTILS_CHECK_MALLOC(encoded);
-    p = encoded;
-    for (i = 0; i < len - 2; i += 3)
-    {
-        *p++ = basis_64[(string[i] >> 2) & 0x3F];
-        *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
-        *p++ = basis_64[((string[i + 1] & 0xF) << 2) | ((int) (string[i + 2] & 0xC0) >> 6)];
-        *p++ = basis_64[string[i + 2] & 0x3F];
-    }
-    if (i < len)
-    {
-        *p++ = basis_64[(string[i] >> 2) & 0x3F];
-        if (i == (len - 1))
-        {
-            *p++ = basis_64[((string[i] & 0x3) << 4)];
-            *p++ = '=';
-        }
-        else
-        {
-            *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
-            *p++ = basis_64[((string[i + 1] & 0xF) << 2)];
-        }
-        *p++ = '=';
-    }
-
-    *p++ = '\0';
-    (void) fprintf(stderr," MMMMMMMMM: %s %d\n", encoded,strlen(encoded));
-    (void) fprintf(stderr,"len: %d\n", p - encoded);
-    return encoded;
-ExitProcessing:
-    return NULL;
-}
-
-
-
 
 /**
  * @brief   converts base64 contents to binary

@@ -711,7 +711,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     if (b64len > 2)
         b64[b64len-2]='\0';
 #endif
-    b64 = mutils_base64_encode_no_format(buf,strlen(buf));
+    b64 = mutils_encode_base64_noformat(buf,strlen(buf));
     if (b64 == NULL)
     {
         errorMsg("Could not base64 encode: %s",buf);
