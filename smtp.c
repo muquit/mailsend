@@ -1394,10 +1394,10 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
         /* mutils_encode_base64 adds CRLF */
         b64[b64len-2]='\0';
 #endif
-        b64=mutils_encode_base64_noformat(g_username,strlen(g_username));
+        b64=mutils_encode_base64_noformat(buf,len);
         if (b64 == NULL)
         {
-            errorMsg("Could not base64 encode user: %s",g_username);
+            errorMsg("Could not base64 for AUTH-PLAIN for user: %s",g_username);
             rc=(-1);
             goto cleanup;
         }

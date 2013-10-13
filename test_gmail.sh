@@ -39,7 +39,7 @@ fi
 set -x
 
 $VALGRIND $BINARY -to $TO -from $YOU \
- -starttls -port 587 -auth \
+ -starttls -port 587 -auth-plain \
  -smtp $SMTP \
  -H "X-Priority: 1" -H "Importance: high" \
  -sub test +cc +bc \
