@@ -239,7 +239,9 @@ char  *mutilsGetDirname     (char *file);
 char  *mutilsSpacesToChar   (char *str,int c);
 char  **mutilsTokenize(char *str,int delim,int *ntokens);
 void  mutilsFreeTokens(char **tokens,int ntokens);
+int   mutils_base64_encode_len(int len);
 unsigned char *mutils_encode_base64(void *src,unsigned long srcl,unsigned long *len);
+char *mutils_encode_base64_noformat(const char *src, int src_len);
 void *mutils_decode_base64(unsigned char *src,unsigned long srcl,unsigned long *len);
 
 int mutils_make_encrypted_key(const char *plain,unsigned char *cipher,int clen);

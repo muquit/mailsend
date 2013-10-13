@@ -45,7 +45,7 @@
 #define MAILSEND_PROG       "mailsend"
 #define MAILSEND_AUTHOR     "muquit@muquit.com"
 #define MAILSEND_URL        "http://www.muquit.com/"
-#define NO_SPAM_STATEMENT   "GNU GPL. It is illegal to use this software for Spamming"
+#define NO_SPAM_STATEMENT   "BSD. It is illegal to use this software for Spamming"
 
 #define MAILSEND_SMTP_PORT  25
 #define MAILSEND_DEF_SUB    ""
@@ -244,6 +244,7 @@ void        initialize_openssl(char *cipher);
 char        *encode_cram_md5(char *challenge,char *user,char *pass);
 int         guess_file_type(char *path,unsigned int *flag);
 void        generate_encrypted_password(const char *plaintext);
+void        print_copyright(void);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
 #endif /* HAVE_OPENSSL */

@@ -216,7 +216,10 @@ void msock_print_ipaddr(struct addrinfo *res)
     }
     else
     {
-        (void) fprintf(stderr," IP address: %s\n",ipstringbuffer);
+        if (debug)
+        {
+            (void) fprintf(stderr," IP address: %s\n",ipstringbuffer);
+        }
     }
 #else
     sa = (struct sockaddr *) res->ai_addr;
@@ -226,19 +229,25 @@ void msock_print_ipaddr(struct addrinfo *res)
         {
             inet_ntop(AF_INET, &(((struct sockaddr_in *)sa)->sin_addr),
                     buf,sizeof(buf) - 1);
-            (void) fprintf(stderr," IPv4 address: %s\n",buf);
+            if (debug)
+            {
+                (void) fprintf(stderr," IPv4 address: %s\n",buf);
+            }
             break;
         }
         case AF_INET6:
         {
             inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)sa)->sin6_addr),
                     buf,sizeof(buf) - 1);
-            (void) fprintf(stderr," IPv6 address: %s\n",buf);
+            if (debug)
+            {
+                (void) fprintf(stderr," IPv6 address: %s\n",buf);
+            }
             break;
         }
         default:
         {
-            (void) fprintf(stderr," Uknown AF family\n");
+            (void) fprintf(stderr,"Error: Uknown AF family\n");
         }
     }
 #endif /* WINNT */
@@ -323,17 +332,26 @@ SOCKET clientSocket(char *address,int port, int connect_timeout)
             {
                 case AF_UNSPEC:
                 {
-                    (void) fprintf(stderr," AF_UNSPEC\n");
+                    if (debug)
+                    {
+                        (void) fprintf(stderr," AF_UNSPEC\n");
+                    }
                     break;
                 }
                 case AF_INET:
                 {
-                    (void) fprintf(stderr," AF_INET IPv4\n");
+                    if (debug)
+                    {
+                        (void) fprintf(stderr," AF_INET IPv4\n");
+                    }
                     break;
                 }
                 case AF_INET6:
                 {
-                    (void) fprintf(stderr," AF_INET6\n");
+                    if (debug)
+                    {
+                        (void) fprintf(stderr," AF_INET6\n");
+                    }
                     break;
                 }
             }
@@ -434,7 +452,6 @@ SOCKET clientSocket(char *address,int port, int connect_timeout)
         msock_close_socket(sock_fd);
         return (INVALID_SOCKET);
     }
-
     if (rc == 0)
     {
         (void) fprintf(stderr,"Error: Connection to %s:%d timed out after %d seconds\n",

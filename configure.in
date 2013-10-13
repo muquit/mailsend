@@ -12,6 +12,7 @@ AC_PROG_MAKE_SET
 dnl Checks for programs.
 AC_PROG_CC
 test "$GCC" = yes && CFLAGS="$CFLAGS -Wall"
+AC_PROG_INSTALL
 
 AC_STDC_HEADERS
 AC_CHECK_HEADERS(string.h strings.h memory.h malloc.h unistd.h ctype.h)

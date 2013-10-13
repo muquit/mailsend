@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAILSEND 1"
-.TH MAILSEND 1 "2013-06-16" "mailsend 1.17b12" "User Commands"
+.TH MAILSEND 1 "2013-10-12" "mailsend 1.17b13" "User Commands"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -134,11 +134,11 @@ mailsend \- A command line program to send mail via SMTP protocol
 .SH "SYNOPSYS"
 .IX Header "SYNOPSYS"
 .Vb 1
-\& Version: @(#) mailsend v1.17b12
+\& Version: @(#) mailsend v1.17b13
 \&
 \& Copyright: GNU GPL. It is illegal to use this software for Spamming
 \&
-\& (OpenSSL version: OpenSSL 1.0.0e 6 Sep 2011)
+\& (OpenSSL version: OpenSSL 0.9.8y 5 Feb 2013)
 \& usage: mailsend [options]
 \& Where the options are:
 \&  \-smtp hostname/IP*    \- Hostname/IP address of the SMTP server
@@ -158,6 +158,7 @@ mailsend \- A command line program to send mail via SMTP protocol
 \&  \-attach file,mime_type,[i/a] (i=inline,a=attachment)
 \&                        \- attach this file as attachment or inline
 \&  \-cs   character set   \- for text/plain attachments (default is us\-ascii)
+\&  \-enc  type            \- Encoding Type. Only valid type: base64
 \&  \-H    "header"        \- Add custom Header
 \&  \-M    "one line msg"  \- attach this one line text message
 \&  \-name "Full Name"     \- add name in the From header

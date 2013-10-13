@@ -36,6 +36,7 @@ VALGRIND="valgrind -v --leak-check=no --log-file=$VALGRIND_LOG"
 else
 VALGRIND=""
 fi
+set -x
 
 $VALGRIND $BINARY -to $TO -from $YOU \
  -starttls -port 587 -auth \

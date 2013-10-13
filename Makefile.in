@@ -5,10 +5,24 @@
 CC= @CC@
 DEFS= @DEFS@ -DUNIX
 PROGNAME= mailsend
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
 
-BINDIR= /usr/bin
+DESTDIR = 
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datarootdir = @datarootdir@
+datadir = @datadir@
+bindir = @bindir@
+mandir = @mandir@
+man1dir = $(mandir)/man1
+BINDIR = $(DESTDIR)$(bindir)
+MAN1DIR = $(DESTDIR)$(man1dir)
+
+#BINDIR= /usr/bin
 MANPAGE= doc/mailsend.1.gz
-MANDIR= /usr/share/man/man1
+#MANDIR= /usr/share/man/man1
 
 MUTILS_INCLUDE= -I./libs/libmutils
 MSOCK_INCLUDE= -I./libs/libmsock
@@ -44,9 +58,13 @@ all: $(PROGNAME)
 $(PROGNAME) : mlibs $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(PROGNAME) $(LIBS)
 
-install:
-	@cp $(PROGNAME) $(BINDIR)
-	@cp $(MANPAGE) $(MANDIR)
+install: install-bin install-man
+
+install-bin: $(BINDIR) $(PROGNAME)
+	$(INSTALL_PROGRAM) $(PROGNAME) $(BINDIR)/$(PROGNAME)
+
+install-man:
+	$(INSTALL_DATA) $(MANPAGE) $(MAN1DIR)
 
 deb:
 	@ruby ./mk_debian_package.rb

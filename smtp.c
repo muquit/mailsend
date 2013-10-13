@@ -14,8 +14,6 @@
 
 #include "mailsend.h"
 
-unsigned char *mutils_encode_base64(void *src,unsigned long srcl,unsigned long *len);
-
 static char buf[BUFSIZ];
 static int  break_out=0;
 
@@ -370,7 +368,7 @@ static BOOL WINAPI CntrlHandler(DWORD CtrlEvent)
         {
             break_out=1;
             (void) fprintf(stderr,"\nNot sending mail. Exiting.......\n");
-            exit(1); /* XXXXXXXXXXXXXXXXXXXXXX */
+            exit(1);
             break;
         }
     }
@@ -1088,14 +1086,19 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
         *al;
 
     int
+        i,
         rc=(-1);
 
     char
         *mech=NULL,
         *auth=NULL;
 
+    /*
     unsigned char
 		*b64=NULL;
+    */
+    char
+        *b64 = NULL;
 
     unsigned long
         b64len=0;
@@ -1215,7 +1218,7 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
     if (g_auth_cram_md5 && check_server_cap(mech))
     {
         char
-            *cmd5;
+            *cmd5 = NULL;
 
         CHECK_USERNAME(mech);
         CHECK_USERPASS(mech);
@@ -1239,7 +1242,13 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
             rc=(-1);
             goto cleanup;
         }
-        cmd5=encode_cram_md5(smtp_line,g_username,g_userpass);
+        cmd5 = encode_cram_md5(smtp_line,g_username,g_userpass);
+        if (cmd5 == NULL)
+        {
+            errorMsg("Could not encode CRAM-MD5");
+            rc = (-1);
+            goto cleanup;
+        }
         memset(buf,0,sizeof(buf));
         (void) snprintf(buf,sizeof(buf)-1,"%s\r\n",cmd5);
         showVerbose("[C] %s",buf);
@@ -1256,6 +1265,10 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
 
         showVerbose("%s Authentication succeeded\n",mech);
         authenticated++;
+        if (cmd5)
+        {
+            (void) free((char *) cmd5);
+        }
     }
     else
     {
@@ -1286,16 +1299,17 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
             rc=(-1);
             goto cleanup;
         }
-
+        /*
         b64=mutils_encode_base64(g_username,strlen(g_username),&b64len);
+        b64[b64len-2]='\0';
+        */
+        b64=mutils_encode_base64_noformat(g_username,strlen(g_username));
         if (b64 == NULL)
         {
-            errorMsg("Could not base64 encode user: %s",buf);
+            errorMsg("Could not base64 encode user: %s",g_username);
             rc=(-1);
             goto cleanup;
         }
-        /* mutils_encode_base64 adds CRLF */
-        b64[b64len-2]='\0';
 
         memset(buf,0,sizeof(buf));
         (void) snprintf(buf,sizeof(buf)-1,"%s\r\n",b64);
@@ -1311,15 +1325,17 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
             goto cleanup;
         }
 
+        /*
         b64=mutils_encode_base64(g_userpass,strlen(g_userpass),&b64len);
+        b64[b64len-2]='\0';
+        */
+        b64=mutils_encode_base64_noformat(g_userpass,strlen(g_userpass));
         if (b64 == NULL)
         {
-            errorMsg("Could not base64 encode user: %s",buf);
+            errorMsg("Could not base64 encode passworf of user: %s",g_username);
             rc=(-1);
             goto cleanup;
         }
-        /* mutils_encode_base64 adds CRLF */
-        b64[b64len-2]='\0';
 
         memset(buf,0,sizeof(buf));
         (void) snprintf(buf,sizeof(buf)-1,"%s\r\n",b64);
@@ -1373,9 +1389,19 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
 
         memcpy(buf + ulen + 2,g_userpass,plen);
         len=ulen + plen + 2;
+#if 0
         b64=mutils_encode_base64(buf,len,&b64len);
         /* mutils_encode_base64 adds CRLF */
         b64[b64len-2]='\0';
+#endif
+        b64=mutils_encode_base64_noformat(g_username,strlen(g_username));
+        if (b64 == NULL)
+        {
+            errorMsg("Could not base64 encode user: %s",g_username);
+            rc=(-1);
+            goto cleanup;
+        }
+
         (void) snprintf(buf,sizeof(buf)-1,"AUTH PLAIN %s\r\n",(char *) b64);
 
         showVerbose("[C] %s",buf);

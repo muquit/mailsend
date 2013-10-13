@@ -26,6 +26,7 @@ static void usage(void)
     static char
         *options[]=
         {
+"  -copyright            - show copyright information",
 "  -smtp hostname/IP*    - Hostname/IP address of the SMTP server",
 "  -port SMTP port       - SMTP port",
 "  -d    domain          - domain name for SMTP HELO/EHLO",
@@ -72,7 +73,7 @@ static void usage(void)
     (void) printf(" Version: %.1024s\n\n",MAILSEND_VERSION);
     (void) printf(" Copyright: %.1024s\n\n",NO_SPAM_STATEMENT);
 #ifdef HAVE_OPENSSL
-    (void) fprintf(stdout," (OpenSSL version: %s)\n",
+    (void) fprintf(stdout," (Compiled with OpenSSL version: %s)\n",
                    SSLeay_version(SSLEAY_VERSION));
 #else
     (void) fprintf(stdout," (Not compiled with OpenSSL)\n");
@@ -369,6 +370,11 @@ int main(int argc,char **argv)
                         }
                         g_connect_timeout = atoi(argv[i]);
                     }
+                }
+                else if (strncmp("copyright", option + 1, 4) == 0)
+                {
+                    print_copyright();
+                    exit(0);
                 }
                 else
                 {

@@ -6,7 +6,8 @@
 static int 
     lock_fd=(-1);
 
-
+static const char basis_64[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 
 void mutils_liberate_memory(void **memory)
@@ -1367,15 +1368,41 @@ static void _fs_give (void **block)
     *block = NULL;
 }
 
+/*
+**
+** Given the length of a plain text string, return the
+** length
+**
+** Parameters:
+**   len - length of plain text string
+**
+** Side Effects:
+**   none
+**
+** Comments:
+**   taken from apache apr util library
+**
+** Return Values:
+**   length of base64 encoded string
+**
+** Development History:
+** muquit@muquit.com Oct-12-2013 first cut
+*/
+int mutils_base64_encode_len(int len)
+{
+    return ((len + 2) / 3 * 4) + 1;
+}
+
 
 /**
+ * @Deprecated
  * @brief   encode content to base64
  * @param   src     pointer to source
  * @param   srcl    Length of the source
  * @param   len     length of base64 encoded string (returns)
  * 
  * @return  Ponter to encoded strin gon success, NULL on failure. The
-*           caller is responsile to free the memory
+ *           caller is responsile to free the memory
  *
  * Adapted from from c-client source
  */
@@ -1439,6 +1466,140 @@ unsigned char *mutils_encode_base64(void *src,unsigned long srcl,unsigned long *
     }
     return (ret);   /* return the resulting string */
 }
+
+/*
+** Endode a string to base64
+**  
+**  Parameters:
+**    string - plain text/binary string
+**    len    - length of the plain text string
+**
+**  Return Values:
+**    Pointer to null terminated base 64 string. Memory is allocated for
+**    the string
+**    NULL in case of error.
+**  Comments:
+**    reason not to use mutils_encode_base64(), it adds crlf after 60
+**    characters, which broke smtp auth with longer base64 encoded string.
+**
+**    The caller is responsible to free the memory of the returned string.
+**
+**    Adapted from apache apr util library. Does not support EBCDIC.
+**
+**  Side Effects:
+**    none
+**
+**  Development History:
+**    muquit@muquit.com Oct-12-2013 first cut
+*/
+char *mutils_encode_base64_noformat(const char *string, int len)
+{
+    int
+        encode_len,
+        i;
+
+    char
+        *p,
+        *encoded = NULL;
+
+    if (len == 0)
+    {
+        return NULL;
+    }
+
+    encode_len = mutils_base64_encode_len(len);
+    encoded = (char *) malloc(encode_len);
+    MUTILS_CHECK_MALLOC(encoded);
+    memset(encoded, 0, encode_len);
+    p = encoded;
+    for (i = 0; i < len - 2; i += 3)
+    {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
+        *p++ = basis_64[((string[i + 1] & 0xF) << 2) | ((int) (string[i + 2] & 0xC0) >> 6)];
+        *p++ = basis_64[string[i + 2] & 0x3F];
+    }
+    if (i < len)
+    {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        if (i == (len - 1))
+        {
+            *p++ = basis_64[((string[i] & 0x3) << 4)];
+            *p++ = '=';
+        }
+        else
+        {
+            *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
+            *p++ = basis_64[((string[i + 1] & 0xF) << 2)];
+        }
+        *p++ = '=';
+    }
+
+    *p++ = '\0';
+    return encoded;
+ExitProcessing:
+    return NULL;
+
+    return strdup("fuck");
+}
+
+char *mutils_base64_encode_no_format(const char *string, int len)
+{
+    int
+        encode_len,
+        i;
+
+    char
+        *p,
+        *encoded = NULL;
+    return strdup("foo");
+
+    if (len == 0)
+    {
+        return NULL;
+    }
+
+    (void) fprintf(stderr,"MMM %s len: %d\n", string, len);
+    encode_len = mutils_base64_encode_len(len) * 2;
+    (void) fprintf(stderr,"MMM elen: %d\n",encode_len);
+    encoded = (char *) malloc(encode_len);
+    memset(encoded, 0, encode_len);
+    //MUTILS_CHECK_MALLOC(encoded);
+    (void) strcpy(encoded,"junk");
+    return encoded;
+    p = encoded;
+    for (i = 0; i < len - 2; i += 3)
+    {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
+        *p++ = basis_64[((string[i + 1] & 0xF) << 2) | ((int) (string[i + 2] & 0xC0) >> 6)];
+        *p++ = basis_64[string[i + 2] & 0x3F];
+    }
+    if (i < len)
+    {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        if (i == (len - 1))
+        {
+            *p++ = basis_64[((string[i] & 0x3) << 4)];
+            *p++ = '=';
+        }
+        else
+        {
+            *p++ = basis_64[((string[i] & 0x3) << 4) | ((int) (string[i + 1] & 0xF0) >> 4)];
+            *p++ = basis_64[((string[i + 1] & 0xF) << 2)];
+        }
+        *p++ = '=';
+    }
+
+    *p++ = '\0';
+    (void) fprintf(stderr," MMMMMMMMM: %s %d\n", encoded,strlen(encoded));
+    (void) fprintf(stderr,"len: %d\n", p - encoded);
+    return encoded;
+ExitProcessing:
+    return NULL;
+}
+
+
 
 
 /**

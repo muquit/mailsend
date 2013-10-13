@@ -8,6 +8,8 @@
 */
 
 #include "mailsend.h"
+#include "copyright.h"
+
 #define DAY_MIN     (24 * HOUR_MIN) /* minutes in a day */
 #define HOUR_MIN    60      /* minutes in an hour */
 #define MIN_SEC     60      /* seconds in a minute */
@@ -575,6 +577,18 @@ static int unix2dos(FILE *ifp,FILE *ofp)
 }
 */
 
+void print_copyright(void)
+{
+    char
+        **p;
+
+    for (p = mailsend_copyright; *p != NULL; p++)
+    {
+        (void) fprintf(stdout,"%s\n",*p);
+    }
+    (void) fflush(stdout);
+}
+
 #ifdef HAVE_OPENSSL
 void print_cert_info(SSL *ssl)
 {
@@ -688,12 +702,21 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
 
     (void) snprintf(buf,sizeof(buf)-1,"%s %s",user,hex);
     /* base64 encode "user hex_digest" */
+#if 0
     b64=mutils_encode_base64((unsigned char *) buf,strlen(buf),&b64len);
     if (b64len <= 0)
         return(NULL);
     /* mutils_encode_base64 adds CRLF */
     if (b64len > 2)
         b64[b64len-2]='\0';
+#endif
+    b64 = mutils_base64_encode_no_format(buf,strlen(buf));
+    if (b64 == NULL)
+    {
+        errorMsg("Could not base64 encode: %s",buf);
+        return (NULL);
+    }
+
     return(b64);
 }
 #else
