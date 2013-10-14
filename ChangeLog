@@ -6,13 +6,7 @@
 	- SMTP authentication was broken if the username and passwords are long
 	enough to create longer than 60 characters base64 encoded string. A
 	newline was added after 60 characters causing authentication to fail.
-
-	I wasted tons of valuable time trying to configure postfix with cram-
-	md5 but it was a disaster. In past, it was very simple to configure 
-	postfix, looks like it has become a monster and depends on too many 
-	third party implementations, unfortunately I do not have that much 
-	time to play.  It was a breeze to configure exim with cram-md5 however 
-	and that's how I verified the fix.  Fixes Issue 22.
+	Fixes Issue 22.
 	(Oct-12-2013)
 
 	- Support DESTDIR during installation. Fixes Issue 5.
