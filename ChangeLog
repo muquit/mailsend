@@ -6,7 +6,7 @@
 	- SMTP authentication was broken if the username and passwords are long
 	enough to create longer than 60 characters base64 encoded string. A
 	newline was added after 60 characters causing authentication to fail.
-	Fixes Issue 22.
+	Fixes Issue 20. Fixes Issue 22.
 	(Oct-12-2013)
 
 	- Support DESTDIR during installation. Fixes Issue 5.
