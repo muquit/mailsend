@@ -81,7 +81,7 @@ int read_smtp_line(void)
     n=msock_gets(lbuf,sizeof(lbuf)-1);
     if (n < 3 )
     {
-        //errorMsg("Error reading SMTP line, read %d bytes",n);
+        /*errorMsg("Error reading SMTP line, read %d bytes",n);*/
         return(-1);
     }
     showVerbose("[S] %s\n",lbuf);
@@ -579,15 +579,27 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     if (is_mime)
     {
         /*
-        ** If there a txt file or a one line messgae, attach them first
+        ** If there is a txt file or a one line message, attach them first
         */
-        /* Part added by Smeeta Jalan -- starts */
+        /* Part originally added by Smeeta Jalan -- starts */
         if (the_msg)
         {
             Sll
                 *l,
                 *one_line_list;
+            FILE
+                *tfp1 = NULL,
+                *tfp2 = NULL;
+            char
+                oneline_tempfile1[MUTILS_PATH_MAX],
+                oneline_tempfile2[MUTILS_PATH_MAX];
 
+            /*
+            ** If one line message is specificed with -M and if
+            ** encoding is base65, write the lines in a temp file first. close
+            ** the file. Then base64 encode them to another temp file and
+            ** write the base64 to smtp server. Remove the files at the end.
+            */
             one_line_list = get_one_line_list();
             if (one_line_list)
             {
@@ -611,28 +623,83 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 {
                     showVerbose("\r\n");
                 }
+                if (g_encoding_type == ENCODE_BASE64)
+                {
+                    memset(oneline_tempfile1, 0, sizeof(oneline_tempfile1));
+                    tfp1 = mutils_get_tempfileFP(oneline_tempfile1,
+                            sizeof(oneline_tempfile1)-1);
+                    if (tfp1 == NULL)
+                    {
+                        errorMsg("%s (%d) - Could not open temp file1 for writing (%s)",
+                                MFL,
+                                ERR_STR);
+                        return (-1);
+                    }
+                    /*showVerbose("Oneline temp file1: * %s\n",oneline_tempfile1);*/
+                }
+
                 for (l = one_line_list; l; l = l->next)
                 {
                     if (g_encoding_type == ENCODE_BASE64)
                     {
-                        unsigned long blen = 0;
-                        unsigned char *b64str = mutils_encode_base64(l->data, strlen((char*) l->data), &blen);
-                        msock_puts((char *) b64str);
-                        msock_puts("\r\n");
-                        if (g_show_attachment_in_log)
-                        {
-                            showVerbose("[C] %s\n",(char *) b64str);
-                        }
+                        fprintf(tfp1,"%s\r\n",(char *) l->data);
                     }
                     else
                     {
                         msock_puts((char *) l->data);
+                        msock_puts("\r\n");
                         if (g_show_attachment_in_log)
                         {
                             showVerbose("[C] %s\n",(char *) l->data);
                         }
                     }
 
+                }
+                if (g_encoding_type == ENCODE_BASE64 && tfp1 != NULL)
+                {
+                    (void) fclose(tfp1);
+                    tfp1 = fopen(oneline_tempfile1,"rb");
+                    if (tfp1 == NULL)
+                    {
+                        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
+                            MFL,
+                            ERR_STR);
+                        return(-1);
+                    }
+                    memset(oneline_tempfile2, 0, sizeof(oneline_tempfile2));
+                    tfp2 = mutils_get_tempfileFP(oneline_tempfile2,
+                        sizeof(oneline_tempfile2)-1);
+                    /*showVerbose("Oneline temp file2: * %s\n",oneline_tempfile2);*/
+                    if (tfp2 == NULL)
+                    {
+                        errorMsg("%s (%d) - Could not open temp file2 for writing (%s)",
+                            MFL,
+                            ERR_STR);
+                        return (-1);
+                    }
+                    mutilsBase64Encode(tfp1,tfp2);
+                    (void) fclose(tfp1);
+                    (void) fclose(tfp2);
+            
+                    tfp2 = fopen(oneline_tempfile2,"r");
+                    if (tfp2 == NULL)
+                    {
+                        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
+                            MFL,
+                            ERR_STR);
+                        return(-1);
+                    }
+                    while(fgets(mbuf, sizeof(mbuf)-1, tfp2))
+                    {
+                        msock_puts(mbuf);
+                        if (g_show_attachment_in_log)
+                        {
+                            showVerbose("[C] %s",mbuf);
+                        }
+                    }
+                    (void) fclose(tfp2);
+                    unlink(oneline_tempfile1);
+                    unlink(oneline_tempfile2);
                 }
 
                 (void) snprintf(buf,sizeof(buf)-1,"\r\n\r\n");
@@ -1086,7 +1153,6 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
         *al;
 
     int
-        i,
         rc=(-1);
 
     char
@@ -1099,9 +1165,6 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
     */
     char
         *b64 = NULL;
-
-    unsigned long
-        b64len=0;
 
     int
         authenticated=0;
