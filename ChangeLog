@@ -15,7 +15,7 @@
 	(Oct-12-2013)
 
 	- New ommand line option -enc for Content-Transfer-Encoding. If your
-	online text message with -M is non-ascii, you should use -enc base64.
+	one line text message with -M is non-ascii, you should use -enc base64.
 	Note: non-ascii input from windows cmd does not work at this time, 
 	however it works fine in linux and mac.
 	(Jul-01-2013)
