@@ -27,6 +27,8 @@ static void usage(void)
         *options[]=
         {
 "  -copyright            - show copyright information",
+"  -4                    - Force to use IPv4 address of SMTP server",
+"  -6                    - Force to use IPv6 address of SMTP server",
 "  -smtp hostname/IP*    - Hostname/IP address of the SMTP server",
 "  -port SMTP port       - SMTP port",
 "  -d    domain          - domain name for SMTP HELO/EHLO",
@@ -211,6 +213,7 @@ int main(int argc,char **argv)
     g_log_fp = NULL;
     g_show_attachment_in_log = 0;
     g_encoding_type = ENCODE_7BIT;
+    g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
 
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
@@ -318,6 +321,32 @@ int main(int argc,char **argv)
                 }
                 break;
             }
+
+            case '4':
+            {
+                if (strncmp("4", option + 1,1) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        g_use_protocol = MSOCK_USE_IPV4;
+                    }
+                }
+                break;
+            }
+
+            case '6':
+            {
+                if (strncmp("6", option + 1,1) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        g_use_protocol = MSOCK_USE_IPV6;
+                    }
+                }
+
+                break;
+            }
+
 
 
             case 'c':

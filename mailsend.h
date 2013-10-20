@@ -41,7 +41,7 @@
 
 #define MFL __FILE__,__LINE__
 
-#define MAILSEND_VERSION    "@(#) mailsend v1.17b14"
+#define MAILSEND_VERSION    "@(#) mailsend v1.17b15"
 #define MAILSEND_PROG       "mailsend"
 #define MAILSEND_AUTHOR     "muquit@muquit.com"
 #define MAILSEND_URL        "http://www.muquit.com/"
@@ -142,6 +142,7 @@ EXTERN FILE *g_log_fp;
 EXTERN char g_log_file[MUTILS_PATH_MAX];
 EXTERN int  g_show_attachment_in_log;
 EXTERN int  g_encoding_type;
+EXTERN int  g_use_protocol;
 
 typedef struct _Address
 {

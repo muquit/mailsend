@@ -40,7 +40,20 @@ static SOCKET smtpConnect(char *smtp_server,int port)
     SOCKET
         sfd;
 
-    sfd=clientSocket(smtp_server,port, g_connect_timeout);
+    if (g_use_protocol == MSOCK_USE_IPV4)
+    {
+        showVerbose("Forcing to use IPv4 address of SMTP server\n");
+    }
+    else if (g_use_protocol == MSOCK_USE_IPV6)
+    {
+        showVerbose("Forcing to use IPv6 address of SMTP server\n");
+    }
+    else
+    {
+        showVerbose("Will detect IPv4 or IPv6 automatically\n");
+    }
+    
+    sfd=clientSocket(g_use_protocol, smtp_server,port, g_connect_timeout);
     if (sfd == INVALID_SOCKET)
     {
         errorMsg("Could not connect to SMTP server \"%s\" at port %d",

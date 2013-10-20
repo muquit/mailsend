@@ -268,7 +268,7 @@ void msock_print_ipaddr(void *res)
 **
 ** returns a blocking SOCKET on success INVALID_SOCKET on failure 
 */
-SOCKET clientSocket(char *address,int port, int connect_timeout)
+SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
 {
     SOCKET
         sock_fd;
@@ -313,6 +313,14 @@ SOCKET clientSocket(char *address,int port, int connect_timeout)
     }
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = PF_UNSPEC;
+    if (use == MSOCK_USE_IPV4)
+    {
+        hints.ai_family = PF_INET;
+    }
+    if (use == MSOCK_USE_IPV6)
+    {
+        hints.ai_family = PF_INET6;
+    }
     (void) snprintf(service, sizeof(service) -1, "%d", port);
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;

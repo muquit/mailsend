@@ -60,7 +60,14 @@
 
 #include "werrno.h"
 
-SOCKET clientSocket(char *server_addr,int port, int connect_timeout);
+#define MSOCK_USE_IPV4   0x01
+#define MSOCK_USE_IPV6   0x02
+#define MSOCK_USE_AUTO   0x03
+
+/**
+ * familty can be USE_IPV4, USE_IPV6 or USE_AUTO
+ */
+SOCKET clientSocket(int use, char *server_addr,int port, int connect_timeout);
 int    sockGets(SOCKET,char *,size_t);
 int    sockPuts(SOCKET sock,char *str);
 
