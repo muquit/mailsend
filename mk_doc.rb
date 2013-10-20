@@ -8,6 +8,7 @@ class MakeMailsendPod
 
   def initialize
     @mailsend_ver = ''
+    @copyright
   end
 
   def log(msg)
@@ -69,7 +70,7 @@ L<http://muquit.com/muquit/software/mailsend/mailsend.html>
 
 =head1 LICENSE
 
-BSD
+#{@copyright}
 
 =head1 AUTHOR
 
@@ -79,6 +80,10 @@ Homepage: L<http://www.muquit.com/>.
 EOD
 ;
   f.close
+  end
+
+  def read_copyright
+    @copyright = File.read("./COPYRIGHT")
   end
 
   def gen_man
@@ -92,6 +97,7 @@ EOD
   def doit
     check_binary
     mailsend_version
+    read_copyright
     gen_pod
     gen_man
   end

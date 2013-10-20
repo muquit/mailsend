@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAILSEND 1"
-.TH MAILSEND 1 "2013-10-19" "mailsend 1.17b13" "User Commands"
+.TH MAILSEND 1 "2013-10-20" "mailsend 1.17b14" "User Commands"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -134,11 +134,11 @@ mailsend \- A command line program to send mail via SMTP protocol
 .SH "SYNOPSYS"
 .IX Header "SYNOPSYS"
 .Vb 1
-\& Version: @(#) mailsend v1.17b13
+\& Version: @(#) mailsend v1.17b14
 \&
 \& Copyright: BSD. It is illegal to use this software for Spamming
 \&
-\& (Compiled with OpenSSL version: OpenSSL 0.9.8y 5 Feb 2013)
+\& (Compiled with OpenSSL version: OpenSSL 1.0.0g 18 Jan 2012)
 \& usage: mailsend [options]
 \& Where the options are:
 \&  \-copyright            \- show copyright information
@@ -146,10 +146,10 @@ mailsend \- A command line program to send mail via SMTP protocol
 \&  \-port SMTP port       \- SMTP port
 \&  \-d    domain          \- domain name for SMTP HELO/EHLO
 \&  \-t    to,to..*        \- email address/es of the recipient/s
-\&  \-cc   cc,cc..         \- Carbon copy address/es
+\&  \-cc   cc,cc..         \- carbon copy address/es
 \&  +cc                   \- do not ask for Carbon Copy
 \&  \-ct   seconds         \- Connect timeout. Default is 5 seconds
-\&  \-bc   bcc,bcc..       \- Blind carbon copy address/es
+\&  \-bc   bcc,bcc..       \- blind carbon copy address/es
 \&  +bc                   \- do not ask for Blind carbon copy
 \&  +D                    \- don not add Date header
 \&  \-f    address*        \- email address of the sender
@@ -170,8 +170,8 @@ mailsend \- A command line program to send mail via SMTP protocol
 \&  \-rt  email_address    \- add Reply\-To header
 \&  \-rrr email_address    \- request read receipts to this address
 \&  \-ssl                  \- SMTP over SSL
-\&  \-starttls             \- Check for STARTTLS and if server supports, do it
-\&  \-auth                 \- Try CRAM\-MD5,LOGIN,PLAIN in that order
+\&  \-starttls             \- use STARTTLS if the server supports it
+\&  \-auth                 \- try CRAM\-MD5,LOGIN,PLAIN in that order
 \&  \-auth\-cram\-md5        \- use AUTH CRAM\-MD5 authentication
 \&  \-auth\-plain           \- use AUTH PLAIN authentication
 \&  \-auth\-login           \- use AUTH LOGIN authentication
@@ -254,7 +254,33 @@ Please look at the web page for latest version and documentation:
 <http://muquit.com/muquit/software/mailsend/mailsend.html>
 .SH "LICENSE"
 .IX Header "LICENSE"
-\&\s-1BSD\s0
+Copyright (C) 2003\-2013  Muhammad Muquit (http://www.muquit.com/)
+.PP
+.Vb 2
+\& o Redistributions of source code must retain the above copyright notice, 
+\&this list of conditions and the following disclaimer.
+\&
+\& o Redistributions in binary form must reproduce the above copyright notice, 
+\&this list of conditions and the following disclaimer in the documentation 
+\&and/or other materials provided with the distribution.
+\&
+\& o Neither the name of the author MUHAMMAD MUQUIT (http://www.muquit.com/)
+\&nor the names of its contributors may be used to endorse or promote 
+\&products derived from this software without specific prior written 
+\&permission.
+.Ve
+.PP
+\&\s-1THIS\s0 \s-1SOFTWARE\s0 \s-1IS\s0 \s-1PROVIDED\s0 \s-1BY\s0 \s-1THE\s0 \s-1COPYRIGHT\s0 \s-1HOLDERS\s0 \s-1AND\s0 \s-1CONTRIBUTORS\s0 \*(L"\s-1AS\s0 \s-1IS\s0\*(R" 
+\&\s-1AND\s0 \s-1ANY\s0 \s-1EXPRESS\s0 \s-1OR\s0 \s-1IMPLIED\s0 \s-1WARRANTIES\s0, \s-1INCLUDING\s0, \s-1BUT\s0 \s-1NOT\s0 \s-1LIMITED\s0 \s-1TO\s0, \s-1THE\s0 
+\&\s-1IMPLIED\s0 \s-1WARRANTIES\s0 \s-1OF\s0 \s-1MERCHANTABILITY\s0 \s-1AND\s0 \s-1FITNESS\s0 \s-1FOR\s0 A \s-1PARTICULAR\s0 \s-1PURPOSE\s0 
+\&\s-1ARE\s0 \s-1DISCLAIMED\s0. \s-1IN\s0 \s-1NO\s0 \s-1EVENT\s0 \s-1SHALL\s0 \s-1THE\s0 \s-1COPYRIGHT\s0 \s-1HOLDER\s0 \s-1OR\s0 \s-1CONTRIBUTORS\s0 \s-1BE\s0 
+\&\s-1LIABLE\s0 \s-1FOR\s0 \s-1ANY\s0 \s-1DIRECT\s0, \s-1INDIRECT\s0, \s-1INCIDENTAL\s0, \s-1SPECIAL\s0, \s-1EXEMPLARY\s0, \s-1OR\s0 
+\&\s-1CONSEQUENTIAL\s0 \s-1DAMAGES\s0 (\s-1INCLUDING\s0, \s-1BUT\s0 \s-1NOT\s0 \s-1LIMITED\s0 \s-1TO\s0, \s-1PROCUREMENT\s0 \s-1OF\s0 
+\&\s-1SUBSTITUTE\s0 \s-1GOODS\s0 \s-1OR\s0 \s-1SERVICES\s0; \s-1LOSS\s0 \s-1OF\s0 \s-1USE\s0, \s-1DATA\s0, \s-1OR\s0 \s-1PROFITS\s0; \s-1OR\s0 \s-1BUSINESS\s0 
+\&\s-1INTERRUPTION\s0) \s-1HOWEVER\s0 \s-1CAUSED\s0 \s-1AND\s0 \s-1ON\s0 \s-1ANY\s0 \s-1THEORY\s0 \s-1OF\s0 \s-1LIABILITY\s0, \s-1WHETHER\s0 \s-1IN\s0 
+\&\s-1CONTRACT\s0, \s-1STRICT\s0 \s-1LIABILITY\s0, \s-1OR\s0 \s-1TORT\s0 (\s-1INCLUDING\s0 \s-1NEGLIGENCE\s0 \s-1OR\s0 \s-1OTHERWISE\s0) 
+\&\s-1ARISING\s0 \s-1IN\s0 \s-1ANY\s0 \s-1WAY\s0 \s-1OUT\s0 \s-1OF\s0 \s-1THE\s0 \s-1USE\s0 \s-1OF\s0 \s-1THIS\s0 \s-1SOFTWARE\s0, \s-1EVEN\s0 \s-1IF\s0 \s-1ADVISED\s0 \s-1OF\s0 \s-1THE\s0 
+\&\s-1POSSIBILITY\s0 \s-1OF\s0 \s-1SUCH\s0 \s-1DAMAGE\s0.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 mailsend is written by Muhammad Muquit <muquit@muquit.com>.
