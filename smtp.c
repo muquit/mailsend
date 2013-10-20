@@ -635,14 +635,14 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                                 ERR_STR);
                         return (-1);
                     }
-                    /*showVerbose("Oneline temp file1: * %s\n",oneline_tempfile1);*/
+                    showVerbose("Oneline temp file1: * %s\n",oneline_tempfile1);
                 }
 
                 for (l = one_line_list; l; l = l->next)
                 {
                     if (g_encoding_type == ENCODE_BASE64)
                     {
-                        fprintf(tfp1,"%s\r\n",(char *) l->data);
+                        fprintf(tfp1,"%s\n",(char *) l->data);
                     }
                     else
                     {
@@ -669,7 +669,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     memset(oneline_tempfile2, 0, sizeof(oneline_tempfile2));
                     tfp2 = mutils_get_tempfileFP(oneline_tempfile2,
                         sizeof(oneline_tempfile2)-1);
-                    /*showVerbose("Oneline temp file2: * %s\n",oneline_tempfile2);*/
+                    showVerbose("Oneline temp file2: * %s\n",oneline_tempfile2);
                     if (tfp2 == NULL)
                     {
                         errorMsg("%s (%d) - Could not open temp file2 for writing (%s)",
