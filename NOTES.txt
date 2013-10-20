@@ -10,7 +10,8 @@ How to release
   - compile. run make docs
   - ldd mailsend to make sure libs are ok.
   - test by running test_gmail.sh
-  - do a check-in 
+  - do a svn check-in. Use Fixes Issue <number> in comment
+    If svn comment has Fixes Issue <n>, it will be closed automatically. Very clever!
   - run mk_release_svn_google.rb to branch and tag the release and create the tgz file.
 
   - create debian package by running mk_debian_package.rb
@@ -24,8 +25,7 @@ How to release
   - use googlecode_upload.pl to upload the zip file
   - ./changelog2wiki.rb > ../mailsend-wiki/ChangeLog.wiki; check-in
   - update version numbers in main page
-  - update issue. Well if svn comment has Fixes Issue 6, it will be closed
-automatically. Very clever!
+  - update issue. 
 
   - deprecate old versions in google code
 
