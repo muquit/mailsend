@@ -69,7 +69,7 @@ L<http://muquit.com/muquit/software/mailsend/mailsend.html>
 
 =head1 LICENSE
 
-GNU GPL
+BSD
 
 =head1 AUTHOR
 

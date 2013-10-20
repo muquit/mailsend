@@ -7,11 +7,12 @@ mailsend - A command line program to send mail via SMTP protocol
 
  Version: @(#) mailsend v1.17b13
 
- Copyright: GNU GPL. It is illegal to use this software for Spamming
+ Copyright: BSD. It is illegal to use this software for Spamming
 
- (OpenSSL version: OpenSSL 0.9.8y 5 Feb 2013)
+ (Compiled with OpenSSL version: OpenSSL 0.9.8y 5 Feb 2013)
  usage: mailsend [options]
  Where the options are:
+  -copyright            - show copyright information
   -smtp hostname/IP*    - Hostname/IP address of the SMTP server
   -port SMTP port       - SMTP port
   -d    domain          - domain name for SMTP HELO/EHLO
@@ -129,7 +130,7 @@ L<http://muquit.com/muquit/software/mailsend/mailsend.html>
 
 =head1 LICENSE
 
-GNU GPL
+BSD
 
 =head1 AUTHOR
 
