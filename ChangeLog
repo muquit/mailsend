@@ -1,3 +1,8 @@
+1.17b15
+	- Added options -4 and -6 to force using IPv4 or IPv6 address of the SMTP
+	server.
+	(Oct-20-2013)
+
 1.17b14
 	- Multiline input with -M was completely broken.
 	(Oct-20-2013)
