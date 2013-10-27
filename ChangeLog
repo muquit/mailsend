@@ -3,6 +3,12 @@
 	server.
 	(Oct-20-2013)
 
+	- Fourth option for -attach flag to specify the attachment name. The
+	default was the attachment filename. Example:
+	-attach "/path/foo.txt,text/plain,a,bar.txt", the attchment name will be
+	bar.txt instead of foo.txt.
+	(Oct-27-2013)
+
 1.17b14
 	- Multiline input with -M was completely broken.
 	(Oct-20-2013)
