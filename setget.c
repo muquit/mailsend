@@ -224,7 +224,6 @@ int add_attachment_to_list(char *file_path_mime)
     if (file_path_mime == NULL || *file_path_mime == '\0')
         return(-1);
 
-    (void) fprintf(stderr,"MMM fpm: %s\n",file_path_mime);
     /* Tokenize the string "file,mime_type,something" */
     tokens=mutilsTokenize(file_path_mime,',',&ntokens);
     if (tokens == NULL)
@@ -250,10 +249,6 @@ int add_attachment_to_list(char *file_path_mime)
 
     a->file_path=xStrdup(file_path);
     a->file_name=xStrdup(file_name);
-
-    showVerbose("number of mime tokens: %d\n",ntokens);
-    (void) fprintf(stderr,"number of mime tokens: %d\n",ntokens);
-
 
     switch (ntokens)
     {
@@ -316,40 +311,9 @@ int add_attachment_to_list(char *file_path_mime)
 
     appendNode(&attachment_head,&na);
 
+    /*
     print_attachemtn_list();
-#if 0
-    if ((mime_type=strchr(file_path_mime,ATTACHMENT_SEP)))
-    {
-        *mime_type++='\0';
-    }
-    else
-    {
-        mime_type="application/octet-stream";
-    }
-
-
-    /* get the file name out */
-    if ((file_name=strrchr(file_path_mime,'/')) || (file_name=strrchr(file_path_mime,'\\')))
-    {
-        file_name++;
-    }
-    else
-    {
-        file_name=file_path_mime;
-    }
-
-    a=(Attachment *) malloc(sizeof(Attachment));
-    CHECK_MALLOC(a);
-
-    a->file_path=xStrdup(file_path_mime);
-    a->file_name=xStrdup(file_name);
-    a->mime_type=xStrdup(mime_type);
-    na=allocateNode((void *) a);
-    CHECK_MALLOC(na);
-
-    appendNode(&attachment_head,&na);
-#endif /* 0 */
-
+    */
     return(0);
 }
 
