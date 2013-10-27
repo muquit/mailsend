@@ -50,4 +50,4 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -M "one line attachment 2" \
  -attach "test.txt,text/plain,i,mittagpausa.txt" \
  -attach "x.gif,image/gif,i" -v \
- -attach "x.gif,image/gif,bar.gif" -v
+ -attach "x.gif,image/gif,a,bar.gif" -v

@@ -63,6 +63,7 @@ void printAddressList2(Sll *list)
 
 void print_attachemtn_list()
 {
+    /*
     Sll
         *l;
 
@@ -80,6 +81,7 @@ void print_attachemtn_list()
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         (void) fprintf(stderr,"\n");
     }
+    */
 }
 
 
@@ -311,9 +313,7 @@ int add_attachment_to_list(char *file_path_mime)
 
     appendNode(&attachment_head,&na);
 
-    /*
     print_attachemtn_list();
-    */
     return(0);
 }
 
