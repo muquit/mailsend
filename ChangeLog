@@ -3,10 +3,15 @@
 	server.
 	(Oct-20-2013)
 
-	- Fourth option for -attach flag to specify the attachment name. The
-	default was the attachment filename. Example:
+	- Added fourth option for -attach flag to specify the attachment name. 
+	The default was the attachment filename. Example:
 	-attach "/path/foo.txt,text/plain,a,bar.txt", the attchment name will be
 	bar.txt instead of foo.txt.
+
+	Note: the attachment filename must be the 4th option, that means you 
+	have to specify the attachment type a or i if you want to change the 
+	attachment name. Fixes Issue 27.
+
 	(Oct-27-2013)
 
 1.17b14

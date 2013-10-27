@@ -912,6 +912,9 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 
                 if (mutilsStrcasecmp(a->mime_type,"text/plain") == 0)
                 {
+                    char
+                        *file_name = "unknown.txt";
+
                     /*
                     ** Guess the file type first. 
                     ** If binary, change my type and base64 encode it.
@@ -925,9 +928,18 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
 
+                    if (a->attachment_name)
+                    {
+                        file_name = a->attachment_name;
+                    }
+                    else
+                    {
+                        file_name = a->file_name;
+                    }
+
                     (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
                                     a->content_disposition,
-                                    a->file_name);
+                                    file_name);
                     msock_puts(buf);
                     showVerbose(buf);
   
@@ -956,9 +968,20 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     }
                     else
                     {
+                        char
+                            *file_name = "unknown.txt";
+                        if (a->attachment_name)
+                        {
+                            file_name = a->attachment_name;
+                        }
+                        else
+                        {
+                            file_name = a->file_name;
+                        }
+
                         (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
                                     a->content_disposition,
-                                    a->file_name);
+                                    file_name);
                     }
                     msock_puts(buf);
                     showVerbose(buf);

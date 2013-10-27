@@ -161,7 +161,8 @@ typedef struct _Attachment
 {
     char
         *file_path,
-        *file_name;
+        *file_name,
+        *attachment_name;
     char
         *mime_type;
     char

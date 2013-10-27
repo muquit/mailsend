@@ -43,7 +43,7 @@ static void usage(void)
 "  -sub  subject         - subject",
 "  -lilst file           - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
-"  -attach file,mime_type,[i/a] (i=inline,a=attachment)",
+"  -attach file,mime_type,[i/a],[name] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -enc  type            - Encoding Type. Only valid type: base64",
@@ -139,6 +139,17 @@ static void show_examples(void)
 " mailsend -f user@example.com -smtp 10.100.30.1\n"
 "  -t user@example.com -sub test -attach \"file.txt,text/plain\"\n"
 "  -attach \"/usr/file.gif,image/gif\" -attach \"file.jpeg,image/jpg\"\n\n");
+
+(void) fprintf(stdout,
+" The name of the attachment will be file.gif and file.jpeg.\n"
+" If you want the name to be different, add the fourth argument with -attach.\n"
+" Note: you MUST have to give the attachment type in this case\n\n");
+
+(void) fprintf(stdout,
+" mailsend -f user@example.com -smtp 10.100.30.1\n"
+"  -t user@example.com -sub test -attach \"file.txt,text/plain\"\n"
+"  -attach \"/usr/file.gif,image/gif,a,bar.gif\" -attach \"file.jpeg,image/jpg\"\n\n");
+
 
 (void) fprintf(stdout,
 " mailsend -f user@example.com -smtp 192.168.0.2\n"

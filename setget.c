@@ -63,7 +63,6 @@ void printAddressList2(Sll *list)
 
 void print_attachemtn_list()
 {
-/*
     Sll
         *l;
 
@@ -75,11 +74,12 @@ void print_attachemtn_list()
         a=(Attachment *) l->data;
         (void) fprintf(stderr,"File path: %s\n",a->file_path);
         (void) fprintf(stderr,"File name: %s\n",a->file_name);
+        if (a->attachment_name)
+            (void) fprintf(stderr,"Attachment name: %s\n",a->attachment_name);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         (void) fprintf(stderr,"\n");
     }
-*/
 }
 
 
@@ -224,6 +224,7 @@ int add_attachment_to_list(char *file_path_mime)
     if (file_path_mime == NULL || *file_path_mime == '\0')
         return(-1);
 
+    (void) fprintf(stderr,"MMM fpm: %s\n",file_path_mime);
     /* Tokenize the string "file,mime_type,something" */
     tokens=mutilsTokenize(file_path_mime,',',&ntokens);
     if (tokens == NULL)
@@ -250,6 +251,10 @@ int add_attachment_to_list(char *file_path_mime)
     a->file_path=xStrdup(file_path);
     a->file_name=xStrdup(file_name);
 
+    showVerbose("number of mime tokens: %d\n",ntokens);
+    (void) fprintf(stderr,"number of mime tokens: %d\n",ntokens);
+
+
     switch (ntokens)
     {
         case 1: /* Only File_path/name given */
@@ -269,7 +274,7 @@ int add_attachment_to_list(char *file_path_mime)
             break;
         }
 
-        case 3:
+        case 3: /* filepath/name, mime_type, disposition given */
         {
             mime_type=tokens[1];
             a->mime_type=xStrdup(mime_type);
@@ -280,6 +285,22 @@ int add_attachment_to_list(char *file_path_mime)
                 a->content_disposition=xStrdup("inline");
             else
                 a->content_disposition=xStrdup("attachment");
+            break;
+        }
+        
+        case 4: /* filepath/name, mime_type, disposition, attchment name given */
+        {
+            mime_type=tokens[1];
+            a->mime_type=xStrdup(mime_type);
+            content_disposition=tokens[2];
+            if (*content_disposition == 'a')
+                a->content_disposition=xStrdup("attachment");
+            else if (*content_disposition == 'i')
+                a->content_disposition=xStrdup("inline");
+            else
+                a->content_disposition=xStrdup("attachment");
+
+            a->attachment_name = xStrdup(tokens[3]);
             break;
         }
 
@@ -295,9 +316,7 @@ int add_attachment_to_list(char *file_path_mime)
 
     appendNode(&attachment_head,&na);
 
-    /*
     print_attachemtn_list();
-    */
 #if 0
     if ((mime_type=strchr(file_path_mime,ATTACHMENT_SEP)))
     {

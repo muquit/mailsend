@@ -29,6 +29,7 @@ if [ x"$OS" = x"Windows_NT" ]; then
     BINARY="./mailsend.exe"
 fi
 os=`uname`
+os="foo"
 if [ x"$os" = x"Linux" ]; then
 VALGRIND_LOG=/tmp/valgrind.log
 VALGRIND="valgrind -v --leak-check=no --log-file=$VALGRIND_LOG"
@@ -39,13 +40,14 @@ fi
 set -x
 
 $VALGRIND $BINARY -to $TO -from $YOU \
- -starttls -port 587 -auth-cram-md5 \
+ -starttls -port 587 -auth \
  -smtp $SMTP \
+ -cs "utf8" \
  -H "X-Priority: 1" -H "Importance: high" \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
- -log /tmp/mailsend.log \
  -M "one line attachment 1" \
  -M "one line attachment 2" \
- -attach "test.txt,text/plain,i" \
- -attach "x.gif,image/gif,i" -v
+ -attach "test.txt,text/plain,i,mittagpausa.txt" \
+ -attach "x.gif,image/gif,i" -v \
+ -attach "x.gif,image/gif,bar.gif" -v
