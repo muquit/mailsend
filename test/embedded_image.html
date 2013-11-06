@@ -1,0 +1,37 @@
+<html>
+    <title>testing embedded image in mail</title>
+    <body>
+        This is a test of embedding an image in HTML and relate the img
+        tag in the HTML document with the image by mailsend while sending
+        mail. We will create an img tag in the document with:
+        <pre>
+            &lt;img src="cid:xx_deadbeefcafe" alt="inline imge"&gt;
+        </pre>
+        <p>
+            <img src="cid:xx_deadbeefcafe" alt="inline imge">
+        <p>
+Notice: only content id is specified with cid, no path of image is specified.
+<p>
+        While sending mail with mailsend, we will specify the content id
+        xx_deadbeefcafe as fifth argument with -attach for the html file
+        and the image. 
+        <p>
+<b>Example:</b>
+        <pre>
+  mailsend -port 587 -from example@gmail.com -to example@gmail.com \
+   -attach "test/embedded_image.html,text/html,i,file.html"
+   -attach "test/test.png,image/png,i,Test.png,xx_deadbeefcafe"
+   -cs "ISO-8859-1" \
+   -starttls -auth -user example@gmail.com \
+   -smtp smtp.gmail.com  \
+   -content-type "multipart/related"
+   -sub "testing embedding image in html" -v
+        </pre>
+       <p>
+       Any mail reader which understands multipart-related Content-Type will
+       display the html and image together. Without the content id, the HTML
+       and the image will show up as 2 separate attachments.
+       <p>
+       gmail or outlook can display HTML file with embedded image
+    </body>
+</html>

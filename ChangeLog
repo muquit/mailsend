@@ -1,6 +1,12 @@
 1.17b15
+	- Support custom Conetent-type header and to support Conent-ID. The
+	custom Conent-type can be specified with the option -conent-type and the
+	Conent-ID of the attachment can be specified as fifth value of the -attach
+	option. Thanks to skalogryz for supplying the patch. Fixes Issue 30.
+	(Nov-06-2013).
+
 	- Added options -4 and -6 to force using IPv4 or IPv6 address of the SMTP
-	server.
+	server. Fixes Issue 26.
 	(Oct-20-2013)
 
 	- Added fourth option for -attach flag to specify the attachment name. 

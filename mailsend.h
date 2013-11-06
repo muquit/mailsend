@@ -143,6 +143,8 @@ EXTERN char g_log_file[MUTILS_PATH_MAX];
 EXTERN int  g_show_attachment_in_log;
 EXTERN int  g_encoding_type;
 EXTERN int  g_use_protocol;
+EXTERN char g_content_type[64];
+
 
 typedef struct _Address
 {
@@ -162,7 +164,8 @@ typedef struct _Attachment
     char
         *file_path,
         *file_name,
-        *attachment_name;
+        *attachment_name,
+	    *content_id;
     char
         *mime_type;
     char

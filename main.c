@@ -43,10 +43,11 @@ static void usage(void)
 "  -sub  subject         - subject",
 "  -lilst file           - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
-"  -attach file,mime_type,[i/a],[name] (i=inline,a=attachment)",
+"  -attach file,mime_type,[i/a],[name],[content-id] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -enc  type            - Encoding Type. Only valid type: base64",
+"  -content-type type    - Message body content type. Default: multipart/mixed",
 "  -H    \"header\"        - Add custom Header",
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -name \"Full Name\"     - add name in the From header",
@@ -231,7 +232,8 @@ int main(int argc,char **argv)
     memset(g_userpass,0,sizeof(g_userpass));
     memset(encrypted_pass, 0, sizeof(encrypted_pass));
     memset(g_from_name,0,sizeof(g_from_name));
-
+	memset(g_content_type,0,sizeof(g_content_type));
+	
     (void) strcpy(g_charset,"us-ascii");
 
     for  (i=1; i < argc; i++)
@@ -410,7 +412,19 @@ int main(int argc,char **argv)
                         }
                         g_connect_timeout = atoi(argv[i]);
                     }
-                }
+                } else if (strncmp("content-type", option+1, 12)==0) 
+				{
+					 if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing content-type set");
+                            return (1);
+                        }
+                        mutilsSafeStrcpy(g_content_type,argv[i],sizeof(g_content_type)-1);
+                    }
+				}
                 else if (strncmp("copyright", option + 1, 4) == 0)
                 {
                     print_copyright();

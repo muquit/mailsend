@@ -574,7 +574,10 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
         srand(time(NULL));
         memset(boundary,0,sizeof(boundary));
         mutilsGenerateMIMEBoundary(boundary,sizeof(boundary));
-        (void) snprintf(buf,sizeof(buf)-1,"Content-type: multipart/mixed; boundary=\"%s\"\r\n",boundary);
+		if (*g_content_type!='\0')
+          (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",g_content_type, boundary);
+		else 
+          (void) snprintf(buf,sizeof(buf)-1,"Content-type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
         msock_puts(buf);
         showVerbose(buf);
 
@@ -983,6 +986,11 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                                     a->content_disposition,
                                     file_name);
                     }
+					if (a->content_id)	{
+		                (void) snprintf(buf,sizeof(buf)-1,"Content-ID: <%s>\r\n",
+                                    a->content_id);
+					}
+
                     msock_puts(buf);
                     showVerbose(buf);
 

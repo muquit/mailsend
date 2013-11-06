@@ -247,6 +247,9 @@ int add_attachment_to_list(char *file_path_mime)
     }
 
     a=(Attachment *) malloc(sizeof(Attachment));
+	a->attachment_name = NULL;
+	a->content_id = NULL;
+
     CHECK_MALLOC(a);
 
     a->file_path=xStrdup(file_path);
@@ -298,6 +301,22 @@ int add_attachment_to_list(char *file_path_mime)
                 a->content_disposition=xStrdup("attachment");
 
             a->attachment_name = xStrdup(tokens[3]);
+            break;
+        }
+		case 5: 
+        {
+            mime_type=tokens[1];
+            a->mime_type=xStrdup(mime_type);
+            content_disposition=tokens[2];
+            if (*content_disposition == 'a')
+                a->content_disposition=xStrdup("attachment");
+            else if (*content_disposition == 'i')
+                a->content_disposition=xStrdup("inline");
+            else
+                a->content_disposition=xStrdup("attachment");
+
+            a->attachment_name = xStrdup(tokens[3]);
+            a->content_id = xStrdup(tokens[4]);
             break;
         }
 
