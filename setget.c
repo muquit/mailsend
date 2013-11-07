@@ -247,10 +247,8 @@ int add_attachment_to_list(char *file_path_mime)
     }
 
     a=(Attachment *) malloc(sizeof(Attachment));
-	a->attachment_name = NULL;
-	a->content_id = NULL;
-
     CHECK_MALLOC(a);
+    memset(a,0,sizeof(Attachment));
 
     a->file_path=xStrdup(file_path);
     a->file_name=xStrdup(file_name);

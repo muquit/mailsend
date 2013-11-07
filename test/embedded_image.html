@@ -18,12 +18,12 @@ Notice: only content id is specified with cid, no path of image is specified.
         <p>
 <b>Example:</b>
         <pre>
-  mailsend -port 587 -from example@gmail.com -to example@gmail.com \
+  mailsend -port 587 -smtp smtp.gmail.com \
+   -from example@gmail.com -to example@gmail.com \
+   -starttls -auth -user example@gmail.com \
    -attach "test/embedded_image.html,text/html,i,file.html"
    -attach "test/test.png,image/png,i,Test.png,xx_deadbeefcafe"
    -cs "ISO-8859-1" \
-   -starttls -auth -user example@gmail.com \
-   -smtp smtp.gmail.com  \
    -content-type "multipart/related"
    -sub "testing embedding image in html" -v
         </pre>
