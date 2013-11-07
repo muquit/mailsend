@@ -21,15 +21,15 @@ Notice: only content id is specified with cid, no path of image is specified.
   mailsend -port 587 -smtp smtp.gmail.com \
    -from example@gmail.com -to example@gmail.com \
    -starttls -auth -user example@gmail.com \
-   -attach "test/embedded_image.html,text/html,i,file.html"
-   -attach "test/test.png,image/png,i,Test.png,xx_deadbeefcafe"
+   -attach "test/embedded_image.html,text/html,i,file.html" \
+   -attach "test/test.png,image/png,i,Test.png,xx_deadbeefcafe" \
    -cs "ISO-8859-1" \
-   -content-type "multipart/related"
+   -content-type "multipart/related" \
    -sub "testing embedding image in html" -v
         </pre>
        <p>
-       Any mail reader which understands multipart-related Content-Type will
-       display the html and image together. Without the content id, the HTML
+       Any mail reader that understands multipart-related Content-type will
+       display the html and the image together. Without the content id, the HTML
        and the image will show up as 2 separate attachments.
        <p>
        gmail or outlook can display HTML file with embedded image
