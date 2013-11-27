@@ -371,7 +371,11 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
         if (sock_fd >= 0)
         {
             msock_make_socket_nonblocking(sock_fd);
-            rc = connect(sock_fd, res->ai_addr, res->ai_addrlen);
+            /*
+            ** Try the current addrinfo
+            ** Patch by https://code.google.com/p/mailsend/issues/detail?id=34
+            */
+            rc = connect(sock_fd, cur->ai_addr, cur->ai_addrlen);
             eno = msock_get_errno(sock_fd);
             if (debug)
             {

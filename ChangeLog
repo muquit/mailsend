@@ -1,4 +1,10 @@
 1.17b15
+	- Try the current addrinfo in connect(), mistakenly the first one was
+	used. If getaddrinfo() returned multiple results and if connect() to first
+	address failed, the rest of the addresses were not tried.  Patch sent 
+	by Peter Liu. Fixes Issue 34.
+	(Nov-27-2013)
+
 	- Support custom Conetent-type header and to support Conent-ID. The
 	custom Conent-type can be specified with the option -conent-type and the
 	Conent-ID of the attachment can be specified as fifth value of the -attach
