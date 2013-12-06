@@ -994,8 +994,12 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
 
+                    add_encoding_type();
+                    msock_puts("\r\n");
+                        /*
                     msock_puts("Content-Transfer-Encoding: base64\r\n\r\n");
                     showVerbose("Content-Transfer-Encoding: base64\r\n\r\n");
+                    */
                 }
 
                 showVerbose("%s (%d) - Now opening Temp file %s for reading\n",

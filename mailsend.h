@@ -122,6 +122,7 @@ do \
 #define ENCODE_8BIT             0x02
 #define ENCODE_BASE64           0x03
 #define ENCODE_QUOTED_PRINTABLE 0x04
+#define ENCODE_NONE             0x05
 
 EXTERN int  g_verbose;
 EXTERN int  g_connect_timeout;

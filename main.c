@@ -224,7 +224,7 @@ int main(int argc,char **argv)
     g_do_starttls=0;
     g_log_fp = NULL;
     g_show_attachment_in_log = 0;
-    g_encoding_type = ENCODE_7BIT;
+    g_encoding_type = ENCODE_BASE64;
     g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
 
     memset(g_log_file,0,sizeof(g_log_file));
