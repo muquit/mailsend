@@ -43,8 +43,11 @@ static void usage(void)
 "  -sub  subject         - subject",
 "  -lilst file           - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
+"  -separator character  - sepatorator used with -attach. Default is comma (,)",
+"                          If used must be specified before -attach",                           
 "  -attach file,mime_type,[i/a],[name],[content-id] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
+"  -show_attach          - show attachment in verbose mode, default is no",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -enc  type            - Encoding Type. Only valid type: base64",
 "  -content-type type    - Message body content type. Default: multipart/mixed",
@@ -52,7 +55,6 @@ static void usage(void)
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
-"  -show_attach          - show attachment in verbose mode, default is no",
 "  -V                    - show version info",
 "  -w                    - wait for a CR after sending the mail",
 "  -rt  email_address    - add Reply-To header",
@@ -233,6 +235,8 @@ int main(int argc,char **argv)
     memset(encrypted_pass, 0, sizeof(encrypted_pass));
     memset(g_from_name,0,sizeof(g_from_name));
 	memset(g_content_type,0,sizeof(g_content_type));
+    memset(g_attach_sep, 0, sizeof(g_attach_sep));
+    (void) strcpy(g_attach_sep,",");
 	
     (void) strcpy(g_charset,"us-ascii");
 
@@ -749,6 +753,24 @@ int main(int argc,char **argv)
                 else if (strncmp("show_attach", option + 1, 9) == 0)
                 {
                     g_show_attachment_in_log = 1;
+                }
+                else if (strncmp("separator", option + 1, 4) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing separator");
+                            return (1);
+                        }
+                        (void) snprintf(g_attach_sep,sizeof(g_attach_sep)-1,"%s",argv[i]);
+                        if (strlen(g_attach_sep) != 1)
+                        {
+                            errorMsg("Invalid separator character specified");
+                            return(1);
+                        }
+                    }
                 }
                 else
                 {

@@ -208,6 +208,7 @@ int add_one_line_to_list(char *line)
 int add_attachment_to_list(char *file_path_mime)
 {
     int
+        separator,
         ntokens;
 
     Sll
@@ -227,7 +228,9 @@ int add_attachment_to_list(char *file_path_mime)
         return(-1);
 
     /* Tokenize the string "file,mime_type,something" */
-    tokens=mutilsTokenize(file_path_mime,',',&ntokens);
+    separator = *g_attach_sep;
+/*    tokens=mutilsTokenize(file_path_mime,',',&ntokens);*/
+    tokens=mutilsTokenize(file_path_mime,separator,&ntokens);
     if (tokens == NULL)
     {
         errorMsg("Could not parse attachment string: \"%s\"",file_path_mime);

@@ -48,6 +48,9 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -user $YOU -pass $PASS \
  -M "one line attachment 1" \
  -M "one line attachment 2" \
- -attach "test.txt,text/plain,i,mittagpausa.txt" \
- -attach "x.gif,image/gif,i" -v \
- -attach "x.gif,image/gif,a,bar.gif" -v
+ -separator ":" \
+ -attach "test.txt:text/plain:i:mittagpausa.txt" \
+ -attach "x.gif:image/gif:i" \
+ -attach "x.gif:image/gif:a:bar.gif" \
+ -show_attach \
+ -v

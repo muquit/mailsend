@@ -665,9 +665,10 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     char
         *b64;
 
+    /*
     unsigned long
         b64len=0;
-
+    */
     char
         hex[33],
         buf[BUFSIZ];

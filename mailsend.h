@@ -145,6 +145,7 @@ EXTERN int  g_show_attachment_in_log;
 EXTERN int  g_encoding_type;
 EXTERN int  g_use_protocol;
 EXTERN char g_content_type[64];
+EXTERN char g_attach_sep[4];
 
 
 typedef struct _Address
