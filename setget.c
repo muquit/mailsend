@@ -69,6 +69,7 @@ void print_attachemtn_list()
     Attachment
         *a;
 
+    /*
     for (l=attachment_head; l; l=l->next)
     {
         a=(Attachment *) l->data;
@@ -83,6 +84,7 @@ void print_attachemtn_list()
         (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
         (void) fprintf(stderr,"\n");
     }
+    */
 }
 
 
