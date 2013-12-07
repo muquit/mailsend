@@ -4,7 +4,7 @@
 	-separator ":" -attach "filename, with command.pdf:application/pdf"
 	(Dec-07-2013)
 
-	- Fixes Issue 35. Added a 5th filed with -attach to specify the encoding
+	- Fixes Issue 35. Added a 5th field with -attach to specify the encoding
 	type. The default encoding type is base64. If no encoding should be used,
 	specify the 5th field as "none". Also 4th field must be specified as "none"
 	if no content-id will be used. Eample:
