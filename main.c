@@ -45,14 +45,15 @@ static void usage(void)
 "  -log file             - write log messages to this file",
 "  -separator character  - sepatorator used with -attach. Default is comma (,)",
 "                          If used must be specified before -attach",                           
-"  -attach file,mime_type,[i/a],[name],[content-id] (i=inline,a=attachment)",
+"  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show_attach          - show attachment in verbose mode, default is no",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
-"  -enc  type            - Encoding Type. Only valid type: base64",
 "  -content-type type    - Message body content type. Default: multipart/mixed",
 "  -H    \"header\"        - Add custom Header",
 "  -M    \"one line msg\"  - attach this one line text message",
+"  -enc type             - encoding type for one line message",
+"                          valid types are base64, none",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
 "  -V                    - show version info",
@@ -226,8 +227,8 @@ int main(int argc,char **argv)
     g_do_starttls=0;
     g_log_fp = NULL;
     g_show_attachment_in_log = 0;
-    g_encoding_type = ENCODE_BASE64;
     g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
+    g_encoding_type = ENCODE_NONE;
 
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
@@ -487,20 +488,17 @@ int main(int argc,char **argv)
                         g_esmtp=1;
                     }
 
-                }
-                if (strncmp("encode", option + 1, 3) == 0)
-                {
-                    if (*option == '-')
+                    if (strncmp("enc",option+1,3) == 0)
                     {
-                        i++;
-                        if (i == argc)
+                        if (*option == '-')
                         {
-                            errorMsg("Missing encoding type. Valid type: base64");
-                            return (1);
-                        }
-                        if (strncmp("base64", argv[i], 6) == 0)
-                        {
-                            g_encoding_type = ENCODE_BASE64;
+                            i++;
+                            if (i == argc)
+                            {
+                                errorMsg("Missing encoding type");
+                                return (1);
+                            }
+                            g_encoding_type = get_encoding_type(argv[i]);
                         }
                     }
                 }

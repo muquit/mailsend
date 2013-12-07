@@ -392,14 +392,14 @@ static BOOL WINAPI CntrlHandler(DWORD CtrlEvent)
 /*
 ** Add the encoding type if it is supported
 **/
-static void add_encoding_type(void)
+static void add_encoding_type(encoding_type)
 {
     memset(buf,0,sizeof(buf));
-    switch(g_encoding_type)
+    switch(encoding_type)
     {
         case ENCODE_BASE64:
         {
-            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n");
+            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n\r\n");
             msock_puts(buf);
             showVerbose(buf);
             break;
@@ -631,16 +631,15 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 msock_puts(buf);
                 showVerbose(buf);
 
-                add_encoding_type();
 
-                msock_puts("\r\n");
-
-                if (g_show_attachment_in_log)
-                {
-                    showVerbose("\r\n");
-                }
                 if (g_encoding_type == ENCODE_BASE64)
                 {
+                    add_encoding_type(g_encoding_type);
+                    if (g_show_attachment_in_log)
+                    {
+                        showVerbose("\r\n");
+                    }
+
                     memset(oneline_tempfile1, 0, sizeof(oneline_tempfile1));
                     tfp1 = mutils_get_tempfileFP(oneline_tempfile1,
                             sizeof(oneline_tempfile1)-1);
@@ -764,9 +763,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             msock_puts(buf);
             showVerbose(buf);
 
-            add_encoding_type();
+            add_encoding_type(g_encoding_type);
 
-            msock_puts("\r\n");
             if (g_show_attachment_in_log)
             {
                 showVerbose("\r\n");
@@ -946,9 +944,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
   
-                    add_encoding_type();
-
-                    msock_puts("\r\n");
+                    add_encoding_type(a->encoding_type);
                     showVerbose("\r\n");
                 }
                 else
@@ -994,8 +990,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     msock_puts(buf);
                     showVerbose(buf);
 
-                    add_encoding_type();
-                    msock_puts("\r\n");
+                    add_encoding_type(a->encoding_type);
+
                         /*
                     msock_puts("Content-Transfer-Encoding: base64\r\n\r\n");
                     showVerbose("Content-Transfer-Encoding: base64\r\n\r\n");
@@ -1034,7 +1030,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 unlink(mime_tmpfile);
             }
             
-            (void) snprintf(buf,sizeof(buf)-1,"\r\n--%s--\r\n",boundary);
+            (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
             msock_puts(buf);
             showVerbose(buf);
         }

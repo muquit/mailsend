@@ -63,7 +63,6 @@ void printAddressList2(Sll *list)
 
 void print_attachemtn_list()
 {
-    /*
     Sll
         *l;
 
@@ -79,9 +78,11 @@ void print_attachemtn_list()
             (void) fprintf(stderr,"Attachment name: %s\n",a->attachment_name);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
+        if (a->content_id)
+            (void) fprintf(stderr,"Content-ID: %s\n",a->content_id);
+        (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
         (void) fprintf(stderr,"\n");
     }
-    */
 }
 
 
@@ -229,13 +230,15 @@ int add_attachment_to_list(char *file_path_mime)
 
     /* Tokenize the string "file,mime_type,something" */
     separator = *g_attach_sep;
-/*    tokens=mutilsTokenize(file_path_mime,',',&ntokens);*/
+    showVerbose("Separator: %c\n",separator);
     tokens=mutilsTokenize(file_path_mime,separator,&ntokens);
     if (tokens == NULL)
     {
         errorMsg("Could not parse attachment string: \"%s\"",file_path_mime);
         exit(1);
     }
+
+    showVerbose("ntokens: %d\n",ntokens);
 
     /* get the file name out */
     file_path=tokens[0];
@@ -255,6 +258,7 @@ int add_attachment_to_list(char *file_path_mime)
 
     a->file_path=xStrdup(file_path);
     a->file_name=xStrdup(file_name);
+    a->encoding_type = ENCODE_BASE64;
 
     switch (ntokens)
     {
@@ -276,51 +280,46 @@ int add_attachment_to_list(char *file_path_mime)
         }
 
         case 3: /* filepath/name, mime_type, disposition given */
+        case 4: /* filepath/name, mime_type, disposition, attchment name given */
+        case 5: /* content-id */
+        case 6: /* encoding type */
         {
             mime_type=tokens[1];
             a->mime_type=xStrdup(mime_type);
             content_disposition=tokens[2];
             if (*content_disposition == 'a')
+            {
                 a->content_disposition=xStrdup("attachment");
+            }
             else if (*content_disposition == 'i')
+            {
                 a->content_disposition=xStrdup("inline");
+            }
             else
+            {
                 a->content_disposition=xStrdup("attachment");
+            }
+
+            if (ntokens == 4)
+            {
+                a->attachment_name = xStrdup(tokens[3]);
+            }
+            if (ntokens == 5)
+            {
+                a->attachment_name = xStrdup(tokens[3]);
+                if (strncmp(tokens[4],"none",4) != 0)
+                    a->content_id = xStrdup(tokens[4]);
+            }
+            if (ntokens == 6)
+            {
+                a->attachment_name = xStrdup(tokens[3]);
+                if (strncmp(tokens[4],"none",4) != 0)
+                    a->content_id = xStrdup(tokens[4]);
+                a->encoding_type = get_encoding_type(tokens[5]);
+            }
             break;
         }
         
-        case 4: /* filepath/name, mime_type, disposition, attchment name given */
-        {
-            mime_type=tokens[1];
-            a->mime_type=xStrdup(mime_type);
-            content_disposition=tokens[2];
-            if (*content_disposition == 'a')
-                a->content_disposition=xStrdup("attachment");
-            else if (*content_disposition == 'i')
-                a->content_disposition=xStrdup("inline");
-            else
-                a->content_disposition=xStrdup("attachment");
-
-            a->attachment_name = xStrdup(tokens[3]);
-            break;
-        }
-		case 5: 
-        {
-            mime_type=tokens[1];
-            a->mime_type=xStrdup(mime_type);
-            content_disposition=tokens[2];
-            if (*content_disposition == 'a')
-                a->content_disposition=xStrdup("attachment");
-            else if (*content_disposition == 'i')
-                a->content_disposition=xStrdup("inline");
-            else
-                a->content_disposition=xStrdup("attachment");
-
-            a->attachment_name = xStrdup(tokens[3]);
-            a->content_id = xStrdup(tokens[4]);
-            break;
-        }
-
         default:
         {
             errorMsg("Invalid string specified with -a \"%s\"",file_path_mime);

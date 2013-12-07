@@ -44,6 +44,29 @@ int isInteractive(void)
     return(0);
 
 }
+
+/*
+** arg: type
+** at this time valid types are: "base64", "none"
+*/
+int get_encoding_type(const char *type)
+{
+    if (type == NULL || *type == '\0')
+    {
+        return ENCODE_BASE64;
+    }
+    if (strncmp("base64", type, 6) == 0)
+    {
+        return ENCODE_BASE64;
+    }
+    else if (strncmp("none", type, 4) == 0)
+    {
+        return ENCODE_NONE;
+    }
+
+    return ENCODE_BASE64;
+}
+
 /*
 ** duplicate a string. exits on failure
 */
@@ -319,11 +342,13 @@ int get_filepath_mimetype(char *str,char *filepath,int fp_size,char *mype_type,i
 {
 
     int
+        separator,
         rc=0;
     char
         *fp,
         *mt;
-    if ((mt=strchr(str,ATTACHMENT_SEP)))
+    separator = *g_attach_sep;
+    if ((mt=strchr(str,separator)))
     {
         *mt++='\0';
     }

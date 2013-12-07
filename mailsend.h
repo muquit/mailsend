@@ -55,7 +55,6 @@
 
 #define EMPTY_OK        0x01
 #define EMPTY_NOT_OK    0x02
-#define ATTACHMENT_SEP  ','
 
 #define FILE_TYPE_DOS       0x00000001
 #define FILE_TYPE_UNIX      0x00000002
@@ -172,6 +171,8 @@ typedef struct _Attachment
         *mime_type;
     char
         *content_disposition;
+    int
+        encoding_type;
 }Attachment;
 
 /* the mail sturct */
@@ -252,6 +253,7 @@ char        *encode_cram_md5(char *challenge,char *user,char *pass);
 int         guess_file_type(char *path,unsigned int *flag);
 void        generate_encrypted_password(const char *plaintext);
 void        print_copyright(void);
+int         get_encoding_type(const char *type);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
 #endif /* HAVE_OPENSSL */

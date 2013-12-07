@@ -40,17 +40,21 @@ fi
 set -x
 
 $VALGRIND $BINARY -to $TO -from $YOU \
+ -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \
  -cs "utf8" \
  -H "X-Priority: 1" -H "Importance: high" \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
+ -enc "none" \
+ -enc "none" \
  -M "one line attachment 1" \
  -M "one line attachment 2" \
  -separator ":" \
- -attach "test.txt:text/plain:i:mittagpausa.txt" \
- -attach "x.gif:image/gif:i" \
- -attach "x.gif:image/gif:a:bar.gif" \
- -show_attach \
- -v
+ -attach "test.txt:text/plain:i:mittagpausa.txt:none:none" \
+ -separator "," \
+ -attach "test.gif,image/gif,i,test.gif,none,base64" \
+ -separator ":" \
+ -attach "test.gif:image/gif:a:bar.gif:none:base64" \
+ -show_attach

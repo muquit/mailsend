@@ -3,7 +3,7 @@
     <body>
         This is a test of embedding an image in HTML and relate the img
         tag in the HTML document with the image by mailsend while sending
-        mail. We will create an img tag in the document with:
+        mail. We will create an img tag in the HTML document with:
         <pre>
             &lt;img src="cid:xx_deadbeefcafe" alt="inline imge"&gt;
         </pre>
@@ -13,10 +13,12 @@
 Notice: only content id is specified with cid, no path of image is specified.
 <p>
         While sending mail with mailsend, we will specify the content id
-        xx_deadbeefcafe as fifth argument with -attach for the html file
+        xx_deadbeefcafe as fifth field with -attach for the html file
         and the image. 
         <p>
 <b>Example:</b>
+<p>
+Note: Requires mailsend v1.17b15+:
         <pre>
   mailsend -port 587 -smtp smtp.gmail.com \
    -from example@gmail.com -to example@gmail.com \
@@ -32,6 +34,7 @@ Notice: only content id is specified with cid, no path of image is specified.
        display the html and the image together. Without the content id, the HTML
        and the image will show up as 2 separate attachments.
        <p>
-       gmail or outlook can display HTML file with embedded image
+       Tested with gmail, outlook and yahoo mail which can display HTML 
+       file with embedded image.
     </body>
 </html>
