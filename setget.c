@@ -16,6 +16,7 @@ static Sll
     *one_line_head = NULL,
     *custom_headers_head = NULL,
     *attachment_head=NULL,
+    *one_line_attachment_head = NULL,
     *server_caps=NULL,
     *addr_head=NULL;
 
@@ -61,7 +62,27 @@ void printAddressList2(Sll *list)
 */
 }
 
-void print_attachemtn_list()
+void print_oneline_attachment_list(void)
+{
+    Sll
+        *l;
+
+    Attachment
+        *a;
+
+    for (l=one_line_attachment_head; l; l=l->next)
+    {
+        a=(Attachment *) l->data;
+        (void) fprintf(stderr,"Message: %s\n",a->one_line_msg);
+        (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
+        (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
+        (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
+        (void) fprintf(stderr,"\n");
+    }
+}
+
+
+void print_attachment_list(void)
 {
     Sll
         *l;
@@ -334,10 +355,50 @@ int add_attachment_to_list(char *file_path_mime)
 
     appendNode(&attachment_head,&na);
 
-    print_attachemtn_list();
+    /*print_attachemtn_list();*/
     return(0);
 }
 
+/*
+** create a list of Attachment for one line messages
+** it uses -mime-type and -enc-type, so these two flags
+** must specified first before -M
+*/
+int add_oneline_to_attachment_list(const char *one_line_msg)
+{
+    int
+        separator,
+        ntokens;
+
+    Sll
+        *na=NULL;
+
+    char
+        **tokens=NULL,
+        *file_path=NULL,
+        *file_name=NULL,
+        *mime_type=NULL,
+        *content_disposition="attachment";
+
+    Attachment
+        *a=NULL;
+
+    a=(Attachment *) malloc(sizeof(Attachment));
+    CHECK_MALLOC(a);
+    memset(a,0,sizeof(Attachment));
+
+    a->one_line_msg=xStrdup(one_line_msg);
+    a->mime_type=xStrdup(mime_type);
+    a->encoding_type = g_encoding_type;
+    a->mime_type=xStrdup(g_mime_type);
+    a->content_disposition=xStrdup("inline");
+
+    na=allocateNode((void *) a);
+    CHECK_MALLOC(na);
+
+    appendNode(&one_line_attachment_head,&na);
+    return(0);
+}
 
 
 

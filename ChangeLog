@@ -1,4 +1,13 @@
 1.17b15
+	-enc flag is changed to -enc-type which is used for encoding type of one
+	line messages.
+	(Dec-08-2013)
+
+	-Fixes Issue 37. A new flags -mime-type "type" can be used to specify the
+	MIME type of one line messages. Default is text/plain. So if the one line
+	message is HTML, the mime type text/html can be specified.
+	(Dec-08-2013)
+
 	- Fixes Issue 36. A new flag -separator "character" can be specified before
 	-attach option to use the specified separator instead of comma. Example:
 	-separator ":" -attach "filename, with command.pdf:application/pdf"

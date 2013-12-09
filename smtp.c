@@ -623,7 +623,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                 msock_puts(buf);
                 showVerbose(buf);
 
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Type: text/plain; charset=%s\r\n",g_charset);
+                (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; charset=%s\r\n",
+                        g_mime_type,g_charset);
                 msock_puts(buf);
                 showVerbose(buf);
 
@@ -653,6 +654,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
                     showVerbose("Oneline temp file1: * %s\n",oneline_tempfile1);
                 }
 
+                (void) fprintf(stderr,"XXX %d\n",g_encoding_type);
                 for (l = one_line_list; l; l = l->next)
                 {
                     if (g_encoding_type == ENCODE_BASE64)

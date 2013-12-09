@@ -48,9 +48,12 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
  -enc "none" \
- -enc "none" \
  -M "one line attachment 1" \
+ -enc "none" \
  -M "one line attachment 2" \
+ -mime-type "text/html" \
+ -enc "none" \
+ -M "<b>this is a test</b>" \
  -separator ":" \
  -attach "test.txt:text/plain:i:mittagpausa.txt:none:none" \
  -separator "," \

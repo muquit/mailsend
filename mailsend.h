@@ -144,6 +144,7 @@ EXTERN int  g_show_attachment_in_log;
 EXTERN int  g_encoding_type;
 EXTERN int  g_use_protocol;
 EXTERN char g_content_type[64];
+EXTERN char g_mime_type[64]; /* of one line message */
 EXTERN char g_attach_sep[4];
 
 
@@ -167,6 +168,9 @@ typedef struct _Attachment
         *file_name,
         *attachment_name,
 	    *content_id;
+    char
+        *one_line_msg;
+
     char
         *mime_type;
     char
@@ -233,13 +237,15 @@ int         add_one_line_to_list(char *line);
 int         add_msg_body_files_to_list(char *file_path);
 int         add_customer_header_to_list(char *line);
 int         add_attachment_to_list(char *file_path_mime);
+int         add_oneline_to_attachment_list(const char *one_line_msg);
 int         add_server_cap_to_list(char *capability);
 Sll         *get_one_line_list(void);
 Sll         *get_custom_header_list(void);
 Sll         *get_attachment_list(void);
 Sll         *get_server_caps_list(void);
 Sll         *get_msg_body_files_list(void);
-void        print_attachemtn_list(void);
+void        print_attachment_list(void);
+void        print_oneline_attachment_list(void);
 char        *fix_to(char *to);
 int         isInteractive(void);
 int         get_filepath_mimetype(char *str,char *filename,int fn_size,

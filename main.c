@@ -52,8 +52,9 @@ static void usage(void)
 "  -content-type type    - Message body content type. Default: multipart/mixed",
 "  -H    \"header\"        - Add custom Header",
 "  -M    \"one line msg\"  - attach this one line text message",
-"  -enc type             - encoding type for one line message",
+"  -enc-type type          - encoding type for one line message",
 "                          valid types are base64, none",
+"  -mime-type type       - MIME type of one line message. Default is text/plan",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
 "  -V                    - show version info",
@@ -236,8 +237,10 @@ int main(int argc,char **argv)
     memset(encrypted_pass, 0, sizeof(encrypted_pass));
     memset(g_from_name,0,sizeof(g_from_name));
 	memset(g_content_type,0,sizeof(g_content_type));
+	memset(g_mime_type,0,sizeof(g_mime_type));
     memset(g_attach_sep, 0, sizeof(g_attach_sep));
     (void) strcpy(g_attach_sep,",");
+    (void) strcpy(g_mime_type, "text/plain");
 	
     (void) strcpy(g_charset,"us-ascii");
 
@@ -664,6 +667,31 @@ int main(int argc,char **argv)
                         }
                         the_msg=argv[i];
                         add_one_line_to_list(the_msg);
+                        add_oneline_to_attachment_list(the_msg);
+                    }
+                }
+                else
+                {
+                    errorMsg("Unknown flag: %s\n",option);
+                    return(1);
+                }
+
+                break;
+            }
+
+            case 'm':
+            {
+                if (strncmp("mime-type",option+1,6) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing mime type");
+                            return (1);
+                        }
+                        mutilsSafeStrcpy(g_mime_type,argv[i],sizeof(g_mime_type)-1);
                     }
                 }
                 else
@@ -992,7 +1020,9 @@ int main(int argc,char **argv)
     }
 
 
-    print_attachemtn_list();
+    print_attachment_list();
+    print_oneline_attachment_list();
+    exit(1);
 
     /*
     ** attaching a file or a one line message will make the mail a 
