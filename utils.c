@@ -70,7 +70,7 @@ int get_encoding_type(const char *type)
 /*
 ** duplicate a string. exits on failure
 */
-char *xStrdup (char *string)
+char *xStrdup (const char *string)
 {
     char
         *tmp;

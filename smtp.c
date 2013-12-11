@@ -15,6 +15,7 @@
 #include "mailsend.h"
 
 static char buf[BUFSIZ];
+static int  bufsz = sizeof(buf) - 1;
 static int  break_out=0;
 
 static char smtp_line[BUFSIZ];
@@ -399,7 +400,7 @@ static void add_encoding_type(encoding_type)
     {
         case ENCODE_BASE64:
         {
-            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n\r\n");
+            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n");
             msock_puts(buf);
             showVerbose(buf);
             break;
@@ -413,6 +414,217 @@ static void add_encoding_type(encoding_type)
     }
 }
 
+static int write_to_socket(char *str)
+{
+    int
+        n;
+    if (str == NULL)
+    {
+        return (-1);
+    }
+    n = msock_puts(str);
+    showVerbose("%d bytes: %s\n",n, str);
+    return(n);
+}
+
+/*
+** return 1 on success
+*/
+static int encode2base64andwrite2socket(const char *str)
+{
+    FILE
+        *tfp1 = NULL,
+        *tfp2 = NULL;
+    char
+        mbuf[1000],
+        oneline_tempfile1[MUTILS_PATH_MAX],
+        oneline_tempfile2[MUTILS_PATH_MAX];
+
+    memset(oneline_tempfile1, 0, sizeof(oneline_tempfile1));
+    /* write the text to a tmp file */
+    tfp1 = mutils_get_tempfileFP(oneline_tempfile1,
+            sizeof(oneline_tempfile1)-1);
+    if (tfp1 == NULL)
+    {
+        errorMsg("%s (%d) - Could not open temp file1 for writing (%s)",
+                MFL,
+                ERR_STR);
+        return (-1);
+    }
+    (void) fprintf(tfp1,"%s",str);
+    (void) fclose(tfp1);
+
+    /* open another tmp file to write the base64 of the first tmp file to */
+    memset(oneline_tempfile2, 0, sizeof(oneline_tempfile2));
+    tfp2 = mutils_get_tempfileFP(oneline_tempfile2,
+        sizeof(oneline_tempfile2)-1);
+    showVerbose("Oneline temp file2: * %s\n",oneline_tempfile2);
+    if (tfp2 == NULL)
+    {
+        errorMsg("%s (%d) - Could not open temp file2 for writing (%s)",
+            MFL,
+            ERR_STR);
+        return (-1);
+    }
+
+    tfp1 = fopen(oneline_tempfile1,"rb");
+    if (tfp1 == NULL)
+    {
+        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
+            MFL,
+            ERR_STR);
+        return(-1);
+    }
+
+    mutilsBase64Encode(tfp1,tfp2);
+    (void) fclose(tfp1);
+    (void) fclose(tfp2);
+
+    /* open the file with base64 and write the content to socket */
+    tfp2 = fopen(oneline_tempfile2,"r");
+    if (tfp2 == NULL)
+    {
+        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
+            MFL,
+            ERR_STR);
+        return(-1);
+    }
+    while(fgets(mbuf, sizeof(mbuf)-1, tfp2))
+    {
+        write_to_socket(mbuf);
+        if (g_show_attachment_in_log)
+        {
+            showVerbose("[C] %s",mbuf);
+        }
+    }
+    (void) fclose(tfp2);
+    unlink(oneline_tempfile1);
+    unlink(oneline_tempfile2);
+ 
+    return(1);
+}
+
+/*
+** send one line messages, each one is an inline attachment
+** return 1 if mail is sent, 0 otherwise
+*/
+static int process_oneline_messages(const char *boundary)
+{
+    int
+        n = (-1);
+
+    Attachment
+        *a = NULL;
+    Sll
+        *l,
+        *oneline_attachment_list;
+
+    oneline_attachment_list = get_oneline_attachment_list();
+    if (oneline_attachment_list == NULL)
+    {
+        return(0);
+    }
+    print_oneline_attachment_list();
+
+    for (l = oneline_attachment_list; l; l = l->next)
+    {
+        a = (Attachment *) l->data;
+        (void) snprintf(buf, bufsz, "\r\n--%s\r\n",boundary);
+        write_to_socket(buf);
+
+        (void) snprintf(buf, bufsz, "Content-Type: %s; charset=%s\r\n",
+                a->mime_type,
+                a->charset);
+        write_to_socket(buf);
+
+        (void) strcpy(buf,"Content-Disposition: inline\r\n");
+        write_to_socket(buf);
+
+        /* add encoding type if needed */
+         add_encoding_type(a->encoding_type);
+
+        /* must separate the message */
+        write_to_socket("\r\n");
+        
+        if (a->encoding_type == ENCODE_BASE64)
+        {
+            /* encode the mssage to base 64 and write to socket */
+            encode2base64andwrite2socket(a->oneline_msg);
+        }
+        else
+        {
+            write_to_socket(a->oneline_msg);
+            if (g_show_attachment_in_log)
+            {
+                showVerbose("[C] %s\n",a->oneline_msg);
+
+            }
+        }
+        write_to_socket("\r\n");
+    }
+    return(n);
+}
+
+/*
+** include the content of the file as body of the message
+** No encoding will be done.
+*/
+static int include_msg_body(void)
+{
+    Sll
+        *l,
+        *msg_body_attachment_head;
+
+    FILE
+        *fp = NULL;
+
+    Attachment
+        *a;
+
+    msg_body_attachment_head = get_msg_body_attachment_list();
+    if (msg_body_attachment_head == NULL)
+    {
+        return(-1);
+    }
+
+    l = msg_body_attachment_head;
+    a = (Attachment *) l->data;
+
+    (void) snprintf(buf,bufsz,"Mime-version: 1.0\r\n");
+    write_to_socket(buf);
+
+    (void) snprintf(buf,bufsz,"Content-type: %s; charset=%s\r\n\r\n",
+            a->mime_type,
+            a->charset);
+    write_to_socket(buf);
+
+    fp=fopen(a->file_path,"r");
+    if (fp == (FILE *) NULL)
+    {
+        errorMsg("Could not open message body file: %s",a->file_path);
+        return (-1);
+    } 
+
+    while (fgets(buf,bufsz,fp))
+    {
+        write_to_socket(buf);
+        if (g_show_attachment_in_log)
+        {
+            showVerbose("[C] %s",buf); 
+        }
+    }
+    (void) fclose(fp);
+
+    (void) snprintf(buf,bufsz,"\r\n\r\n");
+    msock_puts(buf);
+    showVerbose(buf);
+    return(0);
+}
+
+static int include_image(char *path)
+{
+}
+
 /* SMTP: mail */
 static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,char *rt,
                     char *subject,char *attach_file,char *msg_body_file,
@@ -421,7 +633,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     char
         *os="Unix",
         boundary[17],
-        mbuf[1000];
+        mbuf[1024];
 
     int
         newline_before;
@@ -566,24 +778,31 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     msock_puts(buf);
     showVerbose(buf);
 
-    /*
-    if (is_mime && msg_file)
-    */
     if (is_mime)
     {
         srand(time(NULL));
         memset(boundary,0,sizeof(boundary));
         mutilsGenerateMIMEBoundary(boundary,sizeof(boundary));
+
+        /* if msg body file is specified, include and return */
+        if (msg_body_file)
+        {
+            return (include_msg_body());
+        }
+
+        (void) snprintf(buf,sizeof(buf)-1,"Mime-version: 1.0\r\n");
+        msock_puts(buf);
+        showVerbose(buf);
+
 		if (*g_content_type!='\0')
-          (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",g_content_type, boundary);
+          (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",
+                  g_content_type,
+                  boundary);
 		else 
           (void) snprintf(buf,sizeof(buf)-1,"Content-type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
         msock_puts(buf);
         showVerbose(buf);
 
-        (void) snprintf(buf,sizeof(buf)-1,"Mime-version: 1.0\r\n");
-        msock_puts(buf);
-        showVerbose(buf);
     }
 
     msock_puts("\r\n");
@@ -594,139 +813,11 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     */
     if (is_mime)
     {
+        process_oneline_messages(boundary);
         /*
         ** If there is a txt file or a one line message, attach them first
         */
         /* Part originally added by Smeeta Jalan -- starts */
-        if (the_msg)
-        {
-            Sll
-                *l,
-                *one_line_list;
-            FILE
-                *tfp1 = NULL,
-                *tfp2 = NULL;
-            char
-                oneline_tempfile1[MUTILS_PATH_MAX],
-                oneline_tempfile2[MUTILS_PATH_MAX];
-
-            /*
-            ** If one line message is specificed with -M and if
-            ** encoding is base65, write the lines in a temp file first. close
-            ** the file. Then base64 encode them to another temp file and
-            ** write the base64 to smtp server. Remove the files at the end.
-            */
-            one_line_list = get_one_line_list();
-            if (one_line_list)
-            {
-                (void) snprintf(buf,sizeof(buf)-1,"\r\n--%s\r\n",boundary);
-                msock_puts(buf);
-                showVerbose(buf);
-
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; charset=%s\r\n",
-                        g_mime_type,g_charset);
-                msock_puts(buf);
-                showVerbose(buf);
-
-                (void) strcpy(buf,"Content-Disposition: inline\r\n");
-                msock_puts(buf);
-                showVerbose(buf);
-
-
-                if (g_encoding_type == ENCODE_BASE64)
-                {
-                    add_encoding_type(g_encoding_type);
-                    if (g_show_attachment_in_log)
-                    {
-                        showVerbose("\r\n");
-                    }
-
-                    memset(oneline_tempfile1, 0, sizeof(oneline_tempfile1));
-                    tfp1 = mutils_get_tempfileFP(oneline_tempfile1,
-                            sizeof(oneline_tempfile1)-1);
-                    if (tfp1 == NULL)
-                    {
-                        errorMsg("%s (%d) - Could not open temp file1 for writing (%s)",
-                                MFL,
-                                ERR_STR);
-                        return (-1);
-                    }
-                    showVerbose("Oneline temp file1: * %s\n",oneline_tempfile1);
-                }
-
-                (void) fprintf(stderr,"XXX %d\n",g_encoding_type);
-                for (l = one_line_list; l; l = l->next)
-                {
-                    if (g_encoding_type == ENCODE_BASE64)
-                    {
-                        fprintf(tfp1,"%s\n",(char *) l->data);
-                    }
-                    else
-                    {
-                        msock_puts((char *) l->data);
-                        msock_puts("\r\n");
-                        if (g_show_attachment_in_log)
-                        {
-                            showVerbose("[C] %s\n",(char *) l->data);
-                        }
-                    }
-
-                }
-                if (g_encoding_type == ENCODE_BASE64 && tfp1 != NULL)
-                {
-                    (void) fclose(tfp1);
-                    tfp1 = fopen(oneline_tempfile1,"rb");
-                    if (tfp1 == NULL)
-                    {
-                        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
-                            MFL,
-                            ERR_STR);
-                        return(-1);
-                    }
-                    memset(oneline_tempfile2, 0, sizeof(oneline_tempfile2));
-                    tfp2 = mutils_get_tempfileFP(oneline_tempfile2,
-                        sizeof(oneline_tempfile2)-1);
-                    showVerbose("Oneline temp file2: * %s\n",oneline_tempfile2);
-                    if (tfp2 == NULL)
-                    {
-                        errorMsg("%s (%d) - Could not open temp file2 for writing (%s)",
-                            MFL,
-                            ERR_STR);
-                        return (-1);
-                    }
-                    mutilsBase64Encode(tfp1,tfp2);
-                    (void) fclose(tfp1);
-                    (void) fclose(tfp2);
-            
-                    tfp2 = fopen(oneline_tempfile2,"r");
-                    if (tfp2 == NULL)
-                    {
-                        errorMsg("%s (%d) - Could not open temp file for reading (%s)",
-                            MFL,
-                            ERR_STR);
-                        return(-1);
-                    }
-                    while(fgets(mbuf, sizeof(mbuf)-1, tfp2))
-                    {
-                        msock_puts(mbuf);
-                        if (g_show_attachment_in_log)
-                        {
-                            showVerbose("[C] %s",mbuf);
-                        }
-                    }
-                    (void) fclose(tfp2);
-                    unlink(oneline_tempfile1);
-                    unlink(oneline_tempfile2);
-                }
-
-                (void) snprintf(buf,sizeof(buf)-1,"\r\n\r\n");
-                msock_puts(buf);
-                if (g_show_attachment_in_log)
-                {
-                    showVerbose(buf);
-                }
-            }
-        }
 
         if (msg_body_file)
         {  

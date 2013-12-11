@@ -43,7 +43,7 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \
- -cs "utf8" \
+ -cs "utf-8" \
  -H "X-Priority: 1" -H "Importance: high" \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
@@ -53,7 +53,7 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -M "one line attachment 2" \
  -mime-type "text/html" \
  -enc "none" \
- -M "<b>this is a test</b>" \
+ -M "<b>this is a test</b><br>" \
  -separator ":" \
  -attach "test.txt:text/plain:i:mittagpausa.txt:none:none" \
  -separator "," \

@@ -1,11 +1,20 @@
 1.17b15
 	-enc flag is changed to -enc-type which is used for encoding type of one
-	line messages.
+	line messages. This option can be used with -M or -attach.
 	(Dec-08-2013)
 
+	- Major changes on how things work. Now each of one line message can have
+	can have its own character set, mime type and encoding type. Before 
+	there was not way to distinguish the messages.
+
+	Working on changing -attach option to behave the same way. 
+
+	- Fixes Issue 29. A file can be included as body of the mail with the flag
+	-msg-body file. The character set and mime type can be specified with -cs
+	and -mime-type flags but files can not be encoded.
+
 	-Fixes Issue 37. A new flags -mime-type "type" can be used to specify the
-	MIME type of one line messages. Default is text/plain. So if the one line
-	message is HTML, the mime type text/html can be specified.
+	MIME type. Default is text/plain. It can be used with -M or -attach.
 	(Dec-08-2013)
 
 	- Fixes Issue 36. A new flag -separator "character" can be specified before
@@ -17,7 +26,7 @@
 	type. The default encoding type is base64. If no encoding should be used,
 	specify the 5th field as "none". Also 4th field must be specified as "none"
 	if no content-id will be used. Eample:
-	-attach "file.txt,text/plain,a,blah.txt,none,none" -cs utf8
+	-attach "file.txt,text/plain,a,blah.txt,none,none" -cs "utf-8"
 	(Dec-07-2013)
 
 	- Fixess Issue 34. Try the current addrinfo in connect(), mistakenly 

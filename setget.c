@@ -16,7 +16,8 @@ static Sll
     *one_line_head = NULL,
     *custom_headers_head = NULL,
     *attachment_head=NULL,
-    *one_line_attachment_head = NULL,
+    *oneline_attachment_head = NULL,
+    *msg_body_attachment_head = NULL,
     *server_caps=NULL,
     *addr_head=NULL;
 
@@ -70,10 +71,10 @@ void print_oneline_attachment_list(void)
     Attachment
         *a;
 
-    for (l=one_line_attachment_head; l; l=l->next)
+    for (l=oneline_attachment_head; l; l=l->next)
     {
         a=(Attachment *) l->data;
-        (void) fprintf(stderr,"Message: %s\n",a->one_line_msg);
+        (void) fprintf(stderr,"Message: %s\n",a->oneline_msg);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
@@ -84,13 +85,13 @@ void print_oneline_attachment_list(void)
 
 void print_attachment_list(void)
 {
+    /*
     Sll
         *l;
 
     Attachment
         *a;
 
-    /*
     for (l=attachment_head; l; l=l->next)
     {
         a=(Attachment *) l->data;
@@ -359,12 +360,35 @@ int add_attachment_to_list(char *file_path_mime)
     return(0);
 }
 
+int add_msg_body_to_attachment_list(const char *msg_body_file)
+{
+    Sll
+        *na=NULL;
+
+    Attachment
+        *a=NULL;
+
+    if (msg_body_file == NULL || *msg_body_file == '\0')
+    {
+        return(-1);
+    }
+    a=allocate_attachment(); /* defaults will be set */
+
+    a->file_path = xStrdup(msg_body_file);
+
+    na=allocateNode((void *) a);
+    CHECK_MALLOC(na);
+    appendNode(&msg_body_attachment_head,&na);
+    return(0);
+}
+
+
 /*
 ** create a list of Attachment for one line messages
 ** it uses -mime-type and -enc-type, so these two flags
 ** must specified first before -M
 */
-int add_oneline_to_attachment_list(const char *one_line_msg)
+int add_oneline_to_attachment_list(const char *oneline_msg)
 {
     int
         separator,
@@ -376,27 +400,24 @@ int add_oneline_to_attachment_list(const char *one_line_msg)
     char
         **tokens=NULL,
         *file_path=NULL,
-        *file_name=NULL,
-        *mime_type=NULL,
-        *content_disposition="attachment";
+        *file_name=NULL;
 
     Attachment
         *a=NULL;
 
-    a=(Attachment *) malloc(sizeof(Attachment));
-    CHECK_MALLOC(a);
-    memset(a,0,sizeof(Attachment));
+    if (oneline_msg == NULL || *oneline_msg == '\0')
+    {
+        return(-1);
+    }
+    a=allocate_attachment(); /* defaults will be set */
 
-    a->one_line_msg=xStrdup(one_line_msg);
-    a->mime_type=xStrdup(mime_type);
-    a->encoding_type = g_encoding_type;
-    a->mime_type=xStrdup(g_mime_type);
+    a->oneline_msg=xStrdup(oneline_msg);
     a->content_disposition=xStrdup("inline");
 
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
 
-    appendNode(&one_line_attachment_head,&na);
+    appendNode(&oneline_attachment_head,&na);
     return(0);
 }
 
@@ -595,10 +616,33 @@ Sll *get_attachment_list(void)
 {
     return(attachment_head);
 }
+Sll *get_oneline_attachment_list(void)
+{
+    return(oneline_attachment_head);
+}
 
 Sll *get_server_cap_list(void)
 {
     return(server_caps);
+}
+
+Sll *get_msg_body_attachment_list(void)
+{
+    return(msg_body_attachment_head);
+}
+
+Attachment *allocate_attachment(void)
+{
+    Attachment
+        *a;
+    a = (Attachment *) malloc(sizeof(Attachment));
+    CHECK_MALLOC(a);
+    memset(a,0,sizeof(Attachment));
+    /* default */
+    a->charset = xStrdup(g_charset);
+    a->mime_type = xStrdup(g_mime_type);
+    a->encoding_type = g_encoding_type;
+    return(a);
 }
 
 /* just a debug routine */

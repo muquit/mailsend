@@ -169,12 +169,16 @@ typedef struct _Attachment
         *attachment_name,
 	    *content_id;
     char
-        *one_line_msg;
+        *oneline_msg;
 
     char
         *mime_type;
     char
         *content_disposition;
+
+    char
+        *charset;
+
     int
         encoding_type;
 }Attachment;
@@ -208,7 +212,7 @@ typedef struct _Mailsendrc
 }Mailsendrc;
 
 /* function prototypes */
-char        *xStrdup(char *string);
+char        *xStrdup(const char *string);
 int         addAddressToList(char *a,char *label);
 TheMail     *initTheMail(void);
 Address     *newAddress(void);
@@ -238,10 +242,13 @@ int         add_msg_body_files_to_list(char *file_path);
 int         add_customer_header_to_list(char *line);
 int         add_attachment_to_list(char *file_path_mime);
 int         add_oneline_to_attachment_list(const char *one_line_msg);
+int         add_msg_body_to_attachment_list(const char *msg_body_file);
 int         add_server_cap_to_list(char *capability);
 Sll         *get_one_line_list(void);
 Sll         *get_custom_header_list(void);
 Sll         *get_attachment_list(void);
+Sll         *get_oneline_attachment_list(void);
+Sll         *get_msg_body_attachment_list(void);
 Sll         *get_server_caps_list(void);
 Sll         *get_msg_body_files_list(void);
 void        print_attachment_list(void);
@@ -260,6 +267,7 @@ int         guess_file_type(char *path,unsigned int *flag);
 void        generate_encrypted_password(const char *plaintext);
 void        print_copyright(void);
 int         get_encoding_type(const char *type);
+Attachment  *allocate_attachment(void);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
 #endif /* HAVE_OPENSSL */

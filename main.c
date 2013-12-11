@@ -43,18 +43,21 @@ static void usage(void)
 "  -sub  subject         - subject",
 "  -lilst file           - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
+"  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -separator character  - sepatorator used with -attach. Default is comma (,)",
-"                          If used must be specified before -attach",                           
+"                          If used must be specified before -attach",
+"  -enc-type type        - encoding type",
+"                          valid types are base64, none",
+"  -attach_name name     - name of the attachment. Default is filename",
+"  -content-id id        - content-id in the attachment",
+"  -mime-type type       - MIME type",
 "  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show_attach          - show attachment in verbose mode, default is no",
-"  -cs   character set   - for text/plain attachments (default is us-ascii)",
-"  -content-type type    - Message body content type. Default: multipart/mixed",
-"  -H    \"header\"        - Add custom Header",
 "  -M    \"one line msg\"  - attach this one line text message",
-"  -enc-type type          - encoding type for one line message",
-"                          valid types are base64, none",
-"  -mime-type type       - MIME type of one line message. Default is text/plan",
+"  -content-type type    - Content type. Default: multipart/mixed",
+"  -msg-body path        - Path of the file to include as body of mail",
+"  -H    \"header\"        - Add custom Header",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
 "  -V                    - show version info",
@@ -201,7 +204,7 @@ int main(int argc,char **argv)
         *helo_domain=NULL,
         *smtp_server=NULL,
         *attach_file=NULL,
-        *msg_body_file=NULL,  /* not used anymore */
+        *msg_body_file=NULL, /* back in 1.17b15 */ 
         *the_msg=NULL,
         *custom_header=NULL,
         *to=NULL,
@@ -252,7 +255,7 @@ int main(int argc,char **argv)
 
             case 'a':
             {
-                if (strncmp("attach",option+1,2) == 0)
+                if (strncmp("attach",option+1,6) == 0)
                 {
                     if (*option == '-')
                     {
@@ -666,7 +669,6 @@ int main(int argc,char **argv)
                             return (1);
                         }
                         the_msg=argv[i];
-                        add_one_line_to_list(the_msg);
                         add_oneline_to_attachment_list(the_msg);
                     }
                 }
@@ -694,12 +696,25 @@ int main(int argc,char **argv)
                         mutilsSafeStrcpy(g_mime_type,argv[i],sizeof(g_mime_type)-1);
                     }
                 }
+                else if (strncmp("msg-body",option+1,5) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing path of message body file");
+                            return (1);
+                        }
+                        msg_body_file = argv[i];
+                        add_msg_body_to_attachment_list(argv[i]);
+                    }
+                }
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
                     return(1);
                 }
-
                 break;
             }
 
@@ -976,7 +991,6 @@ int main(int argc,char **argv)
         }
     }
 
-
     x=getenv("SMTP_USER_PASS");
     y=NULL;
     if (x && y)
@@ -1020,9 +1034,10 @@ int main(int argc,char **argv)
     }
 
 
+    /*
     print_attachment_list();
     print_oneline_attachment_list();
-    exit(1);
+    */
 
     /*
     ** attaching a file or a one line message will make the mail a 
