@@ -47,17 +47,20 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -H "X-Priority: 1" -H "Importance: high" \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
- -enc "none" \
+ -enc-type "none" \
  -M "one line attachment 1" \
- -enc "none" \
+ -enc-type "none" \
  -M "one line attachment 2" \
  -mime-type "text/html" \
- -enc "none" \
+ -enc-type "none" \
  -M "<b>this is a test</b><br>" \
+ -cs "utf-8" \
+ -mime-type "text/plain" \
+ -enc-type "base64" \
+ -M "Das sieht Geschäftsführer Stirl naturgemäß anders" \
  -separator ":" \
  -attach "test.txt:text/plain:i:mittagpausa.txt:none:none" \
  -separator "," \
  -attach "test.gif,image/gif,i,test.gif,none,base64" \
  -separator ":" \
- -attach "test.gif:image/gif:a:bar.gif:none:base64" \
- -show_attach
+ -attach "test.gif:image/gif:a:bar.gif:none:base64"

@@ -67,6 +67,23 @@ int get_encoding_type(const char *type)
     return ENCODE_BASE64;
 }
 
+int get_content_disposition(const char *disposition)
+{
+    if (disposition == NULL || *disposition == '\0')
+    {
+        return CONTENT_DISPOSITION_ATTACHMENT;
+    }
+    if (strncmp("attachment", disposition, 10) == 0)
+    {
+        return CONTENT_DISPOSITION_ATTACHMENT;
+    }
+    else if (strncmp("inline", disposition, 6) == 0)
+    {
+        return CONTENT_DISPOSITION_INLINE;
+    }
+    return CONTENT_DISPOSITION_ATTACHMENT;
+}
+
 /*
 ** duplicate a string. exits on failure
 */

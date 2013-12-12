@@ -51,6 +51,7 @@ static void usage(void)
 "  -attach_name name     - name of the attachment. Default is filename",
 "  -content-id id        - content-id in the attachment",
 "  -mime-type type       - MIME type",
+"  -content-dispostion v - \"attachment\" or \"inline\". Default is \"attachment\"",
 "  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show_attach          - show attachment in verbose mode, default is no",
@@ -233,6 +234,7 @@ int main(int argc,char **argv)
     g_show_attachment_in_log = 0;
     g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
     g_encoding_type = ENCODE_NONE;
+    g_content_disposition = CONTENT_DISPOSITION_ATTACHMENT;
 
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
@@ -245,7 +247,7 @@ int main(int argc,char **argv)
     (void) strcpy(g_attach_sep,",");
     (void) strcpy(g_mime_type, "text/plain");
 	
-    (void) strcpy(g_charset,"us-ascii");
+    (void) strcpy(g_charset,"none");
 
     for  (i=1; i < argc; i++)
     {
@@ -423,19 +425,34 @@ int main(int argc,char **argv)
                         }
                         g_connect_timeout = atoi(argv[i]);
                     }
-                } else if (strncmp("content-type", option+1, 12)==0) 
-				{
-					 if (*option == '-')
+                }
+                else if (strncmp("content-type", option+1, 12)==0) 
+                {
+                    if (*option == '-')
                     {
                         i++;
                         if (i == argc)
                         {
-                            errorMsg("Missing content-type set");
+                            errorMsg("Missing content-type value");
                             return (1);
                         }
                         mutilsSafeStrcpy(g_content_type,argv[i],sizeof(g_content_type)-1);
                     }
-				}
+                }
+                else if (strncmp("content-disposition", option + 1, 12) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing content-dispostion value");
+                            return (1);
+                        }
+                        g_content_disposition = get_content_disposition(argv[1]);
+                    }
+
+                }
                 else if (strncmp("copyright", option + 1, 4) == 0)
                 {
                     print_copyright();

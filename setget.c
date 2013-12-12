@@ -276,13 +276,9 @@ int add_attachment_to_list(char *file_path_mime)
         file_name=file_path;
     }
 
-    a=(Attachment *) malloc(sizeof(Attachment));
-    CHECK_MALLOC(a);
-    memset(a,0,sizeof(Attachment));
-
+    a = allocate_attachment();
     a->file_path=xStrdup(file_path);
     a->file_name=xStrdup(file_name);
-    a->encoding_type = ENCODE_BASE64;
 
     switch (ntokens)
     {
@@ -639,9 +635,10 @@ Attachment *allocate_attachment(void)
     CHECK_MALLOC(a);
     memset(a,0,sizeof(Attachment));
     /* default */
-    a->charset = xStrdup(g_charset);
+    a->charset = xStrdup(g_charset); /* default is "none" */
     a->mime_type = xStrdup(g_mime_type);
     a->encoding_type = g_encoding_type;
+    a->attach_separator = *g_attach_sep;
     return(a);
 }
 

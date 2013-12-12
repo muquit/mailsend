@@ -115,6 +115,9 @@ do \
 
 #define ERR_STR strerror(errno)
 
+#define CONTENT_DISPOSITION_INLINE     0x01
+#define CONTENT_DISPOSITION_ATTACHMENT 0x02
+
 /* only suport base64 at this time */
 /* as of Jul-01-2013 */
 #define ENCODE_7BIT             0x01 /* default for text/plain */
@@ -146,6 +149,7 @@ EXTERN int  g_use_protocol;
 EXTERN char g_content_type[64];
 EXTERN char g_mime_type[64]; /* of one line message */
 EXTERN char g_attach_sep[4];
+EXTERN int  g_content_disposition;
 
 
 typedef struct _Address
@@ -180,6 +184,7 @@ typedef struct _Attachment
         *charset;
 
     int
+        attach_separator,
         encoding_type;
 }Attachment;
 
@@ -267,6 +272,7 @@ int         guess_file_type(char *path,unsigned int *flag);
 void        generate_encrypted_password(const char *plaintext);
 void        print_copyright(void);
 int         get_encoding_type(const char *type);
+int         get_content_dispositoin(const char *disposition);
 Attachment  *allocate_attachment(void);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
