@@ -374,11 +374,11 @@ int get_filepath_mimetype(char *str,char *filepath,int fp_size,char *mype_type,i
         errorMsg("Could not determine mime-type from input: %s\n",str);
         return(-1);
     }
-    mutilsSafeStrcpy(mype_type,mt,mt_size);
+    mutilsSafeStrcpy(mype_type,mt,mt_size-1);
 
     /* get the filepath out */
     fp=str;
-    mutilsSafeStrcpy(filepath,fp,fp_size);
+    mutilsSafeStrcpy(filepath,fp,fp_size-1);
     return(rc);
 }
 
