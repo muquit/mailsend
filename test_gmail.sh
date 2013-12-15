@@ -29,10 +29,10 @@ if [ x"$OS" = x"Windows_NT" ]; then
     BINARY="./mailsend.exe"
 fi
 os=`uname`
-os="foo"
+#os="foo"
 if [ x"$os" = x"Linux" ]; then
 VALGRIND_LOG=/tmp/valgrind.log
-VALGRIND="valgrind -v --leak-check=no --log-file=$VALGRIND_LOG"
+VALGRIND="valgrind -v --tool=memcheck --leak-check=yes --error-limit=yes --log-file=$VALGRIND_LOG"
 /bin/rm -f $VALGRIND_LOG
 else
 VALGRIND=""
@@ -48,8 +48,10 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -sub test +cc +bc \
  -user $YOU -pass $PASS \
  -enc-type "none" \
+ -mime-type "text/plain" \
  -M "one line attachment 1" \
  -enc-type "none" \
+ -mime-type "text/plain" \
  -M "one line attachment 2" \
  -mime-type "text/html" \
  -enc-type "none" \
@@ -59,8 +61,16 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -enc-type "base64" \
  -M "Das sieht Geschäftsführer Stirl naturgemäß anders" \
  -separator ":" \
- -attach "test.txt:text/plain:i:mittagpausa.txt:none:none" \
+ -cs "iso-8859-1" \
+ -enc-type "8bit" \
+ -mime-type "text/plain" \
+ -content-disposition "inline" \
+ -attach "test.txt" \
  -separator "," \
  -attach "test.gif,image/gif,i,test.gif,none,base64" \
  -separator ":" \
- -attach "test.gif:image/gif:a:bar.gif:none:base64"
+ -attach "test.gif:image/gif:a:bar.gif:none:base64" \
+ -cs "Big5" \
+ -enc-type "base64" \
+ -mime-type "text/plain" \
+ -M "中文測試"

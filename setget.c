@@ -77,7 +77,7 @@ void print_oneline_attachment_list(void)
         (void) fprintf(stderr,"Message: %s\n",a->oneline_msg);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
-        (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
+        (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
         (void) fprintf(stderr,"\n");
     }
 }
@@ -85,7 +85,6 @@ void print_oneline_attachment_list(void)
 
 void print_attachment_list(void)
 {
-    /*
     Sll
         *l;
 
@@ -103,10 +102,9 @@ void print_attachment_list(void)
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         if (a->content_id)
             (void) fprintf(stderr,"Content-ID: %s\n",a->content_id);
-        (void) fprintf(stderr,"Encoding type: %d\n",a->encoding_type);
+        (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
         (void) fprintf(stderr,"\n");
     }
-    */
 }
 
 
@@ -243,7 +241,7 @@ int add_attachment_to_list(char *file_path_mime)
         **tokens=NULL,
         *file_path=NULL,
         *file_name=NULL,
-        *mime_type=NULL,
+        *mime_type,
         *content_disposition="attachment";
 
     Attachment
@@ -285,9 +283,11 @@ int add_attachment_to_list(char *file_path_mime)
         case 1: /* Only File_path/name given */
         {
 
+            /*
             mime_type="application/octet-stream";
             a->mime_type=xStrdup(mime_type);
             a->content_disposition=xStrdup("attachment");
+            */
             break;
         }
 
@@ -295,7 +295,6 @@ int add_attachment_to_list(char *file_path_mime)
         {
             mime_type=tokens[1];
             a->mime_type=xStrdup(mime_type);
-            a->content_disposition=xStrdup("attachment");
             break;
         }
 
@@ -335,7 +334,7 @@ int add_attachment_to_list(char *file_path_mime)
                 a->attachment_name = xStrdup(tokens[3]);
                 if (strncmp(tokens[4],"none",4) != 0)
                     a->content_id = xStrdup(tokens[4]);
-                a->encoding_type = get_encoding_type(tokens[5]);
+                a->content_transfer_encoding = xStrdup(tokens[5]);
             }
             break;
         }
@@ -384,19 +383,10 @@ int add_msg_body_to_attachment_list(const char *msg_body_file)
 ** it uses -mime-type and -enc-type, so these two flags
 ** must specified first before -M
 */
-int add_oneline_to_attachment_list(const char *oneline_msg)
+int add_oneline_to_attachment_list(char *oneline_msg)
 {
-    int
-        separator,
-        ntokens;
-
     Sll
         *na=NULL;
-
-    char
-        **tokens=NULL,
-        *file_path=NULL,
-        *file_name=NULL;
 
     Attachment
         *a=NULL;
@@ -637,8 +627,14 @@ Attachment *allocate_attachment(void)
     /* default */
     a->charset = xStrdup(g_charset); /* default is "none" */
     a->mime_type = xStrdup(g_mime_type);
-    a->encoding_type = g_encoding_type;
+    a->content_transfer_encoding = xStrdup(g_content_transfer_encoding);
     a->attach_separator = *g_attach_sep;
+    a->content_disposition = xStrdup(g_content_disposition);
+    if (*g_attach_name != '\0')
+    {
+        a->attachment_name = xStrdup(g_attach_name);
+    }
+
     return(a);
 }
 

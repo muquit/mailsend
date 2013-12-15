@@ -46,9 +46,9 @@ static void usage(void)
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -separator character  - sepatorator used with -attach. Default is comma (,)",
 "                          If used must be specified before -attach",
-"  -enc-type type        - encoding type",
-"                          valid types are base64, none",
-"  -attach_name name     - name of the attachment. Default is filename",
+"  -enc-type type        - encoding type. base64, 8bit, 7bit etc.",
+"                          Default is base64. Special type is \"none\"",
+"  -aname name           - name of the attachment. Default is filename",
 "  -content-id id        - content-id in the attachment",
 "  -mime-type type       - MIME type",
 "  -content-dispostion v - \"attachment\" or \"inline\". Default is \"attachment\"",
@@ -105,7 +105,7 @@ static void usage(void)
     exit(0);
 }
 
-static void show_examples(void)
+static void show_examplesX(void)
 {
     (void) fprintf(stdout," Example (Note: type without newline):\n");
 (void) fprintf(stdout,
@@ -218,7 +218,7 @@ int main(int argc,char **argv)
         *bcc=NULL,
         *rt=NULL,
         *rrr=NULL;
- 
+
     g_verbose=0;
     g_connect_timeout = DEFAULT_CONNECT_TIMEOUT; /* 5 secs */
     g_quiet=0;
@@ -233,8 +233,6 @@ int main(int argc,char **argv)
     g_log_fp = NULL;
     g_show_attachment_in_log = 0;
     g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
-    g_encoding_type = ENCODE_NONE;
-    g_content_disposition = CONTENT_DISPOSITION_ATTACHMENT;
 
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
@@ -242,19 +240,23 @@ int main(int argc,char **argv)
     memset(encrypted_pass, 0, sizeof(encrypted_pass));
     memset(g_from_name,0,sizeof(g_from_name));
 	memset(g_content_type,0,sizeof(g_content_type));
-	memset(g_mime_type,0,sizeof(g_mime_type));
     memset(g_attach_sep, 0, sizeof(g_attach_sep));
+    memset(g_attach_name, 0, sizeof(g_attach_name));
+    memset(g_content_transfer_encoding, 0, sizeof(g_content_transfer_encoding));
+    memset(g_mime_type, 0, sizeof(g_mime_type));
+
+    (void) strcpy(g_content_transfer_encoding,"base64");
+    (void) strcpy(g_content_disposition,"attachment");
     (void) strcpy(g_attach_sep,",");
-    (void) strcpy(g_mime_type, "text/plain");
-	
     (void) strcpy(g_charset,"none");
+    (void) strcpy(g_mime_type,"text/plain");
+
 
     for  (i=1; i < argc; i++)
     {
         option=argv[i];
         switch (*(option+1))
         {
-
             case 'a':
             {
                 if (strncmp("attach",option+1,6) == 0)
@@ -269,6 +271,19 @@ int main(int argc,char **argv)
                         }
                         attach_file=argv[i];
                         add_attachment_to_list(attach_file);
+                    }
+                }
+                else if (strncmp("aname",option+1,5) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing attachment name");
+                            return (1);
+                        }
+                        mutilsSafeStrcpy(g_attach_name,argv[i],sizeof(g_attach_name)-1);
                     }
                 }
                 else if (strncmp("auth-plain",option+1,
@@ -307,7 +322,6 @@ int main(int argc,char **argv)
                         g_do_auth=1;
                     }
                 }
-
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
@@ -449,7 +463,16 @@ int main(int argc,char **argv)
                             errorMsg("Missing content-dispostion value");
                             return (1);
                         }
-                        g_content_disposition = get_content_disposition(argv[1]);
+                        if ((strcmp(argv[i],"inline") == 0) || strcmp(argv[i], "attachment") == 0)
+                        {
+                            mutilsSafeStrcpy(g_content_disposition,argv[i],sizeof(g_content_disposition)-1);
+                        }
+                        else
+                        {
+                            errorMsg("Invalid value for -content-disposition");
+                            return(1);
+                        }
+
                     }
 
                 }
@@ -511,7 +534,7 @@ int main(int argc,char **argv)
                         g_esmtp=1;
                     }
 
-                    if (strncmp("enc",option+1,3) == 0)
+                    if (strncmp("enc-type",option+1,4) == 0)
                     {
                         if (*option == '-')
                         {
@@ -521,7 +544,9 @@ int main(int argc,char **argv)
                                 errorMsg("Missing encoding type");
                                 return (1);
                             }
-                            g_encoding_type = get_encoding_type(argv[i]);
+                            mutilsSafeStrcpy(g_content_transfer_encoding,
+                                    argv[i],
+                                    sizeof(g_content_transfer_encoding)-1);
                         }
                     }
                 }
@@ -685,7 +710,7 @@ int main(int argc,char **argv)
                             errorMsg("Missing text message");
                             return (1);
                         }
-                        the_msg=argv[i];
+                        the_msg=xStrdup(argv[i]);
                         add_oneline_to_attachment_list(the_msg);
                     }
                 }

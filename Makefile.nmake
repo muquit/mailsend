@@ -26,8 +26,8 @@ CFLAGS= $(DEFINES) /Ox /W3 /wd4996 /nologo
 WINDOWS_LIBS=ws2_32.lib shell32.lib advapi32.lib user32.lib gdi32.lib winmm.lib comdlg32.lib comctl32.lib
 LIBS=$(MSOCK_LIB) $(SLL_LIB) $(MUTILS_LIB) $(OPENSSL_LIBS) $(WINDOWS_LIBS)
 
-SRCS = main.c smtp.c utils.c setget.c
-OBJS = main.obj smtp.obj utils.obj setget.obj 
+SRCS = main.c smtp.c utils.c setget.c examples.c
+OBJS = main.obj smtp.obj utils.obj setget.obj examples.obj
 
 all: $(PROGNAME)
 

@@ -49,8 +49,8 @@ DEFINES= $(INCLUDES) $(DEFS) -DHAVE_STRING_H=1 -DHAVE_STDLIB_H=1 \
 CFLAGS= @CFLAGS@ $(DEFINES)
 LIBS=$(MSOCK_LIB) $(SLL_LIB) $(MUTILS_LIB) $(OPENSSL_LIBS) @LIBS@
 
-SRCS = main.c smtp.c utils.c setget.c
-OBJS = main.o smtp.o utils.o setget.o
+SRCS = main.c smtp.c utils.c setget.c examples.c
+OBJS = main.o smtp.o utils.o setget.o examples.o
 
 .c.o:
 	rm -f $@
@@ -85,6 +85,8 @@ help:
 
 docs:
 	@ruby mk_doc.rb
+ex:
+	@ruby mk_examples.rb > examples.c
 
 libmsock: libmutils
 	+make -C libs/libmsock

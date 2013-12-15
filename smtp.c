@@ -390,31 +390,8 @@ static BOOL WINAPI CntrlHandler(DWORD CtrlEvent)
     return (TRUE);
 }
 #endif /* WINNT */
-/*
-** Add the encoding type if it is supported
-**/
-static void add_encoding_type(encoding_type)
-{
-    memset(buf,0,sizeof(buf));
-    switch(encoding_type)
-    {
-        case ENCODE_BASE64:
-        {
-            (void) strcpy(buf, "Content-Transfer-Encoding: base64\r\n");
-            msock_puts(buf);
-            showVerbose(buf);
-            break;
-        }
 
-        case ENCODE_QUOTED_PRINTABLE:
-        {
-            errorMsg("quoted-printable encoding is not supported yet");
-            break;
-        }
-    }
-}
-
-static int write_to_socket(char *str)
+int write_to_socket(char *str)
 {
     int
         n;
@@ -423,14 +400,14 @@ static int write_to_socket(char *str)
         return (-1);
     }
     n = msock_puts(str);
-    showVerbose("%d bytes: %s\n",n, str);
+    /*showVerbose("%d bytes: %s\n",n, str);*/
     return(n);
 }
 
 /*
 ** return 1 on success
 */
-static int encode2base64andwrite2socket(const char *str)
+int encode2base64andwrite2socket(const char *str)
 {
     FILE
         *tfp1 = NULL,
@@ -508,7 +485,7 @@ static int encode2base64andwrite2socket(const char *str)
 ** send one line messages, each one is an inline attachment
 ** return 1 if mail is sent, 0 otherwise
 */
-static int process_oneline_messages(const char *boundary)
+int process_oneline_messages(const char *boundary)
 {
     int
         n = (-1);
@@ -548,13 +525,15 @@ static int process_oneline_messages(const char *boundary)
         write_to_socket(buf);
 
         /* add encoding type if needed */
-        showVerbose("Encoding type: %d\n",a->encoding_type);
-         add_encoding_type(a->encoding_type);
+        if (strncmp(a->content_transfer_encoding,"none",4) != 0)
+        {
+            (void) snprintf(buf, bufsz, "Content-Transfer-Encoding: %s\r\n\r\n",
+                    a->content_transfer_encoding);
+            write_to_socket(buf);
+        }
 
-        /* must separate the message */
-        write_to_socket("\r\n");
         
-        if (a->encoding_type == ENCODE_BASE64)
+        if (strncmp(a->content_transfer_encoding,"base64",6) == 0)
         {
             /* encode the mssage to base 64 and write to socket */
             encode2base64andwrite2socket(a->oneline_msg);
@@ -577,7 +556,7 @@ static int process_oneline_messages(const char *boundary)
 ** include the content of the file as body of the message
 ** No encoding will be done.
 */
-static int include_msg_body(void)
+int include_msg_body(void)
 {
     Sll
         *l,
@@ -636,26 +615,188 @@ static int include_msg_body(void)
     return(0);
 }
 
-static int include_image(char *path)
+int include_image(void)
 {
     return(0);
 }
 
-#if 0
-static int process_attachments(const char *boundary)
+static void cleanup_attachment(Attachment *a)
+{
+    if (a == NULL)
+        return;
+    if (a->fp_read)
+    {
+        (void) fclose(a->fp_read);
+    }
+    if (*a->mime_tmpfile != '\0')
+    {
+        unlink(a->mime_tmpfile);
+    }
+}
+
+
+/*
+** return the attachment with fp_read member open.
+** If encoding type requires some kind of encoding,
+** mime_tmpfile will contain the file which holds the
+** encoded content. The caller must close the file pointer
+** and unlik the tmp_filename
+** return NULL on error
+*/
+static Attachment *get_encoded_attachment(Attachment *a)
+{
+    FILE
+        *fp_read = NULL,
+        *tfp_write = NULL;
+
+    if (strncmp(a->content_transfer_encoding, "base64", 6) == 0)
+    {
+        tfp_write = mutils_get_tempfileFP(a->mime_tmpfile,sizeof(a->mime_tmpfile)-1);
+        if (tfp_write == NULL)
+        {
+            errorMsg("%s (%d) - Could not create temp file for MIME (%s)",
+                    MFL,
+                    ERR_STR);
+            return(NULL);
+        }
+        showVerbose("%s (%d) - MIME temp file: %s created successfully, FILE pointer=%x\n",
+                MFL,
+                a->mime_tmpfile,
+                tfp_write);
+
+        /* open the file to attach */
+        fp_read = fopen(a->file_path,"rb");
+        if (fp_read == (FILE *) NULL)
+        {
+            errorMsg("%s (%d) - Could not open file for %s reading (%s)",
+                    MFL,
+                    a->file_path,
+                    ERR_STR);
+            return (NULL);
+        }
+
+        showVerbose("%s (%d) - Writing Content to FILE pointer: %x\n",
+                MFL,
+                tfp_write);
+        /* write base64 content to tmp file */
+        mutilsBase64Encode(fp_read,tfp_write);
+        (void) fclose(fp_read);
+        fp_read = NULL;
+
+        (void) fclose(tfp_write);
+        tfp_write = NULL;
+        a->fp_read = fopen(a->mime_tmpfile, "r");
+        if (a->fp_read == (FILE *) NULL)
+        {
+            errorMsg("%s (%d) - Could not open file for %s reading (%s)",
+                    MFL,
+                    a->file_path,
+                    ERR_STR);
+            return (NULL);
+        }
+        return(a);
+    }
+    /* no tmp file */
+    memset(a->mime_tmpfile, 0, sizeof(a->mime_tmpfile));
+    
+    /* open the attachment. caller must close it */
+    a->fp_read = fopen(a->file_path, "r");
+    if (a->fp_read == (FILE *) NULL)
+    {
+        errorMsg("%s (%d) - Could not open file for %s reading (%s)",
+                MFL,
+                a->file_path,
+                ERR_STR);
+        return (NULL);
+    }
+    return(a);
+}
+
+/*
+** write MIME headers, encode attachment if needed
+** and write to socket
+** returns 0 on success -1 on failure
+*/
+int send_attachment(Attachment *a, const char *boundary)
+{
+    Attachment
+        *encoded_attachment;
+
+    encoded_attachment = get_encoded_attachment(a);
+    if (encoded_attachment == NULL)
+    {
+        errorMsg("%s (%d) - Could not encode attachment %s",
+                MFL,
+                a->file_path);
+        return(-1);
+    }
+
+    (void) snprintf(buf, bufsz,"--%s\r\n",boundary);
+    write_to_socket(buf);
+
+    if (a->charset && strncmp(a->charset,"none", 4) != 0)
+    {
+        (void) snprintf(buf, bufsz, "Content-Type: %s; charset=%s\r\n",
+                a->mime_type,
+                a->charset);
+    }
+    else
+    {
+        (void) snprintf(buf, bufsz, "Content-Type: %s\r\n",a->mime_type);
+    }
+    write_to_socket(buf);
+    
+    if (strncmp(a->content_disposition, "inline", 6) == 0)
+    {
+        (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
+    }
+    else
+    {
+        if (a->file_name)
+        {
+            (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
+                a->content_disposition,
+                a->file_name);
+        }
+        else
+        {
+            (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
+        }
+    }
+    write_to_socket(buf);
+
+    if (strncmp(a->content_transfer_encoding,"none",4) != 0)
+    {
+        (void) snprintf(buf, bufsz, "Content-Transfer-Encoding: %s\r\n\r\n",
+                a->content_transfer_encoding);
+        write_to_socket(buf);
+    }
+    else
+    {
+        write_to_socket("\r\n");
+    }
+
+    /* our FILE pointer is already open and read to read from */
+    while (fgets(buf, bufsz, a->fp_read))
+    {
+        write_to_socket(buf);
+    }
+    /* close file, remove tmp file if needed */
+    cleanup_attachment(a);
+    return(0);
+}
+
+int process_attachments(const char *boundary)
 {
     Attachment
         *a;
 
     Sll
+        *attachment_list,
         *al;
 
-    FILE
-        *fp_read = NULL,
-        *tfp_write = NULL;
-
-    char
-        mime_tmpfile[MUTILS_PATH_MAX];
+    int
+        rc;
 
     attachment_list = get_attachment_list();
     if (attachment_list == NULL)
@@ -669,259 +810,14 @@ static int process_attachments(const char *boundary)
         if (a == NULL)
             continue;
 
-
-        if (a->encoding_type == ENCODE_BASE64)
+        rc = send_attachment(a, boundary);
+        if (rc == -1)
         {
-            /* open a tmp file writing MIME content */
-            memset(mime_tmpfile,0,sizeof(mime_tmpfile));
-            tfp_write = mutils_get_tempfileFP(mime_tmpfile,sizeof(mime_tmpfile)-1);
-            if (tfp_write == NULL)
-            {
-                errorMsg("%s (%d) - Could not create temp file for MIME (%s)",
-                        MFL,
-                        ERR_STR);
-                return(-1);
-            }
-            showVerbose("%s (%d) - MIME temp file: %s created successfully, FILE pointer=%x\n",
+            errorMsg("%s (%d) - failed to send attachment %s\n",
                     MFL,
-                    mime_tmpfile,
-                    tfp_write);
-
-            /* open the file to attach */
-            fp_read = fopen(a->file_path,"rb");
-            if (fp_read == (FILE *) NULL)
-            {
-                errorMsg("%s (%d) - Could not open file for %s reading (%s)",
-                        MFL,
-                        a->file_path,
-                        ERR_STR);
-                return (-1);
-            }
-
-            showVerbose("%s (%d) - Writing Content to FILE pointer: %x\n",
-                    MFL,
-                    tfp);
-            /* write base64 content to tmp file */
-            mutilsBase64Encode(fp_read,tfp_write);
-            showVerbose("%s (%d) - Closing FILE pointer: %x\n",
-                    MFL,
-                    tfp);
-            if (fclose(tfp_write) != 0)
-            {
-                errorMsg("%s (%d) - Could not close FP %x of %s (%s)",
-                        MFL,
-                        tfp_write,
-                        mime_tmpfile,
-                        ERR_STR);
-            }
-            showVerbose("%s (%d) - Temp file %s closed successfully\n",
-                    MFL,
-                    mime_tmpfile);
-
-            tfp_write = NULL;
+                    a->file_path);
+            return(-1);
         }
-        else
-        {
-            char
-                xbuf[BUFSIZ];
-
-            fp_read=fopen(a->file_path,"r");
-            if (fp_read == NULL)
-
-            {
-                errorMsg("%s (%d) - could not open file %s for reading (%s)\n",
-                        MFL,
-                        a->file_path,
-                        ERR_STR);
-                continue;
-            }
-
-            /* open a tmp file writing MIME content */
-            memset(mime_tmpfile,0,sizeof(mime_tmpfile));
-            tfp_write = mutils_get_tempfileFP(mime_tmpfile,sizeof(mime_tmpfile)-1);
-
-            if (tfp_write == NULL)
-            {
-                errorMsg("%s (%d) - Could not create temp file for MIME (%s)",
-                        MFL,
-                        ERR_STR);
-                return(-1);
-            }
-
-
-            while(fgets(xbuf,sizeof(xbuf)-1,fp_read))
-            {
-                fputs(xbuf,tfp_write);
-            }
-            (void) fclose(ttp_read);
-            showVerbose("%s (%d) - Closing FILE pointer: %x\n",
-                    MFL,
-                    tfp_write);
-            if (fclose(tfp_write) != 0)
-            {
-                errorMsg("%s (%d) - Could not close FP %x of %s (%s)",
-                        MFL,
-                        tfp,
-                        mime_tmpfile,
-                        ERR_STR);
-            }
-            showVerbose("%s (%d) - Temp file %s closed successfully\n",
-                    MFL,
-                    mime_tmpfile);
-
-            tfp_write = NULL;
-        }
-        (void) fclose(ttp_read);
-
-        (void) snprintf(buf, bufsz,"--%s\r\n",boundary);
-        write_to_socket(buf);
-        
-        if (strcmp(a->charset,"none") != 0)
-        {
-            if (a->filename)
-            {
-                (void) snprintf(buf, bufsz, "Content-Type: %s; charset=%s; name=\"%s\"\r\n",
-                    a->mime_type,
-                    a->charset,
-                    a->filename);
-            }
-            else
-            {
-                (void) snprintf(buf, bufsz, "Content-Type: %s; charset=%s\r\n",
-                    a->mime_type,
-                    a->charset);
-            }
-        }
-        else
-        {
-            (void) snprintf(buf, bufsz, "Content-Type: %s\r\n", a->mime_type);
-        }
-        write_to_socket(buf);
-
-        (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
-        write_to_socket(buf);
-
-        add_encoding_type(a->encoding_type);
-
-        
-
-        if (mutilsStrcasecmp(a->mime_type,"text/plain") == 0)
-        {
-            char
-                *file_name = "unknown.txt";
-
-            /*
-            ** Guess the file type first. 
-            ** If binary, change my type and base64 encode it.
-            ** If the file is text and in Unix format, write it
-            ** back as Dos file (with \r\n
-            ** TODO
-            ** muquit@muquit.com Mar-21-2007 
-            */
-
-            (void) snprintf(buf,sizeof(buf)-1,"Content-Type: text/plain; charset=%s\r\n",g_charset);
-            msock_puts(buf);
-            showVerbose(buf);
-
-            if (a->attachment_name)
-            {
-                file_name = a->attachment_name;
-            }
-            else
-            {
-                file_name = a->file_name;
-            }
-
-            (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                            a->content_disposition,
-                            file_name);
-            msock_puts(buf);
-            showVerbose(buf);
-
-            add_encoding_type(a->encoding_type);
-            showVerbose("\r\n");
-        }
-        else
-        {
-            if (strcmp(a->content_disposition,"inline") == 0)
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s\r\n",a->mime_type);
-            else
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; name=%s\r\n",a->mime_type,a->file_name);
-            msock_puts(buf);
-            showVerbose(buf);
-
-            /*
-            (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                            a->content_disposition,
-                            a->file_name);
-                            */
-            if (strcmp(a->content_disposition,"inline") == 0)
-            {
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n",a->content_disposition);
-            }
-            else
-            {
-                char
-                    *file_name = "unknown.txt";
-                if (a->attachment_name)
-                {
-                    file_name = a->attachment_name;
-                }
-                else
-                {
-                    file_name = a->file_name;
-                }
-
-                (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                            a->content_disposition,
-                            file_name);
-            }
-            if (a->content_id)	{
-                (void) snprintf(buf,sizeof(buf)-1,"Content-ID: <%s>\r\n",
-                            a->content_id);
-            }
-
-            msock_puts(buf);
-            showVerbose(buf);
-
-            add_encoding_type(a->encoding_type);
-
-                /*
-            msock_puts("Content-Transfer-Encoding: base64\r\n\r\n");
-            showVerbose("Content-Transfer-Encoding: base64\r\n\r\n");
-            */
-        }
-
-        showVerbose("%s (%d) - Now opening Temp file %s for reading\n",
-                MFL,
-                mime_tmpfile);
-        fp=fopen(mime_tmpfile,"r");
-        if (fp == (FILE *) NULL)
-        {
-            errorMsg("%s (%d) - Could not open tmp file \"%s\" for reading (%s)\n",
-                    MFL,
-                    mime_tmpfile,
-                    ERR_STR);
-            return (-1);
-        }
-        while (fgets(mbuf,sizeof(mbuf)-1,fp))
-        {
-            msock_puts(mbuf);
-            if (g_show_attachment_in_log)
-            {
-                showVerbose("[C] %s",mbuf); /* new line is there */
-            }
-        }
-        (void) fclose(fp);
-        if (!g_show_attachment_in_log)
-        {
-            showVerbose("<not showing attachment by policy>\n"); /* new line is there */
-        }
-
-        showVerbose("%s (%d) - Done creating MIME message, removing Temp file %s\n",
-                MFL,
-                mime_tmpfile);
-        unlink(mime_tmpfile);
     }
     
     (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
@@ -930,7 +826,6 @@ static int process_attachments(const char *boundary)
 
     return(0);
 }
-#endif 
 
 /* SMTP: mail */
 static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,char *rt,
@@ -1118,256 +1013,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     if (is_mime)
     {
         process_oneline_messages(boundary);
-        /*process_attachments(boundary);*/
-        
-        /* handle MIME attachments starts */
-        {
-            Attachment
-                *a;
-
-            Sll
-                *al;
-
-            FILE
-                *fp = NULL,
-                *tfp = NULL;
-
-            char
-                mime_tmpfile[MUTILS_PATH_MAX];
-
-            for (al=attachment_list; al; al=al->next)
-            {
-                a=(Attachment *) al->data;
-                if (a == NULL)
-                    continue;
-
-                /* open a tmp file writing MIME content */
-                memset(mime_tmpfile,0,sizeof(mime_tmpfile));
-                tfp = mutils_get_tempfileFP(mime_tmpfile,sizeof(mime_tmpfile)-1);
-                if (tfp == NULL)
-                {
-                    errorMsg("%s (%d) - Could not create temp file for MIME (%s)",
-                            MFL,
-                            ERR_STR);
-                    return(-1);
-                }
-                showVerbose("%s (%d) - MIME temp file: %s created successfully, FILE pointer=%x\n",
-                        MFL,
-                        mime_tmpfile,
-                        tfp);
-
-                /* open the file to attach */
-                fp=fopen(a->file_path,"rb");
-                if (fp == (FILE *) NULL)
-                {
-                    errorMsg("%s (%d) - Could not open file for %s reading (%s)",
-                            MFL,
-                            a->file_path,
-                            ERR_STR);
-                    return (-1);
-                }
-
-                /* base64 encode only if it is not mime type of text/plain */
-                if (mutilsStrcasecmp(a->mime_type,"text/plain") != 0)
-                {
-                    showVerbose("%s (%d) - Writing Binary content to FILE pointer: %x\n",
-                            MFL,
-                            tfp);
-                    mutilsBase64Encode(fp,tfp);
-                    if (tfp)
-                    {
-                        showVerbose("%s (%d) - Closing FILE pointer: %x\n",
-                                MFL,
-                                tfp);
-                        if (fclose(tfp) != 0)
-                        {
-                            errorMsg("%s (%d) - Could not close FP %x of %s (%s)",
-                                    MFL,
-                                    tfp,
-                                    mime_tmpfile,
-                                    ERR_STR);
-                        }
-                        showVerbose("%s (%d) - Temp file %s closed successfully\n",
-                                MFL,
-                                mime_tmpfile);
-
-                        tfp = NULL;
-                    }
-                }
-                else
-                {
-                    FILE
-                        *ttp;
-                    char
-                        xbuf[BUFSIZ];
-
-                    /* write the text file to tmp file */
-                    ttp=fopen(a->file_path,"r");
-                    if (ttp == NULL)
-
-                    {
-                        errorMsg("%s (%d) - could not open file %s for reading (%s)\n",
-                                MFL,
-                                a->file_path,
-                                ERR_STR);
-                        continue;
-                    }
-                    while(fgets(xbuf,sizeof(xbuf)-1,ttp))
-                    {
-                        fputs(xbuf,tfp);
-                    }
-                    fclose(ttp);
-                    if (tfp)
-                    {
-                        showVerbose("%s (%d) - Closing FILE pointer: %x\n",
-                                MFL,
-                                tfp);
-                        if (fclose(tfp) != 0)
-                        {
-                            errorMsg("%s (%d) - Could not close FP %x of %s (%s)",
-                                    MFL,
-                                    tfp,
-                                    mime_tmpfile,
-                                    ERR_STR);
-                        }
-                        showVerbose("%s (%d) - Temp file %s closed successfully\n",
-                                MFL,
-                                mime_tmpfile);
-
-                        tfp = NULL;
-                    }
-                }
-                if (fp)
-                    (void) fclose(fp);
-
-                (void) snprintf(buf,sizeof(buf)-1,"--%s\r\n",boundary);
-                msock_puts(buf);
-                showVerbose(buf);
-                
-
-                if (mutilsStrcasecmp(a->mime_type,"text/plain") == 0)
-                {
-                    char
-                        *file_name = "unknown.txt";
-
-                    /*
-                    ** Guess the file type first. 
-                    ** If binary, change my type and base64 encode it.
-                    ** If the file is text and in Unix format, write it
-                    ** back as Dos file (with \r\n
-                    ** TODO
-                    ** muquit@muquit.com Mar-21-2007 
-                    */
-
-                    (void) snprintf(buf,sizeof(buf)-1,"Content-Type: text/plain; charset=%s\r\n",g_charset);
-                    msock_puts(buf);
-                    showVerbose(buf);
-
-                    if (a->attachment_name)
-                    {
-                        file_name = a->attachment_name;
-                    }
-                    else
-                    {
-                        file_name = a->file_name;
-                    }
-
-                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                    a->content_disposition,
-                                    file_name);
-                    msock_puts(buf);
-                    showVerbose(buf);
-  
-                    add_encoding_type(a->encoding_type);
-                    showVerbose("\r\n");
-                }
-                else
-                {
-                    if (strcmp(a->content_disposition,"inline") == 0)
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s\r\n",a->mime_type);
-                    else
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; name=%s\r\n",a->mime_type,a->file_name);
-                    msock_puts(buf);
-                    showVerbose(buf);
-
-                    /*
-                    (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                    a->content_disposition,
-                                    a->file_name);
-                                    */
-                    if (strcmp(a->content_disposition,"inline") == 0)
-                    {
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s\r\n",a->content_disposition);
-                    }
-                    else
-                    {
-                        char
-                            *file_name = "unknown.txt";
-                        if (a->attachment_name)
-                        {
-                            file_name = a->attachment_name;
-                        }
-                        else
-                        {
-                            file_name = a->file_name;
-                        }
-
-                        (void) snprintf(buf,sizeof(buf)-1,"Content-Disposition: %s; filename=\"%s\"\r\n",
-                                    a->content_disposition,
-                                    file_name);
-                    }
-					if (a->content_id)	{
-		                (void) snprintf(buf,sizeof(buf)-1,"Content-ID: <%s>\r\n",
-                                    a->content_id);
-					}
-
-                    msock_puts(buf);
-                    showVerbose(buf);
-
-                    add_encoding_type(a->encoding_type);
-
-                        /*
-                    msock_puts("Content-Transfer-Encoding: base64\r\n\r\n");
-                    showVerbose("Content-Transfer-Encoding: base64\r\n\r\n");
-                    */
-                }
-
-                showVerbose("%s (%d) - Now opening Temp file %s for reading\n",
-                        MFL,
-                        mime_tmpfile);
-                fp=fopen(mime_tmpfile,"r");
-                if (fp == (FILE *) NULL)
-                {
-                    errorMsg("%s (%d) - Could not open tmp file \"%s\" for reading (%s)\n",
-                            MFL,
-                            mime_tmpfile,
-                            ERR_STR);
-                    return (-1);
-                }
-                while (fgets(mbuf,sizeof(mbuf)-1,fp))
-                {
-                    msock_puts(mbuf);
-                    if (g_show_attachment_in_log)
-                    {
-                        showVerbose("[C] %s",mbuf); /* new line is there */
-                    }
-                }
-                (void) fclose(fp);
-                if (!g_show_attachment_in_log)
-                {
-                    showVerbose("<not showing attachment by policy>\n"); /* new line is there */
-                }
-
-                showVerbose("%s (%d) - Done creating MIME message, removing Temp file %s\n",
-                        MFL,
-                        mime_tmpfile);
-                unlink(mime_tmpfile);
-            }
-            
-            (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
-            msock_puts(buf);
-            showVerbose(buf);
-        }
+        process_attachments(boundary);
         /* handle MIME attachments ends */
         goto done;
     } /* is_mime */

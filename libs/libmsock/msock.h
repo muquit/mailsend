@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
-//#include <windows.h>
+/*#include <windows.h>*/
 #include <winsock2.h>
 /* http://support.microsoft.com/kb/955045 */
 /* for getaddrinfo in win2k */

@@ -141,15 +141,16 @@ EXTERN char g_charset[33];
 EXTERN char g_username[64];
 EXTERN char g_userpass[64];
 EXTERN char g_from_name[64];
+EXTERN char g_content_transfer_encoding[32];
 EXTERN FILE *g_log_fp;
 EXTERN char g_log_file[MUTILS_PATH_MAX];
 EXTERN int  g_show_attachment_in_log;
-EXTERN int  g_encoding_type;
 EXTERN int  g_use_protocol;
 EXTERN char g_content_type[64];
-EXTERN char g_mime_type[64]; /* of one line message */
 EXTERN char g_attach_sep[4];
-EXTERN int  g_content_disposition;
+EXTERN char g_attach_name[64];
+EXTERN char g_content_disposition[32];
+EXTERN char g_mime_type[64];
 
 
 typedef struct _Address
@@ -172,20 +173,28 @@ typedef struct _Attachment
         *file_name,
         *attachment_name,
 	    *content_id;
+
     char
         *oneline_msg;
 
     char
         *mime_type;
+
     char
         *content_disposition;
 
     char
+        *content_transfer_encoding,
         *charset;
 
     int
-        attach_separator,
-        encoding_type;
+        attach_separator;
+
+    FILE
+        *fp_read;
+
+    char
+        mime_tmpfile[MUTILS_PATH_MAX];
 }Attachment;
 
 /* the mail sturct */
@@ -246,7 +255,7 @@ int         add_one_line_to_list(char *line);
 int         add_msg_body_files_to_list(char *file_path);
 int         add_customer_header_to_list(char *line);
 int         add_attachment_to_list(char *file_path_mime);
-int         add_oneline_to_attachment_list(const char *one_line_msg);
+int         add_oneline_to_attachment_list(char *one_line_msg);
 int         add_msg_body_to_attachment_list(const char *msg_body_file);
 int         add_server_cap_to_list(char *capability);
 Sll         *get_one_line_list(void);
@@ -272,8 +281,16 @@ int         guess_file_type(char *path,unsigned int *flag);
 void        generate_encrypted_password(const char *plaintext);
 void        print_copyright(void);
 int         get_encoding_type(const char *type);
-int         get_content_dispositoin(const char *disposition);
+int         get_content_disposition(const char *disposition);
 Attachment  *allocate_attachment(void);
+int         write_to_socket(char *str);
+int         send_attachment(Attachment *a, const char *boundary);
+int         process_attachments(const char *boundary);
+int         process_oneline_messages(const char *boundary);
+int         encode2base64andwrite2socket(const char *str);
+int         include_msg_body(void);
+int         include_image(void);
+void        show_examples(void);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
 #endif /* HAVE_OPENSSL */
