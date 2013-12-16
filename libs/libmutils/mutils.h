@@ -110,6 +110,9 @@ vile)*/
 #define O_BINARY  0x00
 #endif
 
+#define MUTILS_TRUE   1
+#define MUTILS_FALSE  0
+
 
 typedef struct _MutilsBlob
 {

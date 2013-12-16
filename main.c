@@ -233,6 +233,7 @@ int main(int argc,char **argv)
     g_log_fp = NULL;
     g_show_attachment_in_log = 0;
     g_use_protocol = MSOCK_USE_AUTO; /* detect IPv4 or IPv6 */
+    g_force = MUTILS_FALSE;
 
     memset(g_log_file,0,sizeof(g_log_file));
     memset(g_username,0,sizeof(g_username));
@@ -572,6 +573,18 @@ int main(int argc,char **argv)
                             return (1);
                         }
                         from=argv[i];
+                    }
+                }
+                break;
+            }
+
+            case 'x':
+            {
+                if (strncmp("xforce",option+1,1) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        g_force = MUTILS_TRUE;
                     }
                 }
                 break;
