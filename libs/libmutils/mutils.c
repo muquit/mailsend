@@ -996,9 +996,7 @@ int mutilsTmpFilename(char *filename)
  *  Development History:
  *      3/26/92, jps, first cut
  */
-char *mutilsBasename(path)
-char
-    *path;
+char *mutilsBasename(char *path)
 {
     char
         *cptr;
@@ -1016,6 +1014,80 @@ char
     return (path);
 }
 
+
+/*
+** Return the extension of a file in a path
+**  Parameters:
+**    path - path of a file
+**  Return Values:
+**   pointer to the extension
+**  Side Effects:
+**   none
+**  Comments:
+**   If that is /usr/local/file.pdf, pointer to 
+**   pdf will be returned
+**  Development History:
+**   muquit@muquit.com Dec-15-2013  - needed to detect mime type based on extension
+*/
+char *mutilsExtension(char *path)
+{
+    char
+        *base,
+        *cptr;
+
+    base = mutilsBasename(path);
+    for (cptr = base + strlen(base); cptr >= base; --cptr)
+    {
+        switch (*cptr)
+        {
+            case '.':
+            {
+                return ++cptr;
+            }
+        }
+    }
+    return path;
+}
+
+char *mutilsExtensionLower(char *path)
+{
+    char
+        *ext;
+    return (mutilsStrLower(mutilsExtension(path)));
+}
+
+
+/*
+**  Return the basename of a path
+**  Parameters:
+**    path - path in Unix or windows style
+**
+**  Return Values:
+**    pointer to the basename on success
+**    pointer to the path on failure
+**  Side Effects:
+**    no memory is allocated, pointer is returned
+**    pointing to the basename
+**  Comments:
+**    If path is say /usr/local/foo, foo will be returned
+**    on success. if path is c:\foo\bar, pointer to bar 
+**    will be returned. if path is blah, pointer ot 
+**    blah will be returned
+**  Development History:
+**    muquit@muquit.com Dec-15-2013 
+**    didn't know I already had it
+*/
+char *mutils_basename(const char *path)
+{
+    char
+        *bn = path;
+    bn = strrchr(path,'/');
+    if (bn == NULL)
+    {
+        bn = strrchr(path,'\\');
+    }
+    return (bn == NULL) ? path : ++bn;
+}
 
 /*
 **  mutilsDotLock()
@@ -1836,6 +1908,7 @@ int mutils_binary_to_hex_buf(unsigned char *in,int in_len,char *out,int *out_len
     *op='\0';
     return(*out_len);
 }
+
 
 
 

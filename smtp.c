@@ -752,7 +752,14 @@ int send_attachment(Attachment *a, const char *boundary)
     }
     else
     {
-        if (a->file_name)
+        if (a->attachment_name)
+        {
+            (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
+                a->content_disposition,
+                a->attachment_name);
+
+        }
+        else if (a->file_name)
         {
             (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
                 a->content_disposition,

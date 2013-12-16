@@ -54,7 +54,7 @@ static void usage(void)
 "  -content-dispostion v - \"attachment\" or \"inline\". Default is \"attachment\"",
 "  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
-"  -show_attach          - show attachment in verbose mode, default is no",
+"  -show-attach          - show attachment in verbose mode, default is no",
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -content-type type    - Content type. Default: multipart/mixed",
 "  -msg-body path        - Path of the file to include as body of mail",
@@ -245,11 +245,17 @@ int main(int argc,char **argv)
     memset(g_content_transfer_encoding, 0, sizeof(g_content_transfer_encoding));
     memset(g_mime_type, 0, sizeof(g_mime_type));
 
-    (void) strcpy(g_content_transfer_encoding,"base64");
+    /* (void) strcpy(g_content_transfer_encoding,"base64"); */ /* no default */
     (void) strcpy(g_content_disposition,"attachment");
     (void) strcpy(g_attach_sep,",");
-    (void) strcpy(g_charset,"none");
+    (void) strcpy(g_charset,DEFAULT_CHARSET);
+    /*
+        No default for mime_type, we will detect from file extensinon
+        if no mime type is specified with -mime-type
+    */
+    /*
     (void) strcpy(g_mime_type,"text/plain");
+    */
 
 
     for  (i=1; i < argc; i++)
@@ -833,7 +839,7 @@ int main(int argc,char **argv)
                     
 #endif /* HAVE_OPENSSL */
                 }
-                else if (strncmp("show_attach", option + 1, 9) == 0)
+                else if (strncmp("show-attach", option + 1, 9) == 0)
                 {
                     g_show_attachment_in_log = 1;
                 }

@@ -506,5 +506,5 @@ char *mutilsStrLower(char *str)
             *s=tolower(*s);
     }
 
-    return (s);
+    return (str);
 }

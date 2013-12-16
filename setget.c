@@ -346,6 +346,26 @@ int add_attachment_to_list(char *file_path_mime)
             break;
         }
     }
+
+    if (a->mime_type == NULL)
+    {
+        if (*g_mime_type != '\0')
+        {
+            a->mime_type = xStrdup(g_mime_type);
+        }
+        else
+        {
+            a->mime_type = xStrdup(get_mime_type(a->file_path));
+        }
+    }
+    if (a->content_transfer_encoding == NULL)
+    {
+        if (*g_content_transfer_encoding == '\0')
+        {
+            a->content_transfer_encoding = xStrdup("base64");
+        }
+    }
+
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
 
@@ -399,6 +419,10 @@ int add_oneline_to_attachment_list(char *oneline_msg)
 
     a->oneline_msg=xStrdup(oneline_msg);
     a->content_disposition=xStrdup("inline");
+    if (*g_mime_type == '\0')
+    {
+        a->mime_type = xStrdup("text/plain");
+    }
 
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
@@ -624,10 +648,16 @@ Attachment *allocate_attachment(void)
     a = (Attachment *) malloc(sizeof(Attachment));
     CHECK_MALLOC(a);
     memset(a,0,sizeof(Attachment));
-    /* default */
-    a->charset = xStrdup(g_charset); /* default is "none" */
-    a->mime_type = xStrdup(g_mime_type);
-    a->content_transfer_encoding = xStrdup(g_content_transfer_encoding);
+
+    a->charset = xStrdup(g_charset); /* default is "utf-8" */
+    if (*g_mime_type != '\0')
+    {
+        a->mime_type = xStrdup(g_mime_type);
+    }
+
+    if (*g_content_transfer_encoding != '\0')
+        a->content_transfer_encoding = xStrdup(g_content_transfer_encoding);
+
     a->attach_separator = *g_attach_sep;
     a->content_disposition = xStrdup(g_content_disposition);
     if (*g_attach_name != '\0')

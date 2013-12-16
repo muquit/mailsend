@@ -227,6 +227,8 @@ char  *mutilsGetTime        (void);
 char  mutilsChopNL          (char *str);
 /*int  mutilsTmpFilename     (char *filename);*/
 char  *mutilsBasename       (char *path);
+char  *mutilsExtension      (char *file_path);
+char  *mutilsExtensionLower (char *file_path);
 int   mutilsWhich           (char *name);
 void  mutilsSetLock         (int fd);
 void  mutilsDotLock         (char *filepath,char *errbuf);
@@ -291,6 +293,7 @@ int     mutils_write_blob_msb_short(MutilsBlob *blob,const unsigned long value);
 size_t  mutils_write_blob_string(MutilsBlob *blob_info,const char *string);
 char    *mutils_getcwd(char *buf,int buflen);
 FILE    *mutils_get_tempfileFP(char *tempfile_path,int buflen);
+char    *mutils_basename(const char *path);
 
 /* time */
 int mutils_time_now(MutilsTime *mt);

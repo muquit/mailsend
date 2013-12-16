@@ -14,6 +14,16 @@
 #define HOUR_MIN    60      /* minutes in an hour */
 #define MIN_SEC     60      /* seconds in a minute */
 
+static struct _MimeType 
+{
+    char
+        *ext,
+        *val;
+} s_mime_type[] =
+{
+#include "mime_types.h"
+};
+
 
 /*
 ** returns a positive number if the file descriptor is connected to
@@ -506,11 +516,15 @@ int rfc822_date(time_t when,char *datebuf,int bufsiz)
 
 /*
 ** return 0 on success, -1 on failure
+** super simple naive funtion to detect if a file is 
+** binary or not.. it's just to prevent attaching binary file
+** if no encoding type is specified. It's not a simple task
+** to detect if a file is binary or not correctly.
 */
 int guess_file_type(char *file,unsigned int *flag)
 {
     char
-        buf[BUFSIZ];
+        buf[513];
 
     int
         i,
@@ -629,6 +643,36 @@ void print_copyright(void)
         (void) fprintf(stdout,"%s\n",*p);
     }
     (void) fflush(stdout);
+}
+
+/*
+**  Return the MIME type of the file
+**  Parameters:
+**    path - path of the file
+**  Return Values:
+**   mime type 
+**  Side Effects:
+**   none
+**  Comments:
+**   If no extension is found, "text/plain" will be returned
+**  Development History:
+*/
+char *get_mime_type(char *path)
+{
+    char
+        *ext;
+    int
+        i;
+
+    ext = mutilsExtensionLower(path);
+    for (i=0; i < sizeof(s_mime_type)/sizeof(*s_mime_type); i++)
+    {
+        if (strcmp(s_mime_type[i].ext, ext) == 0)
+        {
+            return (s_mime_type[i].val);
+        }
+    }
+    return ("text/plain");
 }
 
 #ifdef HAVE_OPENSSL

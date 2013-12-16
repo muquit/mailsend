@@ -126,6 +126,8 @@ do \
 #define ENCODE_QUOTED_PRINTABLE 0x04
 #define ENCODE_NONE             0x05
 
+#define DEFAULT_CHARSET "utf-8"
+
 EXTERN int  g_verbose;
 EXTERN int  g_connect_timeout;
 EXTERN int  g_wait_for_cr;
@@ -291,6 +293,7 @@ int         encode2base64andwrite2socket(const char *str);
 int         include_msg_body(void);
 int         include_image(void);
 void        show_examples(void);
+char        *get_mime_type(char *path);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
 #endif /* HAVE_OPENSSL */
