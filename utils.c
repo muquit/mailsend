@@ -675,6 +675,19 @@ char *get_mime_type(char *path)
     return ("text/plain");
 }
 
+void show_mime_types()
+{
+    int
+        i;
+    for (i=0; i < sizeof(s_mime_type)/sizeof(*s_mime_type); i++)
+    {
+        (void) fprintf(stdout,"%s\t%s\n",
+                s_mime_type[i].val,
+                s_mime_type[i].ext);
+    }
+
+}
+
 #ifdef HAVE_OPENSSL
 void print_cert_info(SSL *ssl)
 {

@@ -55,6 +55,7 @@ static void usage(void)
 "  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show-attach          - show attachment in verbose mode, default is no",
+"  -show-mime-types      - show the compiled in MIME types",
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -content-type type    - Content type. Default: multipart/mixed",
 "  -msg-body path        - Path of the file to include as body of mail",
@@ -744,7 +745,7 @@ int main(int argc,char **argv)
 
             case 'm':
             {
-                if (strncmp("mime-type",option+1,6) == 0)
+                if (strncmp("mime-type",option+1,9) == 0)
                 {
                     if (*option == '-')
                     {
@@ -856,6 +857,12 @@ int main(int argc,char **argv)
                 {
                     g_show_attachment_in_log = 1;
                 }
+                else if (strncmp("show-mime-types",option+1,9) == 0)
+                {
+                    show_mime_types();
+                    return(0);
+                }
+
                 else if (strncmp("separator", option + 1, 4) == 0)
                 {
                     if (*option == '-')

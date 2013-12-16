@@ -297,6 +297,7 @@ void        show_examples(void);
 char        *get_mime_type(char *path);
 #ifdef HAVE_OPENSSL
 void        print_cert_info(SSL *ssl);
+void        show_mime_types(void);
 #endif /* HAVE_OPENSSL */
 
 #endif /* ! MAIL_SEND_H */
