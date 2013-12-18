@@ -7,14 +7,11 @@
 #
 require 'fileutils'
 
-ME = __FILE__
-while File.symlink?(ME)
-    ME= File.expand_path(File.readlink(ME), File.dirname(ME))
-end
-MYDIR = File.expand_path(File.dirname(ME))
 
 class MakeExamples
-  EXAMPLE_FILE = MYDIR + "/misc/examples.txt"
+  ME = __FILE__
+  EXAMPLE_FILE = Dir.pwd + "/misc/examples.txt"
+  PROG = Dir.pwd + "/mailsend"
 
   def initialize
   end
@@ -25,7 +22,7 @@ class MakeExamples
   end
 
   def make_examples
-    v = `./mailsend -V 2>&1`
+    v = `#{PROG} -V 2>&1`
     va = v.split("\n")
     puts <<-EOF
 #include "mailsend.h"

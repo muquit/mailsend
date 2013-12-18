@@ -12,15 +12,15 @@ class MakeDebianPackage
   def initialize
     @dirs = []
 
-    @dirs << "debian/DEBIAN"
-    @dirs << "debian/usr/bin"
-    @dirs << "debian/usr/share/doc/mailsend"
-    @dirs << "debian/usr/share/man/man1"
+    @dirs << Dir.pwd + "/debian/DEBIAN"
+    @dirs << Dir.pwd + "/debian/usr/bin"
+    @dirs << Dir.pwd + "/debian/usr/share/doc/mailsend"
+    @dirs << Dir.pwd + "/debian/usr/share/man/man1"
 
     @depends = "libc6 (>= 2.4)" # XXX CHANGE if needed
     @mailsend_ver = ''
     @package_name = ''
-    @control_file = "debian/DEBIAN/control"
+    @control_file = Dir.pwd + "/debian/DEBIAN/control"
   end
 
   def log(msg)
@@ -29,13 +29,13 @@ class MakeDebianPackage
   end
 
   def check
-    file = "./mailsend"
+    file = Dir.pwd + "/mailsend"
     if !File.exists?(file)
       log "#{file} does not exist, compile first"
       exit(1)
     end
 
-    file = "./changelog.debian"
+    file = Dir.pwd + "/changelog.debian"
     if !File.exists?(file)
       log "#{file} does not exist, compile first"
       exit(1)

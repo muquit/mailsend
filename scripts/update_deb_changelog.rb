@@ -11,7 +11,7 @@
 class UpdateDebianChangelog
 
   def initialize
-    ENV['CHANGELOG'] = './changelog.debian'
+    ENV['CHANGELOG'] = Dir.pwd + '/changelog.debian'
     ENV['DEBFULLNAME'] = 'Muhammad Muquit'
     ENV['DEBEMAIL'] =  'muquit@muquit.com'
     ENV['VISUAL'] = 'vi'

@@ -7,6 +7,7 @@
 class GenerateMailsendExample
   ME = $0
   ME_SHORT = File.basename(ME)
+  PROG = Dir.pwd + "/mailsend"
 
   def initialize
     $stdout.sync = true
@@ -19,7 +20,7 @@ class GenerateMailsendExample
   end
 
   def doit
-    if !File.exists?("mailsend")
+    if !File.exists?(PROG)
       error "Program mailsend does not exist"
     end
     mhash = {}
@@ -29,7 +30,7 @@ class GenerateMailsendExample
     mailsend_found = false
     header = nil
     headers = []
-    o = `mailsend -ex`
+    o = `#{PROG} -ex`
     new_lines = []
     last_h = ''
 

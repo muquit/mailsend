@@ -5,14 +5,16 @@ mailsend - A command line program to send mail via SMTP protocol
 =head1 SYNOPSYS
 
 
- Version: @(#) mailsend v1.17b14
+ Version: @(#) mailsend v1.17b15
 
  Copyright: BSD. It is illegal to use this software for Spamming
 
- (Compiled with OpenSSL version: OpenSSL 1.0.0g 18 Jan 2012)
+ (Compiled with OpenSSL version: OpenSSL 1.0.1c 10 May 2012)
  usage: mailsend [options]
  Where the options are:
   -copyright            - show copyright information
+  -4                    - Force to use IPv4 address of SMTP server
+  -6                    - Force to use IPv6 address of SMTP server
   -smtp hostname/IP*    - Hostname/IP address of the SMTP server
   -port SMTP port       - SMTP port
   -d    domain          - domain name for SMTP HELO/EHLO
@@ -27,15 +29,25 @@ mailsend - A command line program to send mail via SMTP protocol
   -sub  subject         - subject
   -lilst file           - a file containing a list of email addresses
   -log file             - write log messages to this file
-  -attach file,mime_type,[i/a] (i=inline,a=attachment)
-                        - attach this file as attachment or inline
   -cs   character set   - for text/plain attachments (default is us-ascii)
-  -enc  type            - Encoding Type. Only valid type: base64
-  -H    "header"        - Add custom Header
+  -separator character  - sepatorator used with -attach. Default is comma (,)
+                          If used must be specified before -attach
+  -enc-type type        - encoding type. base64, 8bit, 7bit etc.
+                          Default is base64. Special type is "none"
+  -aname name           - name of the attachment. Default is filename
+  -content-id id        - content-id in the attachment
+  -mime-type type       - MIME type
+  -content-dispostion v - "attachment" or "inline". Default is "attachment"
+  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)
+                        - attach this file as attachment or inline
+  -show-attach          - show attachment in verbose mode, default is no
+  -show-mime-types      - show the compiled in MIME types
   -M    "one line msg"  - attach this one line text message
+  -content-type type    - Content type. Default: multipart/mixed
+  -msg-body path        - Path of the file to include as body of mail
+  -H    "header"        - Add custom Header
   -name "Full Name"     - add name in the From header
   -v                    - verbose mode
-  -show_attach          - show attachment in verbose mode, default is no
   -V                    - show version info
   -w                    - wait for a CR after sending the mail
   -rt  email_address    - add Reply-To header
@@ -70,56 +82,128 @@ L<http://muquit.com/muquit/software/mailsend/mailsend.html>
 
 =head1 EXAMPLES
 
- Example (Note: type without newline):
- Show server info
- ================
- mailsend -v -info -port 587 -smtp smtp.gmail.com
- mailsend -v -info -ssl -port 465 -smtp smtp.gmail.com
- mailsend -v -info -smtp smtp.example.com -ct 2
+Examples of mailsend Version: @(#) mailsend v1.17b15
 
- STARTTLS + AUTHENTICATION
- =========================
- mailsend -to user@gmail.com -from user@gmail.com
- -starttls -port 587 -auth
- -smtp smtp.gmail.com
- -sub test +cc +bc -v
- -user you -pass "your_password"
- Note: Password can be set by env var SMTP_USER_PASS instead of -pass
+  Show server info
+  ================
+   mailsend -v -info -port 587 -smtp smtp.gmail.com
+   mailsend -v -info -ssl -port 465 -smtp smtp.gmail.com
+   mailsend -v -info -smtp smtp.example.com -ct 2
 
- SSL + AUTHENTICATION
- ====================
- mailsend -to user@gmail.com -from user@gmail.com
- -ssl -port 465 -auth
- -smtp smtp.gmail.com
- -sub test +cc +bc -v
- -user you -pass "your_password"
+  STARTTLS + AUTHENTICATION
+  =========================
+   mailsend -to user@gmail.com -from user@gmail.com
+   -starttls -port 587 -auth
+   -smtp smtp.gmail.com
+   -sub test +cc +bc -v
+   -user you -pass "your_password"
+   Note: Password can be set by env var SMTP_USER_PASS instead of -pass
 
- As -auth is specified, CRAM-MD5, LOGIN, PLAIN will be tried in that order.
- Use -auth-cram-md5, -auth-plan, -auth-login for specific auth mechanism.
+  SSL + AUTHENTICATION
+  ====================
+   mailsend -to user@gmail.com -from user@gmail.com
+   -ssl -port 465 -auth
+   -smtp smtp.gmail.com
+   -sub test +cc +bc -v
+   -user you -pass "your_password"
 
- Note: Password can be set by env var SMTP_USER_PASS instead of -pass
+   As -auth is specified, CRAM-MD5, LOGIN, PLAIN will be tried in that order.
+   Use -auth-cram-md5, -auth-plan, -auth-login for specific auth mechanism.
 
- Attachments
- ===========
- mailsend -f user@example.com -smtp 10.100.30.1
-  -t user@example.com -sub test -attach "file.txt,text/plain"
-  -attach "/usr/file.gif,image/gif" -attach "file.jpeg,image/jpg"
+   Note: Password can be set by env var SMTP_USER_PASS instead of -pass
 
- mailsend -f user@example.com -smtp 192.168.0.2
-  -t user@example.com -sub test +cc +bc
-  -attach "c:\file.gif,image/gif" -M "Sending a GIF file"
+  One line messages
+  =================
+  One line messages are specified with -M. Each message can have its own
+  MIME type, character set and encoding type:
 
- mailsend -f user@example.com -smtp 192.168.0.2
-  -t user@example.com -sub test +cc +bc -cs "ISO-8859-1"
-  -attach "file2.txt,text/plain"
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub "testing oneline messages"
+   -cs "us-ascii"
+   -enc-type "7bit"
+   -M "This is a test"
+   -cs "iso-8859-1"
+   -enc-type "8bit"
+   -M "Das Vetter ist schön!"
+   -cs "Big5"
+   -enc-type "base64"
+   -M "中文測試"
 
- Inline Attachment
- =================
- mailsend -f user@example.com -d example.com -smtp 10.100.30.1
-  -t user@example.com -sub test -attach "nf.jpg,image/jpeg,i"
-  -M "body line1: content disposition is inline"
-  -M "body line2: this is line2 of the body"
+  Attachments
+  ===========
 
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub test -attach "file.txt,text/plain"
+   -attach "/usr/file.gif,image/gif" -attach "file.jpeg,image/jpg"
+
+  Only requirement of -attach is the path of the file. All other 
+  attributes can be specified before -attach with appropriate
+  flags. Note: The flags must be specified correctly for each attachment,
+  otherwise the one specified in previous attachment will be used.
+
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub test
+    -mime-type "text/plain" 
+    -enc-type "7bit"
+    -charset "us-ascii"
+     -attach "file.txt"
+    -enc-type "8bit"
+    -charset "iso-8859-1"
+    -attach "deutsch.txt"
+   -mime-type "image/gif"
+    -enc-type "base64"
+    -mime-type "image/gif"
+     -attach "/usr/file.gif" 
+   -mime-type "image/jpeg"
+   -enc-type "base64" 
+    -attach "file.jpeg"
+
+  The name of the attachment will be file.gif and file.jpeg.
+  If you want the name to be different:
+
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub test
+   -attach_name "foo.jpg" -attach "/usr/file.gif,image/gif" 
+
+  What if filename has comma in it:
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub test
+   -attach_name "example.pdf" 
+   -mime-type "application/pdf"
+   -attach "This file has comma, in filename.pdf"
+
+   mailsend -f user@example.com -smtp 10.100.30.1
+   -t user@example.com -sub test -attach "file.txt,text/plain"
+   -attach "/usr/file.gif,image/gif,a,bar.gif" -attach "file.jpeg,image/jpg"
+
+   mailsend -f user@example.com -smtp 192.168.0.2
+   -t user@example.com -sub test +cc +bc
+   -attach "c:\file.gif,image/gif" -M "Sending a GIF file"
+
+   mailsend -f user@example.com -smtp 192.168.0.2
+   -t user@example.com -sub test +cc +bc -cs "ISO-8859-1"
+   -attach "file2.txt,text/plain"
+
+  Including a body
+  ================
+  Only one file can be included as a body of the mail. If the
+  file not us-ascii, the SMTP server has to support it. If you include
+  a binary file like this, result is undefined.
+
+   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
+    -port 587 -starttls -auth -user user@gmail.com -pass secret 
+    -charset "utf-8"
+    -mime-type "text/plain"
+    -msg-body "file.txt"
+
+  Inline Attachment
+  =================
+   Each one line message can have mime type and encoding:
+
+   mailsend -f user@example.com -d example.com -smtp 10.100.30.1
+   -t user@example.com -sub test -attach "nf.jpg,image/jpeg,i"
+   -M "body line1: content disposition is inline"
+   -M "body line2: this is line2 of the body"
 
 
 =head1 SEE ALSO

@@ -7,14 +7,9 @@
 #
 require 'fileutils'
 
-ME = __FILE__
-while File.symlink?(ME)
-    ME= File.expand_path(File.readlink(ME), File.dirname(ME))
-end
-MYDIR = File.expand_path(File.dirname(ME))
-
 class MakeMimeTypesH
-  MIME_TYPES_FILE = MYDIR + "/mime.types"
+  ME = __FILE__
+  MIME_TYPES_FILE = Dir.pwd + "/mime.types"
 
   def initialize
   end

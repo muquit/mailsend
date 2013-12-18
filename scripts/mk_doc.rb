@@ -4,7 +4,7 @@
 # muquit@muquit.com  Mar-27-2012 
 class MakeMailsendPod
 
-  PROG = "./mailsend"
+  PROG = Dir.pwd + "/mailsend"
 
   def initialize
     @mailsend_ver = ''
@@ -17,7 +17,7 @@ class MakeMailsendPod
   end
 
   def mailsend_version
-    ver = `./mailsend -V 2>&1`
+    ver = `#{PROG} -V 2>&1`
     a = ver.split("\n")
     l = a[0].to_s.chomp
     if l =~ /.*v(.*)$/
@@ -39,7 +39,7 @@ class MakeMailsendPod
   def gen_pod
     synopsis = `#{PROG} -h`
     ex = `#{PROG} -ex`
-    f = File.open("./doc/mailsend.pod", "w")
+    f = File.open(Dir.pwd + "/doc/mailsend.pod", "w")
     f.puts <<EOD
 =head1 NAME
 

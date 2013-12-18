@@ -6,7 +6,8 @@ require 'fileutils'
 
 begin
   version = nil
-  l = `./mailsend -V 2>&1`
+  prog = Dir.pwd + "/mailsend"
+  l = `#{prog} -V 2>&1`
   lines = l.split("\n")
   lines.each do |line|
     line = line.chomp

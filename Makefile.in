@@ -84,9 +84,9 @@ help:
 	@echo "make deb     - create debian package"
 
 docs:
-	@ruby mk_doc.rb
+	@ruby scripts/mk_doc.rb
 ex:
-	@ruby mk_examples.rb > examples.c
+	@ruby scripts/mk_examples.rb > examples.c
 
 libmsock: libmutils
 	+make -C libs/libmsock

@@ -24,8 +24,8 @@ class ChangeLogToWiki
 
   def doit
     file = ''
-    file = "ChangeLog" if File.exists?("ChangeLog")
-    file = "ChangeLog.txt" if File.exists?("ChangeLog.txt")
+    file = Dir.pwd + "/ChangeLog" if File.exists?(Dir.pwd + "/ChangeLog")
+    file = Dir.pwd + "/ChangeLog.txt" if File.exists?(Dir.pwd + "/ChangeLog.txt")
     f = File.open(file)
     list_found = false
     project=File.basename(Dir.pwd)
