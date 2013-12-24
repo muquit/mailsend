@@ -152,6 +152,7 @@ EXTERN char g_content_type[64];
 EXTERN char g_attach_sep[4];
 EXTERN char g_attach_name[64];
 EXTERN char g_content_disposition[32];
+EXTERN char g_content_id[64];
 EXTERN char g_mime_type[64];
 EXTERN int g_force;
 

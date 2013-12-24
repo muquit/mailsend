@@ -52,7 +52,7 @@ static void usage(void)
 "  -content-id id        - content-id in the attachment",
 "  -mime-type type       - MIME type",
 "  -dispostion val       - \"attachment\" or \"inline\". Default is \"attachment\"",
-"  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
+"  -attach file,mime_type,[i/a] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show-attach          - show attachment in verbose mode, default is no",
 "  -show-mime-types      - show the compiled in MIME types",
@@ -106,6 +106,7 @@ static void usage(void)
     exit(0);
 }
 
+#if 0
 static void show_examplesX(void)
 {
     (void) fprintf(stdout," Example (Note: type without newline):\n");
@@ -180,6 +181,7 @@ static void show_examplesX(void)
 "  -M \"body line1: content disposition is inline\"\n"
 "  -M \"body line2: this is line2 of the body\"\n\n");
 }
+#endif /* if 0 */
 
 int main(int argc,char **argv)
 {
@@ -246,6 +248,7 @@ int main(int argc,char **argv)
     memset(g_attach_name, 0, sizeof(g_attach_name));
     memset(g_content_transfer_encoding, 0, sizeof(g_content_transfer_encoding));
     memset(g_mime_type, 0, sizeof(g_mime_type));
+    memset(g_content_id, 0, sizeof(g_content_id));
 
     /* (void) strcpy(g_content_transfer_encoding,"base64"); */ /* no default */
     (void) strcpy(g_content_disposition,"attachment");
@@ -473,18 +476,32 @@ int main(int argc,char **argv)
                         }
                         if ((strcmp(argv[i],"inline") == 0) || strcmp(argv[i], "attachment") == 0)
                         {
-                            mutilsSafeStrcpy(g_content_disposition,argv[i],sizeof(g_content_disposition)-1);
+                            mutilsSafeStrcpy(g_content_disposition,argv[i],
+                                    sizeof(g_content_disposition)-1);
                         }
                         else
                         {
                             errorMsg("Invalid value for -content-disposition");
                             return(1);
                         }
+                    }
+                }
+                else if (strncmp("content-id", option + 1, 10) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing content-id value");
+                            return (1);
+                        }
 
+                        mutilsSafeStrcpy(g_content_id,argv[i],sizeof(g_content_id)-1);
                     }
 
                 }
-                else if (strncmp("copyright", option + 1, 4) == 0)
+                else if (strncmp("copyright", option + 1, 5) == 0)
                 {
                     print_copyright();
                     exit(0);

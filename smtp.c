@@ -772,6 +772,12 @@ int send_attachment(Attachment *a, const char *boundary)
     }
     write_to_socket(buf);
 
+    if (a->content_id)
+    {
+        (void) snprintf(buf, bufsz, "Content-ID: <%s>\r\n",a->content_id);
+        write_to_socket(buf);
+    }
+
     if (strncmp(a->content_transfer_encoding,"none",4) != 0)
     {
         (void) snprintf(buf, bufsz, "Content-Transfer-Encoding: %s\r\n\r\n",

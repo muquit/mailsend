@@ -13,21 +13,28 @@
 Notice: only content id is specified with cid, no path of image is specified.
 <p>
         While sending mail with mailsend, we will specify the content id
-        xx_deadbeefcafe as fifth field with -attach for the html file
-        and the image. 
+        xx_deadbeefcafe with flag -content-id for the image.
         <p>
 <b>Example:</b>
 <p>
 Note: Requires mailsend v1.17b15+:
         <pre>
-  mailsend -port 587 -smtp smtp.gmail.com \
-   -from example@gmail.com -to example@gmail.com \
-   -starttls -auth -user example@gmail.com \
-   -attach "test/embedded_image.html,text/html,i,file.html" \
-   -attach "test/test.png,image/png,i,Test.png,xx_deadbeefcafe" \
-   -cs "ISO-8859-1" \
-   -content-type "multipart/related" \
-   -sub "testing embedding image in html" -v
+    mailsend -v -sub "Testing embedding image in HTML" 
+    -from example@ gmail.com -to example@gmail.com 
+    -smtp smtp.gmail.com -port 587 -starttls -auth 
+    -user mailsendreal@gmail.com 
+    -cs ISO-8859-1 
+    -content-type "multipart/related" 
+    -mime-type text/html 
+    -disposition inline 
+    -enc-type "none" 
+    -attach "/home/muquit/svndev/mailsend/test/embedded_image.html" 
+    -mime-type image/png 
+    -enc-type "base64" 
+    -disposition inline 
+    -content-id "xx_deadbeefcafe" 
+    -cs "none" 
+    -attach "/home/muquit/svndev/mailsend/test/test.png"
         </pre>
        <p>
        Any mail reader that understands multipart-related Content-type will

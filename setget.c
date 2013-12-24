@@ -366,6 +366,14 @@ int add_attachment_to_list(char *file_path_mime)
         }
     }
 
+    if (a->content_id == NULL)
+    {
+        if (*g_content_id != '\0')
+        {
+            a->content_id = xStrdup(g_content_id);
+        }
+    }
+
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
 
