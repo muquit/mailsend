@@ -59,6 +59,7 @@ static void usage(void)
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -content-type type    - Content type. Default: multipart/mixed",
 "  -msg-body path        - Path of the file to include as body of mail",
+"  -embed-image image    - Path of image to embed in mail",
 "  -H    \"header\"        - Add custom Header",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",
@@ -569,33 +570,49 @@ int main(int argc,char **argv)
 
             case 'e':
             {
-                if (*option == '-')
+                if (strncmp("example",option+1,2) == 0)
                 {
-                    if (strncmp("example",option+1,2) == 0)
+                    if (*option == '-')
                     {
                         show_examples();
                         return(1);
                     }
-                    if (strncmp("ehlo",option+1,4) == 0)
+                }
+                else if (strncmp("ehlo",option+1,4) == 0)
+                {
+                    if (*option == '-')
                     {
                         g_esmtp=1;
                     }
-
-                    if (strncmp("enc-type",option+1,4) == 0)
+                }
+                else if (strncmp("enc-type",option+1,4) == 0)
+                {
+                    if (*option == '-')
                     {
-                        if (*option == '-')
+                        i++;
+                        if (i == argc)
                         {
-                            i++;
-                            if (i == argc)
-                            {
-                                errorMsg("Missing encoding type");
-                                return (1);
-                            }
-                            mutilsSafeStrcpy(g_content_transfer_encoding,
-                                    argv[i],
-                                    sizeof(g_content_transfer_encoding)-1);
+                            errorMsg("Missing encoding type");
+                            return (1);
                         }
+                        mutilsSafeStrcpy(g_content_transfer_encoding,
+                                argv[i],
+                                sizeof(g_content_transfer_encoding)-1);
                     }
+                }
+                else if (strncmp("embed-image", option + 1, 7) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing image for -embded-image");
+                            return (1);
+                        }
+                        /* TODO */
+                    }
+
                 }
                 break;
             }
