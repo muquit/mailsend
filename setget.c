@@ -18,6 +18,7 @@ static Sll
     *attachment_head=NULL,
     *oneline_attachment_head = NULL,
     *msg_body_attachment_head = NULL,
+    *embed_image_attachment_head = NULL,
     *server_caps=NULL,
     *addr_head=NULL;
 
@@ -383,6 +384,29 @@ int add_attachment_to_list(char *file_path_mime)
     return(0);
 }
 
+int add_embed_image_to_attachment_list(const char *image_file)
+{
+    Sll
+        *na=NULL;
+
+    Attachment
+        *a=NULL;
+
+    if (image_file == NULL || *image_file == '\0')
+    {
+        return(-1);
+    }
+    a=allocate_attachment(); /* defaults will be set */
+
+    a->file_path = xStrdup(image_file);
+
+    na=allocateNode((void *) a);
+    CHECK_MALLOC(na);
+    appendNode(&embed_image_attachment_head,&na);
+    return(0);
+
+}
+
 int add_msg_body_to_attachment_list(const char *msg_body_file)
 {
     Sll
@@ -647,6 +671,11 @@ Sll *get_server_cap_list(void)
 Sll *get_msg_body_attachment_list(void)
 {
     return(msg_body_attachment_head);
+}
+
+Sll *get_embed_image_attachment_list(void)
+{
+    return (embed_image_attachment_head);
 }
 
 Attachment *allocate_attachment(void)

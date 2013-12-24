@@ -610,6 +610,7 @@ int main(int argc,char **argv)
                             errorMsg("Missing image for -embded-image");
                             return (1);
                         }
+                        add_embed_image_to_attachment_list(argv[i]);
                         /* TODO */
                     }
 
