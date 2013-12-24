@@ -1,13 +1,16 @@
 1.17b15
+	- The flad -d is changed to -domain. Added new option -disposition to
+	specify the type of content disposition.
+	(Dec-22-2013)
+
 	-enc flag is changed to -enc-type which is used for encoding type of one
 	line messages. This option can be used with -M or -attach.
 	(Dec-08-2013)
 
 	- Major changes on how things work. Now each of one line message can have
-	can have its own character set, mime type and encoding type. Before 
-	there was not way to distinguish the messages.
-
-	Working on changing -attach option to behave the same way. 
+	its own character set, mime type and encoding type. Before there was 
+	not way to distinguish the messages.  The optiopn -attach option also
+	behaves the same way.
 
 	- Fixes Issue 29. A file can be included as body of the mail with the flag
 	-msg-body file. The character set and mime type can be specified with -cs

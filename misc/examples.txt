@@ -2,7 +2,6 @@
  ================
   mailsend -v -info -port 587 -smtp smtp.gmail.com
   mailsend -v -info -ssl -port 465 -smtp smtp.gmail.com
-  mailsend -v -info -smtp smtp.example.com -ct 2
 
  STARTTLS + AUTHENTICATION
  =========================
@@ -36,85 +35,61 @@
   -cs "us-ascii"
   -enc-type "7bit"
   -M "This is a test"
+
   -cs "iso-8859-1"
   -enc-type "8bit"
   -M "Das Vetter ist schön!"
+
   -cs "Big5"
   -enc-type "base64"
   -M "中文測試"
 
  Attachments
  ===========
-
-  mailsend -f user@example.com -smtp 10.100.30.1
-  -t user@example.com -sub test -attach "file.txt,text/plain"
-  -attach "/usr/file.gif,image/gif" -attach "file.jpeg,image/jpg"
-
  Only requirement of -attach is the path of the file. All other 
  attributes can be specified before -attach with appropriate
  flags. Note: The flags must be specified correctly for each attachment,
  otherwise the one specified in previous attachment will be used.
 
+ By default MIME type is guessed from filename extension, default 
+ encoding type base64 is used:
+  mailsend -f user@example.com -smtp 10.100.30.1
+  -t user@example.com -sub "this is a test"
+  -attach "file.pdf" -attach "file.jpg"
+
+ But all espects of attachments can be controlled:
   mailsend -f user@example.com -smtp 10.100.30.1
   -t user@example.com -sub test
    -mime-type "text/plain" 
    -enc-type "7bit"
    -charset "us-ascii"
-    -attach "file.txt"
+   -attach "file.txt"
+
    -enc-type "8bit"
    -charset "iso-8859-1"
    -attach "deutsch.txt"
+
   -mime-type "image/gif"
-   -enc-type "base64"
-   -mime-type "image/gif"
-    -attach "/usr/file.gif" 
+  -enc-type "base64"
+  -aname "flower.gif"
+  -attach "/usr/file.gif" 
+
   -mime-type "image/jpeg"
   -enc-type "base64" 
-   -attach "file.jpeg"
+  -attach "file.jpeg"
 
- The name of the attachment will be file.gif and file.jpeg.
- If you want the name to be different:
-
-  mailsend -f user@example.com -smtp 10.100.30.1
-  -t user@example.com -sub test
-  -attach_name "foo.jpg" -attach "/usr/file.gif,image/gif" 
-
- What if filename has comma in it:
-  mailsend -f user@example.com -smtp 10.100.30.1
-  -t user@example.com -sub test
-  -attach_name "example.pdf" 
-  -mime-type "application/pdf"
-  -attach "This file has comma, in filename.pdf"
-
-  mailsend -f user@example.com -smtp 10.100.30.1
-  -t user@example.com -sub test -attach "file.txt,text/plain"
-  -attach "/usr/file.gif,image/gif,a,bar.gif" -attach "file.jpeg,image/jpg"
-
-  mailsend -f user@example.com -smtp 192.168.0.2
-  -t user@example.com -sub test +cc +bc
-  -attach "c:\\file.gif,image/gif" -M "Sending a GIF file"
-
-  mailsend -f user@example.com -smtp 192.168.0.2
-  -t user@example.com -sub test +cc +bc -cs "ISO-8859-1"
-  -attach "file2.txt,text/plain"
+ By default, content disposition of all atachments are attachment, use
+ -disposition "inline" to give hint to the mail reader to display it as
+ mail body. Look at FAQ# 1 for details.
 
  Including a body
  ================
  Only one file can be included as a body of the mail. If the
- file not us-ascii, the SMTP server has to support it. If you include
- a binary file like this, result is undefined.
+ file is not us-ascii, the SMTP server has to support it. If you 
+ include a binary file, result is undefined.
 
   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
    -port 587 -starttls -auth -user user@gmail.com -pass secret 
    -charset "utf-8"
    -mime-type "text/plain"
    -msg-body "file.txt"
-
- Inline Attachment
- =================
-  Each one line message can have mime type and encoding:
-
-  mailsend -f user@example.com -d example.com -smtp 10.100.30.1
-  -t user@example.com -sub test -attach "nf.jpg,image/jpeg,i"
-  -M "body line1: content disposition is inline"
-  -M "body line2: this is line2 of the body"

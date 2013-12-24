@@ -51,7 +51,7 @@ static void usage(void)
 "  -aname name           - name of the attachment. Default is filename",
 "  -content-id id        - content-id in the attachment",
 "  -mime-type type       - MIME type",
-"  -content-dispostion v - \"attachment\" or \"inline\". Default is \"attachment\"",
+"  -dispostion val       - \"attachment\" or \"inline\". Default is \"attachment\"",
 "  -attach file,mime_type,[i/a],[name],[content-id],[enc type] (i=inline,a=attachment)",
 "                        - attach this file as attachment or inline",
 "  -show-attach          - show attachment in verbose mode, default is no",
@@ -512,7 +512,7 @@ int main(int argc,char **argv)
 
             case 'd':
             {
-                if (strncmp("domain",option+1,1) == 0)
+                if (strncmp("domain",option+1,6) == 0)
                 {
                     if (*option == '-')
                     {
@@ -525,6 +525,28 @@ int main(int argc,char **argv)
                         helo_domain=argv[i];
                     }
                 }
+                else if (strncmp("disposition", option + 1, 6) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            errorMsg("Missing content dispostion value");
+                            return (1);
+                        }
+                        if ((strcmp(argv[i],"inline") == 0) || strcmp(argv[i], "attachment") == 0)
+                        {
+                            mutilsSafeStrcpy(g_content_disposition,argv[i],sizeof(g_content_disposition)-1);
+                        }
+                        else
+                        {
+                            errorMsg("Invalid value for -disposition");
+                            return(1);
+                        }
+                    }
+                }
+
                 break;
             }
 
