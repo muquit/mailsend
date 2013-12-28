@@ -41,7 +41,7 @@ EOF
   end
 
   def send_mail
-    html_file = Dir.pwd + "/test/embedded_image.html"
+    html_file = Dir.pwd + "/test/embed_image1.html"
     image = Dir.pwd + "/test/test.png"
     content_id = "xx_deadbeefcafe"
 

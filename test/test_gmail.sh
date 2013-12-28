@@ -29,7 +29,7 @@ if [ x"$OS" = x"Windows_NT" ]; then
     BINARY="./mailsend.exe"
 fi
 os=`uname`
-#os="foo"
+os="foo"
 if [ x"$os" = x"Linux" ]; then
 VALGRIND_LOG=/tmp/valgrind.log
 VALGRIND="valgrind -v --tool=memcheck --leak-check=yes --error-limit=yes --log-file=$VALGRIND_LOG"
@@ -65,11 +65,8 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -enc-type "8bit" \
  -mime-type "text/plain" \
  -content-disposition "inline" \
- -attach "test.txt" \
- -separator "," \
- -attach "test.gif,image/gif,i,test.gif,none,base64" \
- -separator ":" \
- -attach "test.gif:image/gif:a:bar.gif:none:base64" \
+ -attach "test/test.txt" \
+ -attach "test/test.gif" \
  -cs "Big5" \
  -enc-type "base64" \
  -mime-type "text/plain" \

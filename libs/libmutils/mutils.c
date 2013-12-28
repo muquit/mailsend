@@ -9,6 +9,33 @@ static int
 static const char basis_64[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+/* taken from Parrot code */
+const char Parrot_utf8skip[256] =
+{
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* ascii */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* bogus */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* bogus */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* bogus */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,     /* bogus */
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,     /* scripts */
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,     /* scripts */
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,     /* cjk etc. */
+    4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6      /* cjk etc. */
+};
+
+#define UTF8_IS_START(c)            ((c) >= 0xC2 && (c) <= 0xF4)
+#define UTF8SKIP(c) Parrot_utf8skip[c]
+#define UTF8_IS_CONTINUATION(c)    (((c) & 0xC0) == 0x80)
+
+
+
 
 void mutils_liberate_memory(void **memory)
 {
@@ -1910,6 +1937,135 @@ int mutils_binary_to_hex_buf(unsigned char *in,int in_len,char *out,int *out_len
 }
 
 
+/*
+** return MUTILS_TRUE if the file is binary. MUTILS_FALSE otherwise.
+** return -1 on error
+** The algorithm is adapted from Perl pp_fttext()
+** 512 bytes of file is used.
+**
+** here is the algorithm (perldoc -I -B|more)
+    The "-T" and "-B" switches work as follows.  The first block or
+    so of the file is examined for odd characters such as strange
+    control codes or characters with the high bit set.  If too many
+    strange characters (>30%) are found, it's a "-B" file;
+    otherwise it's a "-T" file.  Also, any file containing a zero
+    byte in the first block is considered a binary file
+*/
+int mutils_file_is_binary(const char *file)
+{
+    struct stat
+        sbuf;
+
+    FILE
+        *fp = NULL;
+
+    char
+        *s,
+        buf[513];
+
+    size_t
+        len;
+    int
+        i,
+        sz,
+        n;
+
+    int
+        odd = 0;
+
+    float
+        x;
+
+    sz = sizeof(buf) - 1;
+    if (stat(file, &sbuf) != 0)
+    {
+        (void) fprintf(stderr,"Could not stat file %s\n",file);
+        return(-1);
+    }
+    len = sbuf.st_size;
+    if (len > 512)
+    {
+        len = 512;
+    }
+    fp = fopen(file, "rb");
+    if (fp == NULL)
+    {
+        (void) fprintf(stderr,"Error reading file: %s\n",file);
+        return(-1);
+    }
+    memset(buf, 0, sizeof(buf));
+    n = fread(buf, 1, len, fp);
+    if (n != len)
+    {
+        (void) fprintf(stderr,"read error\n");
+        return(-1);
+    }
+
+    s = buf;
+
+    if (len && len < sizeof(buf) && buf[len - 1] == 0x1a)
+    {
+        --len;
+    }
+    for (i=0; i < len; i++, s++)
+    {
+        if (!*s)
+        {
+            odd += len;
+            break;
+        }
+        else if (*s & 128)
+        {
+            if (UTF8_IS_START(*s))
+            {
+                int ulen = UTF8SKIP(*s);
+                if (ulen < len - i)
+                {
+                    int
+                        j;
+                    for (j = 1; j < ulen; j++) 
+                    {
+                        if (!UTF8_IS_CONTINUATION(s[j]))
+                        {
+                            goto NotUtf8;
+                        }
+                    }
+                    --ulen;
+                    s += ulen;
+                    i += ulen;
+                    continue;
+                }
+            }
+NotUtf8:
+            odd++;
+        }
+        else 
+        {
+            if (*s < 32 && *s != '\n' && *s != '\r' && *s != '\b' &&
+                    *s != '\t' && *s != '\f' && *s != 27)
+            {
+                odd++;
+            }
+        }
+    }
+    x = ((odd * 1.0) / (len * 1.0));
+    if (x < 0.30)
+    {
+        return MUTILS_FALSE;
+    }
+    else
+    {
+        return MUTILS_TRUE;
+    }
+
+
+ExitProcessing:
+    if (fp)
+    {
+        (void) fclose(fp);
+    }
+    return(-1);
+}
 
 
 

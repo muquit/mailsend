@@ -297,6 +297,7 @@ size_t  mutils_write_blob_string(MutilsBlob *blob_info,const char *string);
 char    *mutils_getcwd(char *buf,int buflen);
 FILE    *mutils_get_tempfileFP(char *tempfile_path,int buflen);
 char    *mutils_basename(const char *path);
+int     mutils_file_is_binary(const char *file);
 
 /* time */
 int mutils_time_now(MutilsTime *mt);

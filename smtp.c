@@ -405,7 +405,7 @@ int write_to_socket(char *str)
 }
 
 /*
-** return 1 on success
+** return 0 on success
 */
 int encode2base64andwrite2socket(const char *str)
 {
@@ -478,12 +478,12 @@ int encode2base64andwrite2socket(const char *str)
     unlink(oneline_tempfile1);
     unlink(oneline_tempfile2);
  
-    return(1);
+    return(0);
 }
 
 /*
 ** send one line messages, each one is an inline attachment
-** return 1 if mail is sent, 0 otherwise
+** return 0 if mail is sent, -1 otherwise
 */
 int process_oneline_messages(const char *boundary)
 {
@@ -549,7 +549,10 @@ int process_oneline_messages(const char *boundary)
         }
         write_to_socket("\r\n");
     }
-    return(n);
+    return(0);
+
+ExitProcessing:
+    return(-1);
 }
 
 /*
@@ -582,13 +585,13 @@ int include_msg_body(void)
 
     if (strcmp(a->charset,"none") != 0)
     {
-        (void) snprintf(buf,bufsz,"Content-type: %s; charset=%s\r\n\r\n",
+        (void) snprintf(buf,bufsz,"Content-Type: %s; charset=%s\r\n\r\n",
                 a->mime_type,
                 a->charset);
     }
     else
     {
-        (void) snprintf(buf,bufsz,"Content-type: %s\r\n\r\n",a->mime_type);
+        (void) snprintf(buf,bufsz,"Content-Type: %s\r\n\r\n",a->mime_type);
     }
     write_to_socket(buf);
 
@@ -648,6 +651,8 @@ static Attachment *get_encoded_attachment(Attachment *a)
     FILE
         *fp_read = NULL,
         *tfp_write = NULL;
+    int
+        tempfile_opened = 0;
 
     if (strncmp(a->content_transfer_encoding, "base64", 6) == 0)
     {
@@ -659,6 +664,7 @@ static Attachment *get_encoded_attachment(Attachment *a)
                     ERR_STR);
             return(NULL);
         }
+        tempfile_opened = 1;
         showVerbose("%s (%d) - MIME temp file: %s created successfully, FILE pointer=%x\n",
                 MFL,
                 a->mime_tmpfile,
@@ -672,7 +678,7 @@ static Attachment *get_encoded_attachment(Attachment *a)
                     MFL,
                     a->file_path,
                     ERR_STR);
-            return (NULL);
+            goto ExitProcessing;
         }
 
         showVerbose("%s (%d) - Writing Content to FILE pointer: %x\n",
@@ -692,7 +698,11 @@ static Attachment *get_encoded_attachment(Attachment *a)
                     MFL,
                     a->file_path,
                     ERR_STR);
-            return (NULL);
+            goto ExitProcessing;
+        }
+        if (tempfile_opened)
+        {
+            unlink(a->mime_tmpfile);
         }
         return(a);
     }
@@ -710,6 +720,13 @@ static Attachment *get_encoded_attachment(Attachment *a)
         return (NULL);
     }
     return(a);
+
+ExitProcessing:
+    if (tempfile_opened)
+    {
+        unlink(a->mime_tmpfile);
+    }
+    return(NULL);
 }
 
 /*
@@ -746,35 +763,40 @@ int send_attachment(Attachment *a, const char *boundary)
     }
     write_to_socket(buf);
     
-    if (strncmp(a->content_disposition, "inline", 6) == 0)
+    if (a->content_id == NULL)
     {
-        (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
-    }
-    else
-    {
-        if (a->attachment_name)
-        {
-            (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
-                a->content_disposition,
-                a->attachment_name);
-
-        }
-        else if (a->file_name)
-        {
-            (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
-                a->content_disposition,
-                a->file_name);
-        }
-        else
+        if (strncmp(a->content_disposition, "inline", 6) == 0)
         {
             (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
         }
+        else
+        {
+            if (a->attachment_name)
+            {
+                (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
+                    a->content_disposition,
+                    a->attachment_name);
+
+            }
+            else if (a->file_name)
+            {
+                (void) snprintf(buf, bufsz, "Content-Disposition: %s; filename=\"%s\"\r\n",
+                    a->content_disposition,
+                    a->file_name);
+            }
+            else
+            {
+                (void) snprintf(buf, bufsz, "Content-Disposition: %s\r\n",a->content_disposition);
+            }
+        }
+        write_to_socket(buf);
     }
-    write_to_socket(buf);
 
     if (a->content_id)
     {
         (void) snprintf(buf, bufsz, "Content-ID: <%s>\r\n",a->content_id);
+        write_to_socket(buf);
+        (void) snprintf(buf, bufsz, "X-Attachment-Id: %s\r\n",a->content_id);
         write_to_socket(buf);
     }
 
@@ -840,6 +862,153 @@ int process_attachments(const char *boundary)
     return(0);
 }
 
+/*
+** Print multipart/mixed or multipart/related header
+** if mixed and embedded images are specified, make
+** to use multipart/alternative for the embedded images.
+*/
+int print_content_type_header(const char *boundary)
+{
+    Sll
+        *oneline_attachment_list,
+        *attachment_list,
+        *embed_image_list;
+
+    (void) snprintf(buf, bufsz,"Mime-version: 1.0\r\n");
+    write_to_socket(buf);
+
+    if (*g_content_type!='\0')
+    {
+      (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",
+              g_content_type,
+              boundary);
+      write_to_socket(buf);
+      return(0);
+    }
+
+    oneline_attachment_list = get_oneline_attachment_list();
+    attachment_list = get_attachment_list();
+    embed_image_list = get_embed_image_attachment_list();
+    if (oneline_attachment_list || attachment_list)
+    {
+        (void) snprintf(buf,sizeof(buf)-1,
+                "Content-type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
+        write_to_socket(buf);
+        return(0);
+    }
+    if (embed_image_list)
+    {
+        (void) snprintf(buf,sizeof(buf)-1,
+                "Content-type: multipart/related; boundary=\"%s\"\r\n", boundary);
+        write_to_socket(buf);
+        return(0);
+    }
+    write_to_socket("\r\n");
+}
+
+int process_embeded_images(const char *boundary)
+{
+    char
+        *ib,
+        *b,
+        related[17],
+        cid[17],
+        tbuf[24],
+        alternative[17];
+
+    Attachment
+        *a;
+
+    Sll
+        *il,
+        *oneline_attachment_list,
+        *attachment_list,
+        *embed_image_list;
+
+    int
+        rc,
+        ic = 1;
+
+    oneline_attachment_list = get_oneline_attachment_list();
+    attachment_list = get_attachment_list();
+
+    embed_image_list = get_embed_image_attachment_list();
+    if (embed_image_list == NULL)
+    {
+        return(0);
+    }
+    memset(related, 0, sizeof(related));
+    memset(alternative, 0, sizeof(alternative));
+
+    mutilsGenerateMIMEBoundary(related,sizeof(related));
+    mutilsGenerateMIMEBoundary(alternative,sizeof(alternative));
+    b = boundary;
+    ib = boundary;
+
+    (void) snprintf(buf, bufsz, "--%s\r\n",boundary);
+    write_to_socket(buf);
+
+    if (attachment_list || oneline_attachment_list)
+    {
+        b = related;
+        ib = b;
+        (void) snprintf(buf, bufsz, "Content-Type: multipart/related; boundary=%s\r\n",b);
+        write_to_socket(buf);
+
+        (void) snprintf(buf, bufsz, "Content-Type: multipart/alternative; boundary=%s\r\n\r\n",
+                alternative);
+        write_to_socket(buf);
+
+        (void) snprintf(buf, bufsz, "--%s\r\n",b);
+        write_to_socket(buf);
+    }
+    else
+    {
+        ib = alternative;
+        (void) snprintf(buf, bufsz, "Content-Type: multipart/alternative; boundary=%s\r\n\r\n",
+                alternative);
+        write_to_socket(buf);
+
+        (void) snprintf(buf, bufsz, "--%s\r\n",alternative);
+        write_to_socket(buf);
+    }
+
+    write_to_socket("Content-Type: text/html; charset=ISO-8859-1\r\n\r\n");
+
+    /* write the img tags with cid */
+    embed_image_list = get_embed_image_attachment_list();
+    for (il = embed_image_list; il; il = il->next)
+    {
+        a = (Attachment *) il->data;
+        mutilsGenerateMIMEBoundary(cid,sizeof(cid));
+        (void) snprintf(tbuf,sizeof(tbuf)-1,"ii%d_%s",ic,cid);
+        a->content_id = xStrdup(tbuf);
+        (void) snprintf(buf, bufsz, "<img src=\"cid:%s\" alt=\"inline image %d\"><br>\n",
+                tbuf,
+                ic);
+        write_to_socket(buf);
+        ic++;
+    }
+    write_to_socket("\r\n");
+    (void) snprintf(buf, bufsz, "--%s--\r\n",ib);
+    write_to_socket(buf);
+
+    for (il = embed_image_list; il; il = il->next)
+    {
+        a = (Attachment *) il->data;
+        if (a == NULL)
+            continue;
+        rc = send_attachment(a,b);
+        RETURN_IF_NOT_ZERO(rc);
+    }
+    (void) snprintf(buf, bufsz, "--%s--\r\n",b);
+    write_to_socket(buf);
+    return(0);
+
+ExitProcessing:
+    return(-1);
+}
+
 /* SMTP: mail */
 static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,char *rt,
                     char *subject,char *attach_file,char *msg_body_file,
@@ -848,13 +1017,17 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     char
         *os="Unix",
         boundary[17],
+        related[17],
+        alternative[17],
         mbuf[1024];
 
     int
         newline_before;
 
     Sll
-        *attachment_list;
+        *oneline_attachment_list,
+        *attachment_list,
+        *embed_image_list;
 
 #ifdef WINNT
     os="Windows";
@@ -862,8 +1035,14 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
     os="Unix";
 #endif /* WINNT */
 
+    memset(boundary, 0, sizeof(boundary));
+    memset(related, 0, sizeof(related));
+    memset(alternative, 0, sizeof(alternative));
+
     attachment_list=get_attachment_list();
-    if (attachment_list)
+    embed_image_list = get_embed_image_attachment_list();
+    oneline_attachment_list = get_oneline_attachment_list();
+    if (attachment_list || embed_image_list || oneline_attachment_list)
     {
         is_mime=1;
     }
@@ -995,6 +1174,8 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 
     if (is_mime)
     {
+        int
+            rc;
         srand(time(NULL));
         memset(boundary,0,sizeof(boundary));
         mutilsGenerateMIMEBoundary(boundary,sizeof(boundary));
@@ -1005,28 +1186,18 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
             return (include_msg_body());
         }
 
-        (void) snprintf(buf,sizeof(buf)-1,"Mime-version: 1.0\r\n");
-        msock_puts(buf);
-        showVerbose(buf);
+        rc = print_content_type_header(boundary);
+        RETURN_IF_NOT_ZERO(rc);
 
-		if (*g_content_type!='\0')
-          (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",
-                  g_content_type,
-                  boundary);
-		else 
-          (void) snprintf(buf,sizeof(buf)-1,"Content-type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
-        msock_puts(buf);
-        showVerbose(buf);
+        rc = process_oneline_messages(boundary);
+        RETURN_IF_NOT_ZERO(rc);
 
-    }
+        rc = process_embeded_images(boundary);
+        RETURN_IF_NOT_ZERO(rc);
 
-    msock_puts("\r\n");
-    showVerbose("\r\n");
+        rc = process_attachments(boundary);
+        RETURN_IF_NOT_ZERO(rc);
 
-    if (is_mime)
-    {
-        process_oneline_messages(boundary);
-        process_attachments(boundary);
         /* handle MIME attachments ends */
         goto done;
     } /* is_mime */
@@ -1578,8 +1749,10 @@ MailFrom:
         goto cleanup;
 
     rc=smtpMail(sfd,to,cc,bcc,from,rrr,rt,sub,attach_file,txt_msg_file,the_msg,is_mime,add_dateh);
+    RETURN_IF_NOT_ZERO(rc);
 
     rc=smtpEom(sfd);
+    RETURN_IF_NOT_ZERO(rc);
     smtp_QUIT();
 
 cleanup:

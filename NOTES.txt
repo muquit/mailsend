@@ -35,3 +35,81 @@ How to release
 
 --
 Apr-28-2013 
+
+Notes on mixing and embedding attachment
+========================================
+* Just embed images, say 2 images
+
+Content-Type: multipart/related: boundary=relate
+
+--relate
+Content-Type: multipart/alternative; boundary=alt
+
+--alt
+Content-Type: text/html; charset=ISO-8859-1
+
+<img src="cid:img1_deadbeef" alt="image 1">
+<br>
+<img src="cid:img2_deadbeef" alt="image 2">
+
+--alt--
+--relate
+Content-Type: image/jpeg; name="test1.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <img1_deadbeef>
+X-Attachment-Id: img1_deadbeef
+
+base64........
+base64........
+--start
+Content-Type: image/png; name="test.png"
+Content-Transfer-Encoding: base64
+Content-ID: <img2_deadbeef>
+X-Attachment-Id: img2_deadbeef
+
+base64........
+base64........
+--relate--
+
+* embedded images and a pdf attachment
+--------------------------------------------
+
+Content-Type: multipart/mixed: boundary=mixed
+
+--mixed
+Content-Type: multipart/related: boundary=relate
+
+--relate
+Content-Type: multipart/alternative; boundary=alt
+
+--alt
+Content-Type: text/html; charset=ISO-8859-1
+
+<img src="cid:img1_deadbeef" alt="image 1">
+<br>
+<img src="cid:img2_deadbeef" alt="image 2">
+
+--alt--
+--relate
+Content-Type: image/jpeg; name="test1.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <img1_deadbeef>
+X-Attachment-Id: img1_deadbeef
+
+base64........
+base64........
+--start
+Content-Type: image/png; name="test.png"
+Content-Transfer-Encoding: base64
+Content-ID: <img2_deadbeef>
+X-Attachment-Id: img2_deadbeef
+
+base64........
+base64........
+--relate--
+--mixed
+Content-Type: application/pdf; name="mailsend.pdf"
+Content-Disposition: attachment; filename="mailsend.pdf"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_hppv4bio1
+--mixed

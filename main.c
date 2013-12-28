@@ -59,7 +59,7 @@ static void usage(void)
 "  -M    \"one line msg\"  - attach this one line text message",
 "  -content-type type    - Content type. Default: multipart/mixed",
 "  -msg-body path        - Path of the file to include as body of mail",
-"  -embed-image image    - Path of image to embed in mail",
+"  -embed-image image    - Path of image to embed in HTML",
 "  -H    \"header\"        - Add custom Header",
 "  -name \"Full Name\"     - add name in the From header",
 "  -v                    - verbose mode",

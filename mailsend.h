@@ -113,6 +113,25 @@ do \
     }\
 }while(0)
 
+#define RETURN_IF_NOT_ZERO(rc) \
+do \
+{ \
+    if (rc != 0) \
+    { \
+        return(rc); \
+    } \
+}while(0)
+
+#define CHECK_WRITE_STATUS(n) \
+do \
+{ \
+    if (n <= 0) \
+    { \
+        goto ExitProcessing; \
+    } \
+}while(0)
+
+
 #define ERR_STR strerror(errno)
 
 #define CONTENT_DISPOSITION_INLINE     0x01
@@ -290,9 +309,11 @@ int         get_encoding_type(const char *type);
 int         get_content_disposition(const char *disposition);
 Attachment  *allocate_attachment(void);
 int         write_to_socket(char *str);
+int         print_content_type_header(const char *boundary);
 int         send_attachment(Attachment *a, const char *boundary);
 int         process_attachments(const char *boundary);
 int         process_oneline_messages(const char *boundary);
+int         process_embeded_images(const char *boundary);
 int         encode2base64andwrite2socket(const char *str);
 int         include_msg_body(void);
 int         include_image(void);

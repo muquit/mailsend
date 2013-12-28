@@ -232,6 +232,7 @@ int add_one_line_to_list(char *line)
 int add_attachment_to_list(char *file_path_mime)
 {
     int
+        rc,
         separator,
         ntokens;
 
@@ -348,6 +349,27 @@ int add_attachment_to_list(char *file_path_mime)
         }
     }
 
+    rc = mutils_file_is_binary(a->file_path);
+    if (rc == -1)
+    {
+        errorMsg("Could not determine file type of %s",a->file_path);
+    }
+    if (rc == MUTILS_TRUE)
+    {
+        mime_type = get_mime_type(a->file_path);
+        if (*g_mime_type != '\0')
+        {
+            if ((mutilsStrcasecmp(g_mime_type,"text/html") == 0) ||
+                (mutilsStrcasecmp(g_mime_type,"text/plain") == 0))
+            {
+                a->charset = xStrdup("none");
+                a->mime_type = xStrdup(mime_type);
+                a->content_transfer_encoding = xStrdup("base64");
+            }
+        }
+    }
+
+
     if (a->mime_type == NULL)
     {
         if (*g_mime_type != '\0')
@@ -399,6 +421,32 @@ int add_embed_image_to_attachment_list(const char *image_file)
     a=allocate_attachment(); /* defaults will be set */
 
     a->file_path = xStrdup(image_file);
+    if (a->charset)
+    {
+        (void) free((char *) a->charset);
+        a->charset = xStrdup("none");
+    }
+
+    if (a->mime_type == NULL)
+    {
+        if (*g_mime_type != '\0')
+        {
+            a->mime_type = xStrdup(g_mime_type);
+        }
+        else
+        {
+            a->mime_type = xStrdup(get_mime_type(a->file_path));
+        }
+    }
+
+    if (a->content_transfer_encoding == NULL)
+    {
+        if (*g_content_transfer_encoding == '\0')
+        {
+            a->content_transfer_encoding = xStrdup("base64");
+        }
+    }
+
 
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
