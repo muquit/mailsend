@@ -60,7 +60,6 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -mime-type "text/plain" \
  -enc-type "base64" \
  -M "Das sieht Geschäftsführer Stirl naturgemäß anders" \
- -separator ":" \
  -cs "iso-8859-1" \
  -enc-type "8bit" \
  -mime-type "text/plain" \

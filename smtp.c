@@ -759,7 +759,16 @@ int send_attachment(Attachment *a, const char *boundary)
     }
     else
     {
-        (void) snprintf(buf, bufsz, "Content-Type: %s\r\n",a->mime_type);
+        if (a->attachment_name)
+        {
+            (void) snprintf(buf, bufsz, "Content-Type: %s; name=\"%s\"\r\n",
+                    a->mime_type,
+                    a->attachment_name);
+        }
+        else
+        {
+            (void) snprintf(buf, bufsz, "Content-Type: %s\r\n",a->mime_type);
+        }
     }
     write_to_socket(buf);
     

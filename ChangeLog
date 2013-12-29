@@ -1,4 +1,8 @@
 1.17b15
+	- The flag -emdbed-image img1 -embed-image imd2 etc to embed image in 
+	HTML.
+	(Dec-27-2013)
+
 	- The flad -d is changed to -domain. Added new option -disposition to
 	specify the type of content disposition.
 	(Dec-22-2013)

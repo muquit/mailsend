@@ -397,6 +397,11 @@ int add_attachment_to_list(char *file_path_mime)
         }
     }
 
+    if (a->attachment_name == NULL)
+    {
+        a->attachment_name = xStrdup(file_name);
+    }
+
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
 
