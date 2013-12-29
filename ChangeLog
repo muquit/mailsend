@@ -7,7 +7,7 @@
 	specify the type of content disposition.
 	(Dec-22-2013)
 
-	-enc flag is changed to -enc-type which is used for encoding type of one
+	- enc flag is changed to -enc-type which is used for encoding type of one
 	line messages. This option can be used with -M or -attach.
 	(Dec-08-2013)
 
@@ -20,12 +20,12 @@
 	-msg-body file. The character set and mime type can be specified with -cs
 	and -mime-type flags but files can not be encoded.
 
-	-Fixes Issue 37. A new flags -mime-type "type" can be used to specify the
+	- Fixes Issue 37. A new flags -mime-type "type" can be used to specify the
 	MIME type. Default is text/plain. It can be used with -M or -attach.
 	(Dec-08-2013)
 
 	- Fixes Issue 36. A new flag -separator "character" can be specified before
-	-attach option to use the specified separator instead of comma. Example:
+	the -attach option to use the specified separator instead of comma. Example:
 	-separator ":" -attach "filename, with command.pdf:application/pdf"
 	(Dec-07-2013)
 

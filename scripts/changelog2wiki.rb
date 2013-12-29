@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'iconv'
+
 ########################################################################
 # convert ChangeLog to google code wiki
 # muquit@muquit.com Mar-17-2013 
@@ -36,8 +38,9 @@ class ChangeLogToWiki
 <wiki:toc />
 EOD
     while ((line = f.gets))
-      line.chomp!
-      line.strip!
+      line.chomp! if line
+      line.strip! if line
+      line = Iconv.conv('UTF-8', 'iso8859-1',line)
       if line =~ /^=/
         puts line
         next
