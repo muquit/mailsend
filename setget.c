@@ -667,7 +667,7 @@ int addAddressesFromFileToList(char *address_file)
         if (addr == NULL)
         {
             errorMsg("addAddressToList: malloc problem for newAddress()");
-            return (-1);
+            goto ExitProcessing;
         }
         /* fill with data */
         showVerbose("Label: %s\n",label);
@@ -680,7 +680,7 @@ int addAddressesFromFileToList(char *address_file)
         {
             errorMsg("addAddressToList: malloc problem with allocateNode()");
             (void) free ((char *) addr);
-            return (-1);
+            goto ExitProcessing;
         }
         appendNode(&addr_head,&list);
     }
@@ -689,6 +689,10 @@ int addAddressesFromFileToList(char *address_file)
         (void) fclose(fp);
 
     return (0);
+ExitProcessing:
+    if (fp != (FILE *) NULL)
+        (void) fclose(fp);
+    return (-1);
 }
 
 
