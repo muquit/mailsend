@@ -18,7 +18,7 @@ If you are a competent coder, you are welcome to join the project and make it be
 It should compile on any POSIX compliant system.  Works on 64 bit systems.
 #Versions#
 ##Latest stable version is 1.16##
-Released on Mar-4-2012.  ChangeLog
+Released on Mar-4-2012. [ChangeLog](ChangeLog.md)
 ##Latest Development version is 1.17b14
 Released on Oct-20-2013 ChangeLog. Just because it a development version, it does not mean it is unstable.  This version has many bug fixes which is not available in v1.16.
 
