@@ -170,4 +170,4 @@ It compiles cleanly with cygwin as well. The name of the binary will be mailsend
   * In Windows, non ascii characters can not be used with -M. In Linux/Mac for non-ascii characters for -M, also specify -enc base64 (available in v1.17b13+)
 
 # FAQ
-Please visit [mailsend FAQ](mailsend-FAQ) at the wiki section
+Please visit [[mailsend FAQ|mailsend-FAQ]] at the wiki section
