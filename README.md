@@ -5,7 +5,7 @@
 
 Suggestions, bug reports are always welcome. 
 
-If you have questions, concerns, suggestions, please join the discussion group [http://groups.google.com/group/mailsend-discuss mailsend-discuss] instead of sending me mails.
+If you have questions, concerns, suggestions, please join the discussion group [mailsend-discuss](http://groups.google.com/group/mailsend-discuss) instead of sending me mails.
 
 If you are a competent coder, you are welcome to join the project and make it better.
 
