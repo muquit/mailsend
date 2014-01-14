@@ -11,6 +11,8 @@ If you are a competent coder, you are welcome to join the project and make it be
 
 **NOTE** - I am in the process of migrating the project from [googlecode](https://code.google.com/p/mailsend/) -- Jan-13-2014
 
+To download source/binaries, please click on the **release** link at the top..
+
 #Supported Platforms#
 
   * Microsoft Windows
