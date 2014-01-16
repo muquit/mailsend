@@ -176,3 +176,5 @@ It compiles cleanly with cygwin as well. The name of the binary will be mailsend
 ## FAQ
 <!-- why the hell I can not use relative link? -->
 Please look at [mailsend FAQ](doc/mailsend-FAQ.mediawiki)
+## Examples
+Plese type `mailsend -example` or look at [examples](docs/examples.mediawiki)
