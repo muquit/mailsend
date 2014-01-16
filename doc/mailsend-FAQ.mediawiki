@@ -226,4 +226,4 @@ No.
 * It is also possible the server requires authentication. Type mailsend -ex for examples on how to use authentication. 
 
 === What are the valid MIME types? ===
-In mailsend v1.17b15+, type `mailsend -show-mime-types`. In older versions, look at the file [[mime.types|mime.types]]
+In mailsend v1.17b15+, type `mailsend -show-mime-types`. In older versions, look at the file [[../mime.types|mime.types]]
