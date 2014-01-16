@@ -22,7 +22,7 @@ As -auth is specified, CRAM-MD5, LOGIN, PLAIN will be tried in that order.  Use 
 Note: Password can be set by env var SMTP_USER_PASS instead of -pass
 
 ===One line messages===
-One line messages are specified with -M. Each message can have its own MIME type, character set and encoding type:
+One line messages are specified with -M. Each message can have its own MIME type, character set and encoding type (requires mailsend v1.17b15+):
   mailsend -f user@example.com -smtp 10.100.30.1
   -t user@example.com -sub "testing oneline messages"
   -cs "us-ascii"
@@ -70,7 +70,7 @@ But all espects of attachments can be controlled:
 
 By default, content disposition of all atachments are attachment, use -disposition "inline" to give hint to the mail reader to display it as mail body. Look at FAQ# 1 for details.
 ===Including a body===
-Only one file can be included as a body of the mail. If the file is not us-ascii, the SMTP server has to support it. If you include a binary file, result is undefined.
+Only one file can be included as a body of the mail. If the file is not us-ascii, the SMTP server has to support it. If you include a binary file, result is undefined. Requires maislend v1.17b15+
 
   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
    -port 587 -starttls -auth -user user@gmail.com -pass secret
