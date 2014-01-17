@@ -1,4 +1,5 @@
-# 1.17b15
+__TOC__
+===1.17b15===
 * The flag `-emdbed-image img1 -embed-image imd2` etc to embed image in HTML.    
 **(Dec-27-2013)**
 
@@ -30,11 +31,11 @@
 * Fixes Issue 26. Added options `-4` and `-6` to force using IPv4 or IPv6 address of the SMTP server.   
 **(Oct-20-2013)**  
 
-# 1.17b14
+=== 1.17b14===
 * Multiline input with `-M` was completely broken.  
 	**(Oct-20-2013)**
 
-# 1.17b13
+===1.17b13===
 * Changed Copyright to more flexible BSD from GNU GPL. Added `-copyright` flag.  
 **(Oct-12-2013)**
 
@@ -51,17 +52,17 @@ Fixes Issue 20. Fixes Issue 22.
 	however it works fine in linux and mac.  
 **(Jul-01-2013)**
 
-# 1.17b12
+===1.17b12===
 * Add \r\n to multiple one line messages specified by `-M`.  Possible Fix for Issue 12.
 
 * Do not show attachments in verbose mode. The option -show_attach   will enable it. Fixes Issue 13.  
 **(Jun-16-2013)**
 
-# 1.17b11
+===1.17b11===
 * mailsend writes "Mail sent successfully" message on stdout in interactive mode even if -quiet flag is used. Fixes Issue 6.  
 **(May-05-2013)**
 
-# 1.17b10
+===1.17b10===
 * If there are some kind of socket error, print the error message. If  a log file is specified with -log, the error will be written there.  
 **(Mar-23-2013)**
 
@@ -70,7 +71,7 @@ Fixes Issue 20. Fixes Issue 22.
 * fixed several warnings  
 **(Apr-27-2013)**
 
-# 1.17b9
+===1.17b9===
 * There was a bug if multiple attachments were specified. The temp file was  
 	created only once and was removed. The bug shows up in Windows.
 
@@ -79,35 +80,35 @@ Fixes Issue 20. Fixes Issue 22.
 * A new flag -log is added for logging status messages to a file.   It is very alpha at the moment. User -v to see anything useful. The log messages are time stamped.  
 **(Mar-16-2013)**
 
-# 1.17b8
+===1.17b8===
 * Print more error messages.  
 **(Mar-06-2013)**
 
-# 1.17b7
+===1.17b7===
 * Print some error message with errno.  
 **(Mar-06-2013)**
 
-# 1.17b6
+===1.17b6===
 * MIME temp file was created on current working directory. Now go through some  huristics to determine the path.  
 **(Mar-05-2013)**
 
-# 1.17b5
+===1.17b5===
 * `getaddrinfo()` was not found in ws2_32 dll in Windows 2000.  included  Wspiapi.h header in msock library as per Microsoft <http://support.microsoft.com/kb/955045>. Thanks to Bob R for reporting the issue. It's a Windows only change.  
 **(Feb-21-2013)**
 
-# 1.17b4
+===1.17b4===
 * Added flag -H "header" to add custom headers. For example:   -H "X-Priority: 1" -H "Importance: high". Requested by David Young.  
 **(Feb-12-2013)**
 
-# 1.17b3
+===1.17b3===
 * Individual auth flags were not working.  
 **(Jan-21-2013)**
 
-# 1.17b2
+===1.17b2===
 * IPv6 address was printed wrong.  
 **(Aug-26-2012)**
 
-# 1.17b1
+===1.17b1===
 * IPv6 support for all platforms.  
 **(Aug-25-2012)**
 
@@ -129,7 +130,7 @@ Fixes Issue 20. Fixes Issue 22.
 * created man page. Added install target to Makefile.  
 **(July-05-2012)**
 
-# 1.16
+===1.16===
 * Added support for SMTP over SSL with -ssl. It is different than   STARTTLS in the sense that it is not part of SMTP protocol, the entire connection is encrypted from start to end. Note: No checking is performed on certificate. At this time, smtp.gmail.com does SMTP over SSL on port 465.  
 **(Feb-27-2012)**
 
@@ -139,7 +140,7 @@ Fixes Issue 20. Fixes Issue 22.
 * Created Makefile.nmake for MS Visual Studio 10.  
 **(Feb-28-2012)**
 
-# 1.15b5
+===1.15b5===
 * New flag '-name "Your Name"' can be used to add your name in the  From header, e.g. -f jdoe@example.com -name "John Doe" will create the From header as: From: John Doe <jdoe@example.com>  
 **(Apr-24-2007)**
 
@@ -149,7 +150,7 @@ Fixes Issue 20. Fixes Issue 22.
 * The flags '-d domain' is not mandatory anymore. If not specified  "localhost" will be used as domain in HELO or EHLO.  
 **(Apr-25-2007)**
 
-# 1.15b4
+===1.15b4===
 * When using -info and -smtp, message was wrong.  
 
 * Greetings can be multi line. Thanks to Keith B Smith.  
@@ -159,11 +160,11 @@ Fixes Issue 20. Fixes Issue 22.
 * The flag `-ex` is now `-example`.  
 **(Mar-18-2007)**
     
-# 1.15b3
+===1.15b3===
 * Compiled on Windows with openssl 0.9.7l.  
 * If addresses are specified in a file with -l, do not ask for To. Addresses  int he file not not validated howerver.
 
-# 1.15b2
+===1.15b2===
 * New flag -ex show examples.  
 
 * New flag -info to show SMTP server info.  
@@ -171,7 +172,7 @@ Fixes Issue 20. Fixes Issue 22.
 * Few bug fixes   
 **(Feb-18-2007)**
 
-# 1.15a
+===1.15a===
 * Added support for AUTH CRAM-MD5, AUTH PLAIN and AUTH LOGIN  autentication.  
 **(Feb-17-2007)**
 
@@ -187,14 +188,14 @@ Fixes Issue 20. Fixes Issue 22.
 * STARTTLS support. If the SMTP server supports it, enable it in mailsend  with flag "-starttls".  
 **(Feb-11-2007)**  
 
-# 1.14
+===1.14===
 * Content-disposition can be changed to attachment or inline.  Example: -a * "file.gif,image/gif,i". The default is attachment.  -a * "file.gif,image.gif,a" is same as a "file.gif,image/gif"  
 **(Feb-06-2007)**
 
 * Bcc was broken  
 **(Nov-03-2006)**
 
-# 1.13
+===1.13===
 * If no subject is specified with -sub, it'll be empty. Before  the default subject was "hello!"  
 **(Jun-25-2006)**
 
@@ -204,11 +205,11 @@ Fixes Issue 20. Fixes Issue 22.
 * For text attachments, Content-Disposition was always inline. Now it'll  be attachment.  Thanks to Danny Casier.  
 **(May-21-2006)**
 
-# 1.12
+===1.12===
 * mailsend was not adding Date header. Some SMTP servers does not add it  either. Now by default it'll add the Date header (make sure your clock is set properly). If you don't want mailsend to add Date header, use the flag +D. Thanks to Mr S J Hannan for the bug report.  
 **(May-20-2006)**
 
-# 1.11
+===1.11===
 * Attachment seperator character is changed to a , from :. Because in  Windows drive is specified with :. Thanks to Jeppe Teglgaard Mohr for pointing it out. Example:  -a "c:\file.gif,image/gif"   
 **(Apr-23-2006)**
 
@@ -221,5 +222,5 @@ Fixes Issue 20. Fixes Issue 22.
 * New flag -rt to add Reply-To header.  
 **(May-14-2006)**
 
-# 1.10
+===1.10===
 * If the attachment type was text/plain, <CR><LF> was not added after  Content-Disposition line which caused attachment to be ignored by some mail readers. 
