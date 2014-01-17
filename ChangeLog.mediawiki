@@ -1,6 +1,7 @@
 __TOC__
 ===1.17b15===
-* The flag <code>-emdbed-image img1 -embed-image imd2</code> etc to embed image in HTML.    
+(Not released yet but source is available)
+* The flag <code>-emdbed-image img1 -embed-image imd2</code> etc to embed image in HTML.
 '''(Dec-27-2013)'''
 
 * The flag <code>-d</code> is changed to <code>-domain</code>. Added new option <code>-disposition</code> to specify the type of content disposition.  
