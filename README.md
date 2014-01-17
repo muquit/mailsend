@@ -5,7 +5,7 @@
 
 Suggestions, bug reports are always welcome. 
 
-If you have any questions, request or suggestion please use the [Issues](https://github.com/muquit/mailsend/issues/) with appropriate label.
+If you have any question, request or suggestion, please enter it in  the [Issues](https://github.com/muquit/mailsend/issues/) with appropriate label.
 
 If you are a competent coder, you are welcome to join the project and make it better or fork it and send pull request.
 
