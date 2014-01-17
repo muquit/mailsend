@@ -6,7 +6,7 @@ Microsoft Outlook does not support inline content-disposition MIME header by des
 
 My observation about Outlook 2010 is, if the very first attachment is attached as inline, it shows up as embedded in the body. The rest of the attachments show up as regular attachments, no matter what kind of content-disposition is used. I have no idea what kind of logic they are using!
 
-'''However''' mailsend v1.17b15+ has a feature to include '''one'' text or HTML file has as message body with flag <code>-msg-body file</code>. It also has a feture to embed images inside HTML documents which is supported by most mail readers including Outlook.
+'''However''' mailsend v1.17b15+ has a feature to include '''one''' text or HTML file has as message body with flag <code>-msg-body file</code>. It also has a feture to embed images inside HTML which is supported by most mail readers including Outlook.
 
 === How to find out the capabilities of a SMTP server? ===
 Type any of:
@@ -228,4 +228,4 @@ No.
 * It is also possible the server requires authentication. Type mailsend -ex for examples on how to use authentication. 
 
 === What are the valid MIME types? ===
-In mailsend v1.17b15+, type `mailsend -show-mime-types`. In older versions, look at the file [[../mime.types|mime.types]]
+In mailsend v1.17b15+, type <code>mailsend -show-mime-types</code>. In older versions, look at the file [[../mime.types|mime.types]]
