@@ -5,9 +5,9 @@
 
 Suggestions, bug reports are always welcome. 
 
-If you have questions, concerns, suggestions, please join the discussion group [mailsend-discuss](http://groups.google.com/group/mailsend-discuss) instead of sending me mails.
+If you have any questions, request or suggestion please use the [Issues](Issues) with appropriate label.
 
-If you are a competent coder, you are welcome to join the project and make it better.
+If you are a competent coder, you are welcome to join the project and make it better or fork it and send pull request.
 
 **NOTE** - I am in the process of migrating the project from [googlecode](https://code.google.com/p/mailsend/) -- Jan-13-2014
 
