@@ -1,42 +1,42 @@
 __TOC__
 ===1.17b15===
-* The flag `-emdbed-image img1 -embed-image imd2` etc to embed image in HTML.    
+* The flag <code>-emdbed-image img1 -embed-image imd2</code> etc to embed image in HTML.    
 '''(Dec-27-2013)'''
 
-* The flag `-d` is changed to `-domain`. Added new option `-disposition` to specify the type of content disposition.  
+* The flag <code>-d</code> is changed to <code>-domain</code>. Added new option <code>-disposition</code> to specify the type of content disposition.  
 '''(Dec-22-2013)'''  
 
-* `-enc` flag is changed to `-enc-type` which is used for encoding type of one line messages. This option can be used with `-M` or `-attach`.  
+* <code>-enc</code> flag is changed to <code>-enc-type</code> which is used for encoding type of one line messages. This option can be used with <code>-M</code> or <code>-attach</code>.  
 '''(Dec-08-2013)'''  
 
 * Major changes on how things work. Now each of one line message can have its own character set, mime type and encoding type. Before there was not way to distinguish the messages.  The optiopn -attach option also behaves the same way.  
 
-* Fixes Issue 29. A file can be included as body of the mail with the flag `-msg-body file`. The character set and mime type can be specified with -cs and -mime-type flags but files can not be encoded.  
+* Fixes Issue 29. A file can be included as body of the mail with the flag <code>-msg-body file</code>. The character set and mime type can be specified with -cs and -mime-type flags but files can not be encoded.  
 
-* Fixes Issue 37. A new flags `-mime-type "type"` can be used to specify the MIME type. Default is text/plain. It can be used with -M or -attach.  
+* Fixes Issue 37. A new flags <code>-mime-type "type"</code> can be used to specify the MIME type. Default is text/plain. It can be used with -M or -attach.  
 '''(Dec-08-2013)'''  
 
-* Fixes Issue 36. Only specify filename with `-attach`. Specify other MIME * parameters with appropriate flags.  
+* Fixes Issue 36. Only specify filename with <code>-attach</code>. Specify other MIME * parameters with appropriate flags.  
 '''(Dec-07-2013)'''  
 
-* Fixes Issue 35. The default encoding type is base64. If no encoding should be used, specify encoding type with `-enc-type  "none"`.   
+* Fixes Issue 35. The default encoding type is base64. If no encoding should be used, specify encoding type with <code>-enc-type  "none"</code>.   
 '''(Dec-07-2013)'''  
 
-* Fixess Issue 34. Try the current addrinfo in `connect()`, mistakenly the first one was used. If `getaddrinfo()` returned multiple results and if connect() to first address failed, the rest of the addresses were not tried.  Patch sent by Peter Liu.   
+* Fixess Issue 34. Try the current addrinfo in </code>connect()</code>, mistakenly the first one was used. If </code>getaddrinfo()</code> returned multiple results and if connect() to first address failed, the rest of the addresses were not tried.  Patch sent by Peter Liu.   
 '''(Nov-27-2013)'''  
 
-* Fixes Issue 30. Support custom Content-type header and to support Conent-ID. The custom Conent-type can be specified with the option `-conent-type` and the Conent-ID of the attachment can be specified as fifth value of the -attach option. Thanks to skalogryz for supplying the patch.  
+* Fixes Issue 30. Support custom Content-type header and to support Conent-ID. The custom Conent-type can be specified with the option <code>-conent-type</code> and the Conent-ID of the attachment can be specified as fifth value of the -attach option. Thanks to skalogryz for supplying the patch.  
 '''(Nov-06-2013)'''.  
 
-* Fixes Issue 26. Added options `-4` and `-6` to force using IPv4 or IPv6 address of the SMTP server.   
+* Fixes Issue 26. Added options <code>-4</code> and <code>-6</code> to force using IPv4 or IPv6 address of the SMTP server.   
 '''(Oct-20-2013)'''  
 
 === 1.17b14===
-* Multiline input with `-M` was completely broken.  
+* Multiline input with <code>-M</code> was completely broken.  
 	'''(Oct-20-2013)'''
 
 ===1.17b13===
-* Changed Copyright to more flexible BSD from GNU GPL. Added `-copyright` flag.  
+* Changed Copyright to more flexible BSD from GNU GPL. Added <code>-copyright</code> flag.  
 '''(Oct-12-2013)'''
 
 * SMTP authentication was broken if the username and passwords are long enough to create longer than 60 characters base64 encoded string. A newline was added after 60 characters causing authentication to fail.
@@ -53,7 +53,7 @@ Fixes Issue 20. Fixes Issue 22.
 '''(Jul-01-2013)'''
 
 ===1.17b12===
-* Add \r\n to multiple one line messages specified by `-M`.  Possible Fix for Issue 12.
+* Add \r\n to multiple one line messages specified by <code>-M</code>.  Possible Fix for Issue 12.
 
 * Do not show attachments in verbose mode. The option -show_attach   will enable it. Fixes Issue 13.  
 '''(Jun-16-2013)'''
@@ -93,7 +93,7 @@ Fixes Issue 20. Fixes Issue 22.
 '''(Mar-05-2013)'''
 
 ===1.17b5===
-* `getaddrinfo()` was not found in ws2_32 dll in Windows 2000.  included  Wspiapi.h header in msock library as per Microsoft <http://support.microsoft.com/kb/955045>. Thanks to Bob R for reporting the issue. It's a Windows only change.  
+* </code>getaddrinfo()</code> was not found in ws2_32 dll in Windows 2000.  included  Wspiapi.h header in msock library as per Microsoft <http://support.microsoft.com/kb/955045>. Thanks to Bob R for reporting the issue. It's a Windows only change.  
 '''(Feb-21-2013)'''
 
 ===1.17b4===
@@ -112,7 +112,7 @@ Fixes Issue 20. Fixes Issue 22.
 * IPv6 support for all platforms.  
 '''(Aug-25-2012)'''
 
-* Multiple one line message can be added with -M, for example:  `-M "message line 1" -M message line 2"`  
+* Multiple one line message can be added with -M, for example:  <code>-M "message line 1" -M message line 2"</code>  
 '''(Aug-26-2012)'''
 
 * First cut of debian package.  
@@ -123,7 +123,7 @@ Fixes Issue 20. Fixes Issue 22.
 * Do not enforce authentication just because server supports it.  Do it only if the user wants it.  
 '''(Jun-29-2012)'''
 
-* Added flag `-ct <seconds>` for connect timeout with SMTP server. The   default default timeout is 5 seconds.
+* Added flag <code>-ct <seconds></code> for connect timeout with SMTP server. The   default default timeout is 5 seconds.
 
 * Exit with 0 if everything went well otherwise exit with 1 in case   of error.
 
@@ -157,7 +157,7 @@ Fixes Issue 20. Fixes Issue 22.
 
 * Some server don't say ESMTP in the greetings, but still  supports it. In that case force EHLO with -esmtp.  Again Thanks to Keith B Smith.
 
-* The flag `-ex` is now `-example`.  
+* The flag <code>-ex</code> is now <code>-example</code>.  
 '''(Mar-18-2007)'''
     
 ===1.15b3===
