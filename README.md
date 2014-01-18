@@ -7,8 +7,6 @@ Suggestions, bug reports are always welcome.
 
 If you have any question, request or suggestion, please enter it in  the [Issues](https://github.com/muquit/mailsend/issues/) with appropriate label.
 
-If you are a competent coder, you are welcome to join the project and make it better or fork it and send pull request.
-
 **NOTE** - I am in the process of migrating the project from [googlecode](https://code.google.com/p/mailsend/) -- Jan-13-2014
 
 To download source/binaries, please go to the [releases](https://github.com/muquit/mailsend/releases/) page.
