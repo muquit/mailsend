@@ -13,9 +13,9 @@ To download source/binaries, please go to the [[https://github.com/muquit/mailse
 
 == Supported Platforms ==
 
-  * Microsoft Windows
-  * Linux/Unix
-  * Mac OS X
+* Microsoft Windows
+* Linux/Unix
+* Mac OS X
 
 It should compile on any POSIX compliant system.  Works on 64 bit systems.
 == Versions ==
