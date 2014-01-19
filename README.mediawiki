@@ -1,30 +1,30 @@
-##Introduction
-**mailsend** is a simple command line program to send mail via [SMTP](http://www.ietf.org/rfc/rfc0821.txt?number=821) protocol. I needed to send a piece of alert mail from a program in a networked Windows machine, but could not find a simple program like this installed. So I wrote one. You might find it useful in some situations. The program does not use any config file and I plan to keep it that way.  
+= mailsend = 
+'''mailsend''' is a simple command line program to send mail via [SMTP](http://www.ietf.org/rfc/rfc0821.txt?number=821) protocol. I needed to send a piece of alert mail from a program in a networked Windows machine, but could not find a simple program like this installed. So I wrote one. You might find it useful in some situations. The program does not use any config file and I plan to keep it that way.  
 
-**From version 1.17b1+, IPv6 is supported in all platforms.**
+'''From version 1.17b1+, IPv6 is supported in all platforms.'''
 
 Suggestions, bug reports are always welcome. 
 
 If you have any question, request or suggestion, please enter it in  the [Issues](https://github.com/muquit/mailsend/issues/) with appropriate label.
 
-**NOTE** - I am in the process of migrating the project from [googlecode](https://code.google.com/p/mailsend/) -- Jan-13-2014
+'''NOTE''' - I am in the process of migrating the project from [googlecode](https://code.google.com/p/mailsend/) -- Jan-13-2014
 
 To download source/binaries, please go to the [releases](https://github.com/muquit/mailsend/releases/) page.
 
-##Supported Platforms#
+== Supported Platforms ==
 
   * Microsoft Windows
   * Linux/Unix
   * Mac OS X
 
 It should compile on any POSIX compliant system.  Works on 64 bit systems.
-##Versions#
-###Latest stable version is 1.16##
+== Versions ==
+===Latest stable version is 1.16 ===
 Released on Mar-4-2012. [ChangeLog](ChangeLog.mediawiki)
-###Latest Development version is 1.17b14
+=== Latest Development version is 1.17b14 ===
 Released on Oct-20-2013 [ChangeLog](ChangeLog.mediawiki). Just because it a development version, it does not mean it is unstable.  This version has many bug fixes which is not available in v1.16.
 
-##Synopsis
+== Synopsis ==
 
     Version: @(#) mailsend v1.16
 
@@ -120,12 +120,12 @@ You must know the FQDN or IP address of the SMTP server you use. The file you sp
       -info                 - show SMTP server information
       -help                 - shows this help
       -q                    - quiet
-The options with `*` must be specified. Environment variables: **SMTP_USER_PASS** for plain text password (-pass)
+The options with `*` must be specified. Environment variables: '''SMTP_USER_PASS''' for plain text password (-pass)
 
-## Examples
+== Examples ==
 Please visit [examples Examples] at the  wiki section
-## How to compile/install
-### Linux/Unix/Mac OS X
+== How to compile/install ==
+=== Linux/Unix/Mac OS X ===
     $ /bin/sh ./configure --with-openssl=/usr
 
 In Mac OS X Mavericks as of Oct-27-2013, you have to do the following:
@@ -145,7 +145,7 @@ Default installation location is /usr/local. If you want to change that:
 
 
 The name of the binary will be mailsend. If compiled with OpenSSL, the support for STARTTLS and SMTP over SSL will be available.
-### Linux Debian package
+=== Linux Debian package ===
 A Debian package is also supplied. To install the package, type: 
 
     $ sudo dpkg -i mailsend_1.17b14-ubuntu_i386.deb
@@ -158,7 +158,7 @@ If you prefer to build the Debian package yourself, after compiling, type:
 
     $ ruby ./mk_debian_package.rb 
 
-### Microsoft Windows
+=== Microsoft Windows ===
 A compiled binary for MS Windows is already supplied. However, if you need to modify something or want to compile it yourself, you will need MS Visual Studio (I used MS Visual Studio 10, freely available from Microsoft).  You have to find and run the vsvars32.bat file that came with Visual Studio first in order to use VS from command line. To compile, open a command shell and type:
 
     c:\> nmake -f Makefile.nmake clean
@@ -166,13 +166,13 @@ A compiled binary for MS Windows is already supplied. However, if you need to mo
 
 It compiles cleanly with cygwin as well. The name of the binary will be mailsend.exe 
 
-## Known Issues
+== Known Issues ==
   * For text or html attachments, \r\n is not added at the end of lines. Some SMTP servers (e.g. qmail) does not like that. It will be fixed in some future release.
   * For non ascii characters, MIME headers are not converted as per RFC2047
   * In Windows, non ascii characters can not be used with -M. In Linux/Mac for non-ascii characters for -M, also specify -enc base64 (available in v1.17b13+)
 
-## FAQ
+== FAQ ==
 <!-- why the hell I can not use relative link? -->
 Please look at [mailsend FAQ](doc/mailsend-FAQ.mediawiki)
-## Examples
+== Examples ==
 Plese type `mailsend -example` or look at [examples](doc/examples.mediawiki)
