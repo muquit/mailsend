@@ -1,4 +1,6 @@
-= Can an attachment be part of the mail body? =
+= mailsend FAQ =
+This FAQ addresses mailsend v1.17b15+
+== Can an attachment be part of the mail body? ==
 Yes. mailsend supports attachments as inline with the option `-attach "file,MIME type,i"`. Any decent mail reader (gmail does, ThunderBird does) will display the attachment as a body of the mail but it is up to the mail reader to do so. mailsend can not do anything about it.
 
 Microsoft Outlook does not support inline content-disposition MIME header by design. Please look at the Microsoft Knowledge base article http://support.microsoft.com/kb/814111 for detail.
@@ -7,7 +9,7 @@ My observation about Outlook 2010 is, if the very first attachment is attached a
 
 '''However''' mailsend v1.17b15+ has a feature to include '''one''' text or HTML file has as message body with flag <code>-msg-body file</code>. It also has a feture to embed images inside HTML which is supported by most mail readers including Outlook.
 
-= How to find out the capabilities of a SMTP server? =
+== How to find out the capabilities of a SMTP server? ==
 Type any of:
 
 '''c:\> mailsend.exe -info -smtp localhost'''
@@ -36,8 +38,8 @@ Type any of:
     [S] 220 2.0.0 Ready to start TLS
     Cipher: ECDHE-RSA-RC4-SHA
     Certificate information:
-    Subject: /C=US/ST=California/L=Mountain View/O=Google Inc/CN=smtp.gmail.com
-    Issuer: /C=US/O=Google Inc/CN=Google Internet Authority
+    Subject: /C==US/ST==California/L==Mountain View/O==Google Inc/CN==smtp.gmail.com
+    Issuer: /C==US/O==Google Inc/CN==Google Internet Authority
     [C] EHLO localhost
     [S] 250-mx.google.com at your service, [x.x.x.x]
     [S] 250-SIZE 35882577
@@ -53,8 +55,8 @@ Type any of:
     SMTP server: smtp.gmail.com, Port: 465
     Cipher: ECDHE-RSA-RC4-SHA
     Certificate information:
-    Subject: /C=US/ST=California/L=Mountain View/O=Google Inc/CN=smtp.gmail.com
-    Issuer: /C=US/O=Google Inc/CN=Google Internet Authority
+    Subject: /C==US/ST==California/L==Mountain View/O==Google Inc/CN==smtp.gmail.com
+    Issuer: /C==US/O==Google Inc/CN==Google Internet Authority
     [S] 220 mx.google.com ESMTP xxxxxxxxxxxxxxxx.19
     [C] EHLO localhost
     [S] 250-mx.google.com at your service, [xxx.xxx.xxx.xxx]
@@ -65,7 +67,7 @@ Type any of:
     [C] QUIT
     [S] 221 2.0.0 closing connection xxxxxxxxxxxxxxxx.19
 
-= Does mailsend support IPv6? =
+== Does mailsend support IPv6? ==
 From v1.17b1, IPv6 is supported in all platforms. If you have IPv6 (native or through tunnel), mailsend will use IPv6 automatically if the fqdn of the SMP server resolves to an IPv6 address. Or you can just specify the IPv6 address of the SMTP server.
 Example:
 
@@ -76,8 +78,8 @@ Example:
     libmsock: using getaddrinfo
      AF_INET6
      IPv6 address: [2607:f8b0:400c:c03::6c]:25 <-------
-     EINPROGRESS=10036,EWOULDBLOCK=10035
-     conenct(): socket=312,rc=-1, errno=10035
+     EINPROGRESS==10036,EWOULDBLOCK==10035
+     conenct(): socket==312,rc==-1, errno==10035
      Try socket 312
     [S] 220 mx.google.com ESMTP q19sm8376288vdf.21
     [C] EHLO localhost
@@ -90,8 +92,8 @@ Example:
     [S] 220 2.0.0 Ready to start TLS
     Cipher: ECDHE-RSA-RC4-SHA
     Certificate information:
-    Subject: /C=US/ST=California/L=Mountain View/O=Google Inc/CN=smtp.gmail.com
-    Issuer: /C=US/O=Google Inc/CN=Google Internet Authority
+    Subject: /C==US/ST==California/L==Mountain View/O==Google Inc/CN==smtp.gmail.com
+    Issuer: /C==US/O==Google Inc/CN==Google Internet Authority
     [C] EHLO localhost
     [S] 250-mx.google.com at your service, [2001:xxx:xxxx:xxx::x]
     [S] 250-SIZE 35882577
@@ -100,10 +102,10 @@ Example:
     [S] 250 ENHANCEDSTATUSCODES
     [C] QUIT
 
-= How to send mail via gmail? =
+== How to send mail via gmail? ==
 Please look at the [examples Examples] section. Look for -ssl and -starttls and -port.
 
-= Does mailsend support multibyte non-ascii input? =
+== Does mailsend support multibyte non-ascii input? ==
 At this time it only works in linux and mac. In windows it will be needed to change code to support reading multibyte characters input from command line. Here is an example of non-ascii input in mac, mailsend 1.17b14 is running in linux:
 
 [http://mailsend.googlecode.com/svn/wiki/multibyte_input.png]
@@ -114,11 +116,11 @@ The verbose output looks something like:
     To: muquit@gmail.com
     X-Mailer: @(#) mailsend v1.17b15 (Unix)
     X-Copyright: BSD. It is illegal to use this software for Spamming
-    Content-type: multipart/mixed; boundary="aWGL4q7mlq0dFml7"
+    Content-type: multipart/mixed; boundary=="aWGL4q7mlq0dFml7"
     Mime-version: 1.0
 
     --aWGL4q7mlq0dFml7
-    Content-Type: text/plain; charset=utf-8
+    Content-Type: text/plain; charset==utf-8
     Content-Disposition: inline
 
     [C] running on linux, input from mac keyboard
@@ -145,11 +147,11 @@ Notice smtp.gmail.com accepts raw multibyte characters. However some SMTP server
     To: muquit@gmail.com
     X-Mailer: @(#) mailsend v1.17b15 (Unix)
     X-Copyright: BSD. It is illegal to use this software for Spamming
-    Content-type: multipart/mixed; boundary="NflDZxwWowVAFTP3"
+    Content-type: multipart/mixed; boundary=="NflDZxwWowVAFTP3"
     Mime-version: 1.0
 
     --NflDZxwWowVAFTP3
-    Content-Type: text/plain; charset=utf-8
+    Content-Type: text/plain; charset==utf-8
     Content-Disposition: inline
     Content-Transfer-Encoding: base64
 
@@ -169,7 +171,7 @@ Notice smtp.gmail.com accepts raw multibyte characters. However some SMTP server
 
 The mail will look the same in gmail.
 
-= Can this program be used as a mail sender from web browsers? =
+== Can this program be used as a mail sender from web browsers? ==
 
 I'll use the Firefox as an example in Windows. By default in MS Windows, Firefox will start outlook express (or nothing) to send mail when you click on a mailto: link. This behavior can be changed as follows:
 
@@ -192,11 +194,11 @@ Note: there's no need to clean mailto: tag from another program before calling m
 
 On Unix, search on the web on how to setup external mail sender for Firefox. Again there's no need to remove mailto: tag from another script.
 
-= Does the program support ESMTP authentication? =
+== Does the program support ESMTP authentication? ==
 From v1.15a+, STARTTLS, CRAM-MD5, LOGIN and PLAIN authentication is supported. SMTP over SSL is also supported in v 1.16+. Type mailsend -ex for examples on how to use authentication.
-= What's the difference between -ssl and -starttls? =
+== What's the difference between -ssl and -starttls? ==
 With the option -ssl, an encrypted connection is made first and then SMTP protocol continues over the encrypted connection. For example, smtp.gmail.com supports it at port 465. With -starttls, a regular unencrypted connection is made first, then if the server supports STRTTLS, the command is issued to make the connection encrypted. For example smtp. gmail.com supports STARTTLS at port 587.
-= How to send mail to multiple people? =
+== How to send mail to multiple people? ==
 Create a text file containing the addresses and then specify the file with -l. The syntax of the file is as follows:
 
     #####################################################
@@ -217,14 +219,14 @@ Create a text file containing the addresses and then specify the file with -l. T
 
 Make sure there is a new line at the end of the last line or the last address will be ignored. Run mailsend with -v to verify that all the addresses are used.
 
-= Does mailsend verify certificates while making SSL connections? =
+== Does mailsend verify certificates while making SSL connections? ==
 No.
 
-= I send mail but the mail never reaches the destination. What's wrong? =
+== I send mail but the mail never reaches the destination. What's wrong? ==
 * First of all make sure you can talk to the SMTP server ([mailsendFAQ#How_to_find_out_the_capabilities_of_a_SMTP_server?])
 * Make sure the mail is accepted by the server (run mailsend with -v).
 * Make sure that the SMTP server relays message to outside domain or only accepts mail from certain IP addresses (Talk to the admin).
 * It is also possible the server requires authentication. Type mailsend -ex for examples on how to use authentication. 
 
-= What are the valid MIME types? =
+== What are the valid MIME types? ==
 In mailsend v1.17b15+, type <code>mailsend -show-mime-types</code>. In older versions, look at the file [[../mime.types|mime.types]]
