@@ -1,5 +1,4 @@
-__TOC__
-=== Can an attachment be part of the mail body? ===
+= Can an attachment be part of the mail body? =
 Yes. mailsend supports attachments as inline with the option `-attach "file,MIME type,i"`. Any decent mail reader (gmail does, ThunderBird does) will display the attachment as a body of the mail but it is up to the mail reader to do so. mailsend can not do anything about it.
 
 Microsoft Outlook does not support inline content-disposition MIME header by design. Please look at the Microsoft Knowledge base article http://support.microsoft.com/kb/814111 for detail.
@@ -8,7 +7,7 @@ My observation about Outlook 2010 is, if the very first attachment is attached a
 
 '''However''' mailsend v1.17b15+ has a feature to include '''one''' text or HTML file has as message body with flag <code>-msg-body file</code>. It also has a feture to embed images inside HTML which is supported by most mail readers including Outlook.
 
-=== How to find out the capabilities of a SMTP server? ===
+= How to find out the capabilities of a SMTP server? =
 Type any of:
 
 '''c:\> mailsend.exe -info -smtp localhost'''
@@ -66,7 +65,7 @@ Type any of:
     [C] QUIT
     [S] 221 2.0.0 closing connection xxxxxxxxxxxxxxxx.19
 
-=== Does mailsend support IPv6? ===
+= Does mailsend support IPv6? =
 From v1.17b1, IPv6 is supported in all platforms. If you have IPv6 (native or through tunnel), mailsend will use IPv6 automatically if the fqdn of the SMP server resolves to an IPv6 address. Or you can just specify the IPv6 address of the SMTP server.
 Example:
 
@@ -101,10 +100,10 @@ Example:
     [S] 250 ENHANCEDSTATUSCODES
     [C] QUIT
 
-=== How to send mail via gmail? ===
+= How to send mail via gmail? =
 Please look at the [examples Examples] section. Look for -ssl and -starttls and -port.
 
-=== Does mailsend support multibyte non-ascii input? ===
+= Does mailsend support multibyte non-ascii input? =
 At this time it only works in linux and mac. In windows it will be needed to change code to support reading multibyte characters input from command line. Here is an example of non-ascii input in mac, mailsend 1.17b14 is running in linux:
 
 [http://mailsend.googlecode.com/svn/wiki/multibyte_input.png]
@@ -170,7 +169,7 @@ Notice smtp.gmail.com accepts raw multibyte characters. However some SMTP server
 
 The mail will look the same in gmail.
 
-=== Can this program be used as a mail sender from web browsers? ===
+= Can this program be used as a mail sender from web browsers? =
 
 I'll use the Firefox as an example in Windows. By default in MS Windows, Firefox will start outlook express (or nothing) to send mail when you click on a mailto: link. This behavior can be changed as follows:
 
@@ -193,11 +192,11 @@ Note: there's no need to clean mailto: tag from another program before calling m
 
 On Unix, search on the web on how to setup external mail sender for Firefox. Again there's no need to remove mailto: tag from another script.
 
-=== Does the program support ESMTP authentication? ===
+= Does the program support ESMTP authentication? =
 From v1.15a+, STARTTLS, CRAM-MD5, LOGIN and PLAIN authentication is supported. SMTP over SSL is also supported in v 1.16+. Type mailsend -ex for examples on how to use authentication.
-=== What's the difference between -ssl and -starttls? ===
+= What's the difference between -ssl and -starttls? =
 With the option -ssl, an encrypted connection is made first and then SMTP protocol continues over the encrypted connection. For example, smtp.gmail.com supports it at port 465. With -starttls, a regular unencrypted connection is made first, then if the server supports STRTTLS, the command is issued to make the connection encrypted. For example smtp. gmail.com supports STARTTLS at port 587.
-=== How to send mail to multiple people? ===
+= How to send mail to multiple people? =
 Create a text file containing the addresses and then specify the file with -l. The syntax of the file is as follows:
 
     #####################################################
@@ -218,14 +217,14 @@ Create a text file containing the addresses and then specify the file with -l. T
 
 Make sure there is a new line at the end of the last line or the last address will be ignored. Run mailsend with -v to verify that all the addresses are used.
 
-=== Does mailsend verify certificates while making SSL connections? ===
+= Does mailsend verify certificates while making SSL connections? =
 No.
 
-=== I send mail but the mail never reaches the destination. What's wrong? ===
+= I send mail but the mail never reaches the destination. What's wrong? =
 * First of all make sure you can talk to the SMTP server ([mailsendFAQ#How_to_find_out_the_capabilities_of_a_SMTP_server?])
 * Make sure the mail is accepted by the server (run mailsend with -v).
 * Make sure that the SMTP server relays message to outside domain or only accepts mail from certain IP addresses (Talk to the admin).
 * It is also possible the server requires authentication. Type mailsend -ex for examples on how to use authentication. 
 
-=== What are the valid MIME types? ===
+= What are the valid MIME types? =
 In mailsend v1.17b15+, type <code>mailsend -show-mime-types</code>. In older versions, look at the file [[../mime.types|mime.types]]
