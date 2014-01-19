@@ -1,4 +1,4 @@
-= Frequently asked questions for mailsend =
+= Frequently asked questions about mailsend =
 This FAQ addresses mailsend v1.17b15+
 == Can an attachment be part of the mail body? ==
 Yes. mailsend supports attachments as inline with the option `-attach "file,MIME type,i"`. Any decent mail reader (gmail does, ThunderBird does) will display the attachment as a body of the mail but it is up to the mail reader to do so. mailsend can not do anything about it.
