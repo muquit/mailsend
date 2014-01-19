@@ -1,5 +1,3 @@
-= mailsend FAQ =
-This FAQ addresses mailsend v1.17b15+
 == Show server info ==
   mailsend -v -info -port 587 -smtp smtp.gmail.com
   mailsend -v -info -ssl -port 465 -smtp smtp.gmail.com
