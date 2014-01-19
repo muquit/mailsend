@@ -169,7 +169,7 @@ It compiles cleanly with cygwin as well. The name of the binary will be mailsend
 == Known Issues ==
 * For text or html attachments, \r\n is not added at the end of lines. Some SMTP servers (e.g. qmail) does not like that. It will be fixed in some future release.
 * For non ascii characters, MIME headers are not converted as per RFC2047
-* In Windows, non ascii characters can not be used with -M. In Linux/Mac for non-ascii characters for -M, also specify -enc base64 (available in v1.17b13+)
+* In Windows, non ascii characters can not be entered with -M from command line (Works fine in Linux and Mac).
 
 == FAQ ==
 <!-- why the hell I can not use relative link? -->
