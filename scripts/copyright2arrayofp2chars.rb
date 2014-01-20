@@ -10,6 +10,11 @@ class CopyrightTwoArrayOfPointerToChar
   def initialize
   end
   def doit
+    lines = File.readlines(COPYRIGHT_FILE)
+    if !lines
+      puts "Error: could not read #{COPYRIGHT_FILE}"
+      exit
+    end
     t = Time.new
   puts <<-EOF
 #ifndef COPYRIGHT_H
@@ -22,7 +27,6 @@ static char
   *mailsend_copyright[] = 
   {
 EOF
-    lines = File.read(COPYRIGHT_FILE)
     lines.each do |line|
     line.chomp!
     line = line.gsub(/\"/,"\\\"")
