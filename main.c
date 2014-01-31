@@ -31,7 +31,7 @@ static void usage(void)
 "  -6                    - Force to use IPv6 address of SMTP server",
 "  -smtp hostname/IP*    - Hostname/IP address of the SMTP server",
 "  -port SMTP port       - SMTP port",
-"  -d    domain          - domain name for SMTP HELO/EHLO",
+"  -domain    domain     - domain name for SMTP HELO/EHLO",
 "  -t    to,to..*        - email address/es of the recipient/s",
 "  -cc   cc,cc..         - carbon copy address/es",
 "  +cc                   - do not ask for Carbon Copy",
