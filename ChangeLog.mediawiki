@@ -1,6 +1,9 @@
 __TOC__
 ===1.17b15===
 (Not released yet but source is available)
+* If no encoding type was specified for a one line message, it was NULL and a debug message tried to print it causing a seg fault. Fixes Issue #45.
+'''(Feb-01-2014'''
+
 * The flag <code>-emdbed-image img1 -embed-image imd2</code> etc to embed image in HTML.
 '''(Dec-27-2013)'''
 
