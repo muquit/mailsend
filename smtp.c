@@ -487,9 +487,6 @@ int encode2base64andwrite2socket(const char *str)
 */
 int process_oneline_messages(const char *boundary)
 {
-    int
-        n = (-1);
-
     Attachment
         *a = NULL;
     Sll
@@ -540,6 +537,14 @@ int process_oneline_messages(const char *boundary)
         }
         else
         {
+            /*
+            ** no encoding type, so last \r\n was no added, we must
+            ** add it or some mailer will thing the mail is invalid
+            */
+            if (strncmp(a->content_transfer_encoding,"none",4) == 0)
+            {
+                write_to_socket("\r\n");
+            }
             write_to_socket(a->oneline_msg);
             if (g_show_attachment_in_log)
             {
@@ -550,9 +555,6 @@ int process_oneline_messages(const char *boundary)
         write_to_socket("\r\n");
     }
     return(0);
-
-ExitProcessing:
-    return(-1);
 }
 
 /*
@@ -913,6 +915,7 @@ int print_content_type_header(const char *boundary)
         return(0);
     }
     write_to_socket("\r\n");
+    return(0);
 }
 
 int process_embeded_images(const char *boundary)
@@ -1013,9 +1016,18 @@ int process_embeded_images(const char *boundary)
     (void) snprintf(buf, bufsz, "--%s--\r\n",b);
     write_to_socket(buf);
     return(0);
+}
 
-ExitProcessing:
-    return(-1);
+static void print_end_boundary(const char *boundary)
+{
+    if (get_attachment_list() == NULL)
+    {
+        (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
+        msock_puts(buf);
+        showVerbose(buf);
+        return;
+    }
+    /* process_attachments(boundary) already printed the end bounday */
 }
 
 /* SMTP: mail */
@@ -1206,6 +1218,12 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 
         rc = process_attachments(boundary);
         RETURN_IF_NOT_ZERO(rc);
+
+        /*
+        ** if there were other kind of MIME types but no attachments,
+        ** we have to print the last boundary 
+        */
+        print_end_boundary(boundary);
 
         /* handle MIME attachments ends */
         goto done;

@@ -585,7 +585,7 @@ int main(int argc,char **argv)
                         g_esmtp=1;
                     }
                 }
-                else if (strncmp("enc-type",option+1,4) == 0)
+                else if (strncmp("enc-type",option+1,5) == 0)
                 {
                     if (*option == '-')
                     {

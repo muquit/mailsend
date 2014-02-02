@@ -3,22 +3,22 @@
 # muquit@muquit.com Jan-21-2013  
 #set -x
 ME=`basename $0`
-NARG=$#
-if [ $NARG -ne 2 ]; then
-    echo "usage: $ME <TO> <FROM>"
-    echo "Please specify password with SMTP_USER_PASS env var"
+TO=$TO
+if [ x"$TO" = x ]; then
+    echo "TO environment variable is not not"
     exit 1
 fi
-TO="$1"
-YOU="$2"
+FROM=$FROM
+if [ x"$FROM" = x ]; then
+    echo "FROM environment variable is not not"
+    exit 1
+fi
 
-if [ x"$SMTP_USER_PASS" = x ]; then
-    echo "Please specify password with SMTP_USER_PASS env var"
+pass=$SMTP_USER_PASS
+if [ x"$pass" = x ]; then
+    echo "SMTP_USER_PASS environment variable is not not"
     exit 1
 fi
-PASS=$SMTP_USER_PASS
-echo "To: $TO"
-echo "From: $YOU"
 
 #SMTP=smtp.comcast.net
 SMTP=smtp.gmail.com
@@ -39,14 +39,14 @@ VALGRIND=""
 fi
 set -x
 
-$VALGRIND $BINARY -to $TO -from $YOU \
+$VALGRIND $BINARY -to $TO -from $FROM \
  -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \
  -cs "utf-8" \
  -H "X-Priority: 1" -H "Importance: high" \
- -sub test +cc +bc \
- -user $YOU -pass $PASS \
+ -sub "testing mailsend" +cc +bc \
+ -user "$FROM" -pass "$PASS" \
  -enc-type "none" \
  -mime-type "text/plain" \
  -M "one line attachment 1" \
@@ -59,7 +59,7 @@ $VALGRIND $BINARY -to $TO -from $YOU \
  -cs "utf-8" \
  -mime-type "text/plain" \
  -enc-type "base64" \
- -M "Das sieht Geschäftsführer Stirl naturgemäß anders" \
+ -M "Ich lerne seit ungefähr zwei Jahren Deutsch" \
  -cs "iso-8859-1" \
  -enc-type "8bit" \
  -mime-type "text/plain" \

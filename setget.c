@@ -78,7 +78,10 @@ void print_oneline_attachment_list(void)
         (void) fprintf(stderr,"Message: %s\n",a->oneline_msg);
         (void) fprintf(stderr,"Mime type: %s\n",a->mime_type);
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
-        (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
+        if (a->content_transfer_encoding)
+            (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
+        else
+            (void) fprintf(stderr,"Encoding type: none\n");
         (void) fprintf(stderr,"\n");
     }
 }
@@ -103,7 +106,10 @@ void print_attachment_list(void)
         (void) fprintf(stderr,"Disposition: %s\n",a->content_disposition);
         if (a->content_id)
             (void) fprintf(stderr,"Content-ID: %s\n",a->content_id);
-        (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
+        if (a->content_transfer_encoding)
+            (void) fprintf(stderr,"Encoding type: %s\n",a->content_transfer_encoding);
+        else
+            (void) fprintf(stderr,"Encoding type: none\n");
         (void) fprintf(stderr,"\n");
     }
 }
@@ -509,6 +515,10 @@ int add_oneline_to_attachment_list(char *oneline_msg)
         a->mime_type = xStrdup("text/plain");
     }
 
+    if (a->content_transfer_encoding == NULL)
+    {
+        a->content_transfer_encoding = xStrdup("none");
+    }
     na=allocateNode((void *) a);
     CHECK_MALLOC(na);
 
