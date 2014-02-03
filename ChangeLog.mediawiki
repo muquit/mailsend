@@ -1,6 +1,7 @@
 __TOC__
 ===1.17b15===
-(Not released yet but source is available)
+Not released yet as I am still testing it. You are welcome to get the latest source, test and report the bugs.
+
 * If no encoding type was specified for a one line message, it was NULL and a debug message tried to print it causing a seg fault. Fixes Issue #45.
 '''(Feb-01-2014'''
 
