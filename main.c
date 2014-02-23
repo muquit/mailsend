@@ -102,9 +102,6 @@ static void usage(void)
     (void) fprintf(stdout,
 " Environment variables:\n"
 "  SMTP_USER_PASS for plain text password (-pass)\n");
-
-
-    exit(0);
 }
 
 #if 0
@@ -279,7 +276,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing file to attach");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         attach_file=argv[i];
                         add_attachment_to_list(attach_file);
@@ -293,7 +291,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing attachment name");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         mutilsSafeStrcpy(g_attach_name,argv[i],sizeof(g_attach_name)-1);
                     }
@@ -337,7 +336,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
                 break;
             }
@@ -352,7 +352,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing BCc address/es");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         bcc=argv[i];
                         save_bcc=mutilsStrdup(bcc);
@@ -369,7 +370,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
                 break;
             }
@@ -411,7 +413,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing Cc address/es");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         cc=argv[i];
                         save_cc=mutilsStrdup(cc);
@@ -433,7 +436,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing character set");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         mutilsSafeStrcpy(g_charset,argv[i],sizeof(g_charset)-1);
                     }
@@ -447,7 +451,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing connect timeout with -ct");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         g_connect_timeout = atoi(argv[i]);
                     }
@@ -460,7 +465,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing content-type value");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         mutilsSafeStrcpy(g_content_type,argv[i],sizeof(g_content_type)-1);
                     }
@@ -473,7 +479,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing content-dispostion value");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         if ((strcmp(argv[i],"inline") == 0) || strcmp(argv[i], "attachment") == 0)
                         {
@@ -483,7 +490,8 @@ int main(int argc,char **argv)
                         else
                         {
                             errorMsg("Invalid value for -content-disposition");
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                     }
                 }
@@ -495,7 +503,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing content-id value");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
 
                         mutilsSafeStrcpy(g_content_id,argv[i],sizeof(g_content_id)-1);
@@ -505,12 +514,14 @@ int main(int argc,char **argv)
                 else if (strncmp("copyright", option + 1, 5) == 0)
                 {
                     print_copyright();
-                    exit(0);
+                    rc = 0;
+                    goto ExitProcessing;
                 }
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
                 break;
             }
@@ -538,7 +549,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing domain name");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         helo_domain=argv[i];
                     }
@@ -551,7 +563,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing content dispostion value");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         if ((strcmp(argv[i],"inline") == 0) || strcmp(argv[i], "attachment") == 0)
                         {
@@ -560,7 +573,8 @@ int main(int argc,char **argv)
                         else
                         {
                             errorMsg("Invalid value for -disposition");
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                     }
                 }
@@ -575,7 +589,8 @@ int main(int argc,char **argv)
                     if (*option == '-')
                     {
                         show_examples();
-                        return(1);
+                        rc = 1;
+                        goto ExitProcessing;
                     }
                 }
                 else if (strncmp("ehlo",option+1,4) == 0)
@@ -593,7 +608,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing encoding type");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         mutilsSafeStrcpy(g_content_transfer_encoding,
                                 argv[i],
@@ -608,7 +624,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing image for -embded-image");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         add_embed_image_to_attachment_list(argv[i]);
                         /* TODO */
@@ -628,7 +645,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing From address/es");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         from=argv[i];
                     }
@@ -653,6 +671,8 @@ int main(int argc,char **argv)
                 if (strncmp("help",option+1,1) == 0)
                 {
                     usage();
+                    rc = 0;
+                    goto ExitProcessing;
                 }
                 /* won't be here */
                 break;
@@ -677,7 +697,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing address list file"); 
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         address_file=argv[i];
                     }
@@ -691,7 +712,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing address log file"); 
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         g_log_fp = fopen(argv[i], "a");
                         if (g_log_fp == NULL)
@@ -699,7 +721,8 @@ int main(int argc,char **argv)
                             errorMsg("Could not open log file %s for writing (%s)",
                                     argv[i],
                                     strerror(errno));
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         /*
                         ** tell msock lib to write error message to log file
@@ -721,7 +744,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing SMTP Port with -port");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         port=atoi(argv[i]);
                     }
@@ -734,7 +758,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing password with -pass");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         (void) snprintf(g_userpass,sizeof(g_userpass)-1,
                                         "%s",argv[i]);
@@ -744,7 +769,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
                 break;
             }
@@ -759,7 +785,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing custom header");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         custom_header=argv[i];
                         add_customer_header_to_list(custom_header);
@@ -768,7 +795,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -785,7 +813,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing text message");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         the_msg=xStrdup(argv[i]);
                         add_oneline_to_attachment_list(the_msg);
@@ -794,7 +823,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -810,7 +840,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing mime type");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         mutilsSafeStrcpy(g_mime_type,argv[i],sizeof(g_mime_type)-1);
                     }
@@ -823,7 +854,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing path of message body file");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         msg_body_file = argv[i];
                         add_msg_body_to_attachment_list(argv[i]);
@@ -832,7 +864,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
                 break;
             }
@@ -847,7 +880,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing Name with -n");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         (void) snprintf(g_from_name,sizeof(g_from_name)-1,
                                         "%s",argv[i]);
@@ -856,7 +890,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -872,7 +907,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing smtp server");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         smtp_server=argv[i];
                     }
@@ -885,7 +921,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing subject with -sub");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         sub=argv[i];
                     }
@@ -896,7 +933,8 @@ int main(int argc,char **argv)
                     g_do_ssl=1;
 #else
                     (void) fprintf(stderr,"Error: '-ssl' not available, not compiled with OpenSSL\n");
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
 #endif /* HAVE_OPENSSL */
 
                 }
@@ -906,7 +944,8 @@ int main(int argc,char **argv)
                     g_do_starttls=1;
 #else
                     (void) fprintf(stderr,"Error: '-starttls' not available, not compiled with OpenSSL\n");
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                     
 #endif /* HAVE_OPENSSL */
                 }
@@ -917,7 +956,8 @@ int main(int argc,char **argv)
                 else if (strncmp("show-mime-types",option+1,9) == 0)
                 {
                     show_mime_types();
-                    return(0);
+                    rc = 0;
+                    goto ExitProcessing;
                 }
 
                 else if (strncmp("separator", option + 1, 4) == 0)
@@ -928,20 +968,23 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing separator");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         (void) snprintf(g_attach_sep,sizeof(g_attach_sep)-1,"%s",argv[i]);
                         if (strlen(g_attach_sep) != 1)
                         {
                             errorMsg("Invalid separator character specified");
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                     }
                 }
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -957,7 +1000,8 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             errorMsg("Missing smtp server");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         (void) snprintf(g_username,sizeof(g_username)-1,
                                         "%s",argv[i]);
@@ -966,7 +1010,8 @@ int main(int argc,char **argv)
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -1009,7 +1054,8 @@ int main(int argc,char **argv)
 #else
                 (void) fprintf(stderr,"Not Compiled OpenSSL, some auth methods will be unavailable\n");
 #endif /* ! HAVE_OPENSSL */
-                return(0);
+                rc = 0;
+                goto ExitProcessing;
                 break;
             }
 
@@ -1023,14 +1069,16 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             (void) fprintf(stderr,"Error: missing to addresses\n");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         to=argv[i];
                         save_to=mutilsStrdup(to);
                         if (save_to == NULL)
                         {
                             errorMsg("memory allocation problem for -to");
-                            return(-1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         save_to=fix_to(save_to);
                         to=fix_to(to);
@@ -1055,13 +1103,15 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             (void) fprintf(stderr,"Error: missing to addresses for -rrr\n");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         rrr=mutilsStrdup(argv[i]);
                         if (rrr == NULL)
                         {
                             errorMsg("memory allocation problem for -rrr");
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                     }
                 }
@@ -1073,20 +1123,23 @@ int main(int argc,char **argv)
                         if (i == argc)
                         {
                             (void) fprintf(stderr,"Error: missing to addresses for -rt\n");
-                            return (1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                         rt=mutilsStrdup(argv[i]);
                         if (rt == NULL)
                         {
                             errorMsg("memory allocation problem for -rt");
-                            return(1);
+                            rc = 1;
+                            goto ExitProcessing;
                         }
                     }
                 }
                 else
                 {
                     errorMsg("Unknown flag: %s\n",option);
-                    return(1);
+                    rc = 1;
+                    goto ExitProcessing;
                 }
 
                 break;
@@ -1109,7 +1162,8 @@ int main(int argc,char **argv)
             {
                 (void) fprintf(stderr,"Error: Unrecognized option: %s\n",
                                option);
-                return (1);
+                rc = 1;
+                goto ExitProcessing;
             }
 
 
@@ -1121,7 +1175,8 @@ int main(int argc,char **argv)
     if (x && y)
     {
         (void) fprintf(stderr,"SMTP_USER_PASS and SMTP_USER_PASS_ENC can not be set. Exiting..\n");
-        return(1);
+        rc = 1;
+        goto ExitProcessing;
     }
     if (x)
     {
@@ -1135,7 +1190,8 @@ int main(int argc,char **argv)
     if (g_do_ssl && g_do_starttls)
     {
         (void) fprintf(stderr,"Options -ssl and -starttls are mutually exclusive\n");
-        exit(1);
+        rc = 1;
+        goto ExitProcessing;
     }
 #endif /* HAVE_OPENSSL */
 
@@ -1154,8 +1210,8 @@ int main(int argc,char **argv)
             helo_domain="localhost";
         rc = show_smtp_info(smtp_server,port,helo_domain);
         if (rc < 0)
-            return (1);
-        return(0);
+            rc = 1;
+        goto ExitProcessing;
     }
 
 
@@ -1289,14 +1345,18 @@ int main(int argc,char **argv)
             {
                 (void) fprintf(stderr,"\nPlease specify auth password with -pass\n");
                 (void) fprintf(stderr,"Or by environment variable SMTP_USER_PASS\n");
-                return(1);
+                rc = 1;
+                goto ExitProcessing;
             }
         }
     }
 
     rc=validateMusts(from,save_to,smtp_server,helo_domain);
     if (rc != 0)
-        return (1); /* exit */
+    {
+        rc = 1;
+        goto ExitProcessing;
+    }
 
 #ifdef UNIX
     signal(SIGPIPE,SIG_IGN);
@@ -1356,5 +1416,8 @@ int main(int argc,char **argv)
     {
         rc = 1;
     }
+
+ExitProcessing:
+    close_log();
     return (rc);
 }

@@ -265,7 +265,7 @@ int add_attachment_to_list(char *file_path_mime)
     if (tokens == NULL)
     {
         errorMsg("Could not parse attachment string: \"%s\"",file_path_mime);
-        exit(1);
+        exit_error();
     }
 
     showVerbose("ntokens: %d\n",ntokens);
@@ -350,7 +350,7 @@ int add_attachment_to_list(char *file_path_mime)
         default:
         {
             errorMsg("Invalid string specified with -a \"%s\"",file_path_mime);
-            exit(1);
+            exit_error();
             break;
         }
     }

@@ -269,6 +269,14 @@ void        errorMsg(char *format,...);
 void        showVerbose(char *format,...);
 void        print_info(char *format,...);
 void        write_log(char *format,...);
+void        open_log(const char *log_file);
+void        close_log(void);
+void        exit_ok(void);
+void        exit_error(void);
+void        log_info(const char *fmt, ...);
+void        log_debug(const char *fmt, ...);
+void        log_error(const char *fmt, ...);
+void        log_fatal(const char *fmt, ...);
 int         addAddressesFromFileToList(char *adress_list_file);
 int         validateMusts(char *from,char *to,char *smtp_server,
                           char *helo_domain);

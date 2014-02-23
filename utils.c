@@ -111,11 +111,32 @@ char *xStrdup (const char *string)
     if (tmp == (char *) NULL)
     {
         (void) fprintf(stderr,"Error: mystrdup(): memory allocation problem\n");
-        exit(1);
+        exit_error();
     }
     /* it's safe to copy this way */
     (void) strcpy(tmp, string);
     return (tmp);
+}
+
+void log_info(const char *fmt, ...)
+{
+    va_list
+        args;
+
+    va_start(args, fmt);
+    va_end(args);
+}
+
+void log_debug(const char *fmt, ...)
+{
+}
+
+void log_error(const char *fmt, ...)
+{
+}
+
+void log_fatal(const char *fmt, ...)
+{
 }
 
 void errorMsg(char *format,...)
@@ -216,6 +237,27 @@ void write_log(char *format,...)
     vfprintf(g_log_fp,format,args);
     (void) fflush(g_log_fp);
     va_end(args);
+}
+
+void close_log(void)
+{
+    if (g_log_fp != NULL)
+    {
+        (void) fclose(g_log_fp);
+        g_log_fp = NULL;
+    }
+}
+
+void exit_ok(void)
+{
+    close_log();
+    exit(0);
+}
+
+void exit_error(void)
+{
+    close_log();
+    exit(1);
 }
 
 

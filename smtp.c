@@ -382,7 +382,7 @@ static BOOL WINAPI CntrlHandler(DWORD CtrlEvent)
         {
             break_out=1;
             (void) fprintf(stderr,"\nNot sending mail. Exiting.......\n");
-            exit(1);
+            exit_error();
             break;
         }
     }
@@ -1756,9 +1756,9 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
         }
         if (!authenticated)
         {
-                (void) fprintf(stderr,
+            (void) fprintf(stderr,
 " Use -auth or specify a mechanism that server supports. exiting.\n");
-            exit(1);
+            exit_error();
         }
     }
 
