@@ -1,0 +1,12 @@
+*.o
+*.obj
+*.a
+config.log
+config.status
+Makefile
+mkey.c
+mailsend
+mailsend.exe
+*.lib
+*.deb
+*.gz
