@@ -38,7 +38,7 @@ static void usage(void)
 "  -ct   seconds         - Connect timeout. Default is 5 seconds",
 "  -bc   bcc,bcc..       - blind carbon copy address/es",
 "  +bc                   - do not ask for Blind carbon copy",
-"  +D                    - don not add Date header",
+"  +D                    - do not add Date header",
 "  -f    address*        - email address of the sender",
 "  -sub  subject         - subject",
 "  -lilst file           - a file containing a list of email addresses",
