@@ -41,7 +41,7 @@ static void usage(void)
 "  +D                    - do not add Date header",
 "  -f    address*        - email address of the sender",
 "  -sub  subject         - subject",
-"  -lilst file           - a file containing a list of email addresses",
+"  -list_address file    - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
 "  -separator character  - sepatorator used with -attach. Default is comma (,)",
