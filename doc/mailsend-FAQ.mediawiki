@@ -199,7 +199,7 @@ From v1.15a+, STARTTLS, CRAM-MD5, LOGIN and PLAIN authentication is supported. S
 == What's the difference between -ssl and -starttls? ==
 With the option -ssl, an encrypted connection is made first and then SMTP protocol continues over the encrypted connection. For example, smtp.gmail.com supports it at port 465. With -starttls, a regular unencrypted connection is made first, then if the server supports STRTTLS, the command is issued to make the connection encrypted. For example smtp. gmail.com supports STARTTLS at port 587.
 == How to send mail to multiple people? ==
-Create a text file containing the addresses and then specify the file with -l. The syntax of the file is as follows:
+Create a text file containing the addresses and then specify the file with -list-address. The syntax of the file is as follows:
 
     #####################################################
     # File can contain addresses to send mail to.
