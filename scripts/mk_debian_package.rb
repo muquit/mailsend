@@ -63,7 +63,7 @@ Description: Send mail via SMTP protocol
  STARTTLS and SMTP over SSL is also supported.  It was originally written 
  for Microsoft Windows but later on ported to Linux/Unix. The Homepage of
  mailsend is at: http://muquit.com/muquit/software/mailsend/mailsend.html
- License is GNU GPL.
+ License is BSD.
 
 
 EOD
@@ -74,17 +74,17 @@ EOD
   end
 
   def gen_copyright
-    f = File.open("./debian/usr/share/doc/mailsend/copyright", "w")
+    f = File.open("./debian/usr/share/doc/mailsend/COPYRIGHT", "w")
     year = Time.new.year
     f.puts <<EOD
 mailsend
 
 Copyright #{year} Muhammad Muquit <muquit@muquit.com>
 
-License: GNU GPL
+License: BSD
 
-On Debian systems, the full text of the GPL can be found at
-/usr/share/common-licenses/GPL
+On Debian systems, the full text of the BSD can be found at
+/usr/share/common-licenses/BSD
 
 EOD
     f.close
