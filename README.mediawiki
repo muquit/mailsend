@@ -21,7 +21,7 @@ It should compile on any POSIX compliant system.  Works on 64 bit systems.
 ===Latest stable version is 1.16 ===
 Released on Mar-4-2012. Please look at: [[ChangeLog.mediawiki|ChangeLog]]. This version lacks lot of features. Use v1.17b14.
 === Latest Development version is 1.17b15 ===
-Released on May-25-2015. This version has lot of new features and ready for testing.
+Released on May-25-2015. This version has lot of new features and ready for testing. [[ChangeLog.mediawiki|ChangeLog]]
 === Last Stable Development version is 1.17b14 ===
 Released on Oct-20-2013. Please look at: [[ChangeLog.mediawiki|ChangeLog]]. 
 
