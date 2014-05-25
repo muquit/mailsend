@@ -2,8 +2,14 @@ __TOC__
 ===1.17b15===
 Not released yet as I am still testing it. You are welcome to get the latest source, test and report the bugs.
 
+* When the mail is sent in interactive mode, add a CRLF after the last header.  Fixes #58
+'''(May-24-2014)'''
+
+* Read multi line SMTP status messages. Before if the status code was not * expected, read was stopped after reading the first line. Sometimes it isuseful to see all the lines as the messages could tell what is wrong. Fixes #57
+'''(May-24-2014)'''
+
 * If no encoding type was specified for a one line message, it was NULL and a debug message tried to print it causing a seg fault. Fixes Issue #45.
-'''(Feb-01-2014'''
+'''(Feb-01-2014)'''
 
 * The flag <code>-emdbed-image img1 -embed-image imd2</code> etc to embed image in HTML.
 '''(Dec-27-2013)'''

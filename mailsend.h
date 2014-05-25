@@ -258,7 +258,8 @@ void        printAddressList(void);
 void        print_server_caps(void);
 void        print_one_lines(void);
 char        *check_server_cap(char *what);
-int         read_smtp_line();
+int         read_smtp_line(void);
+int         read_smtp_multi_lines(void);
 int         show_smtp_info(char *smtp_server,int port,char *domain);
 int         send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
                      char *smtp_server,int smtp_port,char *helo_domain,

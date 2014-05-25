@@ -68,6 +68,35 @@ static SOCKET smtpConnect(char *smtp_server,int port)
     return (sfd);
 }
 
+int read_smtp_multi_lines(void)
+{
+    int
+        rc,
+        lcnt = 0;
+    if (smtp_sep == A_DASH)
+    {
+        for (;;)
+        {
+            rc=read_smtp_line();
+            if (rc < 0)
+                break;
+            lcnt++;
+            if (lcnt >= 100)
+            {
+                errorMsg("Too many lines from server\n");
+                rc=(-1);
+                goto ExitProcessing;
+            }
+            if (smtp_sep != A_DASH)
+                break;
+        }
+    }
+    smtp_sep = A_SPACE;
+    return(0);
+ExitProcessing:
+    return(1);
+}
+
 /*
  * sfd   socket 
  *
@@ -212,6 +241,7 @@ static int say_helo(char *helo_domain)
                 break;
         }
     }
+    smtp_sep = A_SPACE;
 
     return(rc);
 }
@@ -357,6 +387,7 @@ int smtpEom(int sfd)
     if (smtp_code != 250)
     {
         errorMsg("Expected smtp code 250, got %d\n",smtp_code);
+        read_smtp_multi_lines();
         rc = (-1);
     }
 
@@ -1246,6 +1277,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 #endif /* WINNT */
 
         newline_before=1;
+        msock_puts("\r\n"); /* RFC822 sec 3.1 */
         while (fgets(mbuf,sizeof(mbuf)-1,stdin) && (break_out == 0))
         {
             if (newline_before && *mbuf == '.')
@@ -1293,11 +1325,12 @@ static int read_greetings(void)
     if (rc < 0)
         goto cleanup;
 
-    s_esmtp=g_esmtp; /* if foreced with -ehlo */
+    s_esmtp=g_esmtp; /* if forced with -ehlo */
 
     if (smtp_code != 220)
     {
         errorMsg("Expected smtp code 220, got %d\n",smtp_code);
+        read_smtp_multi_lines();
         rc=(-1);
         goto cleanup;
     }
@@ -1329,6 +1362,7 @@ static int read_greetings(void)
         }
     }
 cleanup:
+    smtp_sep = A_SPACE;
     return(rc);
 }
 

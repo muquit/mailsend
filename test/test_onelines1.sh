@@ -24,5 +24,6 @@ fi
         -from $FROM -to $TO \
         -smtp smtp.gmail.com -port 587 -starttls -auth \
         -user $FROM \
+        -M "Three one line messages including this one" \
         -M "one line message 1" \
         -M "one line message 2"
