@@ -10,6 +10,8 @@ If you have any question, request or suggestion, please enter it in  the [[https
 == Download source/binary==
 To download source/binaries, please go to the [[https://github.com/muquit/mailsend/releases/|releases]] page.
 
+'''So many versions! which version to use? I recommend use v1.17b14 in a production environment.'''
+
 == Supported Platforms ==
 
 * Microsoft Windows
@@ -18,7 +20,6 @@ To download source/binaries, please go to the [[https://github.com/muquit/mailse
 
 It should compile on any POSIX compliant system.  Works on 64 bit systems.
 == Versions ==
-'''So many versions! which version to use? I recommend use v1.17b14 in a production environment.'''
 
 ===Latest stable version is 1.16 ===
 Released on Mar-4-2012. Please look at: [[ChangeLog.mediawiki|ChangeLog]]. This version lacks lot of features. Use v1.17b14.
