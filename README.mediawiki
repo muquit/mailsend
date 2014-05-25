@@ -19,8 +19,10 @@ To download source/binaries, please go to the [[https://github.com/muquit/mailse
 It should compile on any POSIX compliant system.  Works on 64 bit systems.
 == Versions ==
 ===Latest stable version is 1.16 ===
-Released on Mar-4-2012. Please look at: [[ChangeLog.mediawiki|ChangeLog]]
-=== Latest Development version is 1.17b14 ===
+Released on Mar-4-2012. Please look at: [[ChangeLog.mediawiki|ChangeLog]]. This version lacks lot of features. Use v1.17b14.
+=== Latest Development version is 1.17b15 ===
+Released on May-25-2015. This version has lot of new features and ready for testing.
+=== Last Stable Development version is 1.17b14 ===
 Released on Oct-20-2013. Please look at: [[ChangeLog.mediawiki|ChangeLog]]. 
 
 Just because it a development version, it does not mean it is unstable.  This version has many bug fixes which is not available in v1.16.
