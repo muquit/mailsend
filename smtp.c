@@ -386,8 +386,8 @@ int smtpEom(int sfd)
     rc = read_smtp_line();
     if (smtp_code != 250)
     {
-        errorMsg("Expected smtp code 250, got %d\n",smtp_code);
         read_smtp_multi_lines();
+        errorMsg("Expected smtp code 250, got %d\n",smtp_code);
         rc = (-1);
     }
 
@@ -1329,8 +1329,8 @@ static int read_greetings(void)
 
     if (smtp_code != 220)
     {
-        errorMsg("Expected smtp code 220, got %d\n",smtp_code);
         read_smtp_multi_lines();
+        errorMsg("Expected smtp code 220, got %d\n",smtp_code);
         rc=(-1);
         goto cleanup;
     }
