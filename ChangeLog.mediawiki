@@ -1,6 +1,7 @@
 __TOC__
 ===1.17b15===
-Not released yet as I am still testing it. You are welcome to get the latest source, test and report the bugs.
+* Released for testing.
+'''(May-24-2014)'''
 
 * When the mail is sent in interactive mode, add a CRLF after the last header.  Fixes #58
 '''(May-24-2014)'''
