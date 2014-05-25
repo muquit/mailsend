@@ -1278,6 +1278,7 @@ static int smtpMail(int sfd,char *to,char *cc,char *bcc,char *from,char *rrr,cha
 
         newline_before=1;
         msock_puts("\r\n"); /* RFC822 sec 3.1 */
+        showVerbose("\r\n");
         while (fgets(mbuf,sizeof(mbuf)-1,stdin) && (break_out == 0))
         {
             if (newline_before && *mbuf == '.')
