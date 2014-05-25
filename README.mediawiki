@@ -75,6 +75,72 @@ Just because it a development version, it does not mean it is unstable.  This ve
 The options with * must the specified
 You must know the FQDN or IP address of the SMTP server you use. The file you specify with -l contains email address one per line. For determining MIME types, please look at [mimetypes MIME Types].
 
+     Version: @(#) mailsend v1.17b15
+
+     Copyright: BSD. It is illegal to use this software for Spamming
+
+     (Compiled with OpenSSL version: 1.0.1g 7 Apr 2014)
+     usage: mailsend [options]
+     Where the options are:
+      -copyright            - show copyright information
+      -4                    - Force to use IPv4 address of SMTP server
+      -6                    - Force to use IPv6 address of SMTP server
+      -smtp hostname/IP*    - Hostname/IP address of the SMTP server
+      -port SMTP port       - SMTP port
+      -domain    domain     - domain name for SMTP HELO/EHLO
+      -t    to,to..*        - email address/es of the recipient/s
+      -cc   cc,cc..         - carbon copy address/es
+      +cc                   - do not ask for Carbon Copy
+      -ct   seconds         - Connect timeout. Default is 5 seconds
+      -bc   bcc,bcc..       - blind carbon copy address/es
+      +bc                   - do not ask for Blind carbon copy
+      +D                    - do not add Date header
+      -f    address*        - email address of the sender
+      -sub  subject         - subject
+      -list_address file    - a file containing a list of email addresses
+      -log file             - write log messages to this file
+      -cs   character set   - for text/plain attachments (default is us-ascii)
+      -separator character  - sepatorator used with -attach. Default is comma (,)
+                              If used must be specified before -attach
+      -enc-type type        - encoding type. base64, 8bit, 7bit etc.
+                              Default is base64. Special type is "none"
+      -aname name           - name of the attachment. Default is filename
+      -content-id id        - content-id in the attachment
+      -mime-type type       - MIME type
+      -dispostion val       - "attachment" or "inline". Default is "attachment"
+      -attach file,mime_type,[i/a] (i=inline,a=attachment)
+                            - attach this file as attachment or inline
+      -show-attach          - show attachment in verbose mode, default is no
+      -show-mime-types      - show the compiled in MIME types
+      -M    "one line msg"  - attach this one line text message
+      -content-type type    - Content type. Default: multipart/mixed
+      -msg-body path        - Path of the file to include as body of mail
+      -embed-image image    - Path of image to embed in HTML
+      -H    "header"        - Add custom Header
+      -name "Full Name"     - add name in the From header
+      -v                    - verbose mode
+      -V                    - show version info
+      -w                    - wait for a CR after sending the mail
+      -rt  email_address    - add Reply-To header
+      -rrr email_address    - request read receipts to this address
+      -ssl                  - SMTP over SSL
+      -starttls             - use STARTTLS if the server supports it
+      -auth                 - try CRAM-MD5,LOGIN,PLAIN in that order
+      -auth-cram-md5        - use AUTH CRAM-MD5 authentication
+      -auth-plain           - use AUTH PLAIN authentication
+      -auth-login           - use AUTH LOGIN authentication
+      -user username        - username for ESMTP authentication
+      -pass password        - password for ESMTP authentication
+      -example              - show examples
+      -ehlo                 - force EHLO
+      -info                 - show SMTP server information
+      -help                 - shows this help
+      -q                    - quiet
+
+The options with * must be specified
+Environment variables: SMTP_USER_PASS for plain text password (-pass)
+
+
      Version: @(#) mailsend v1.17b14
 
      Copyright: BSD. It is illegal to use this software for Spamming
