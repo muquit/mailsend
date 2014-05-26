@@ -10,7 +10,7 @@ If you have any question, request or suggestion, please enter it in  the [[https
 == Download source/binary==
 To download source/binaries, please go to the [[https://github.com/muquit/mailsend/releases/|releases]] page.
 
-'''So many versions! which version to use? I recommend use v1.17b14 in a production environment.''' If possible, please test v1.17v15 and give me the feedback.
+'''So many versions! which version to use? I recommend use v1.17b14 in a production environment.''' If possible, please test v1.17b15 and give me the feedback.
 
 == Supported Platforms ==
 
