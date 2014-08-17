@@ -121,7 +121,7 @@ int read_smtp_line(void)
 
     memset(lbuf,0,sizeof(lbuf));
     /* read a line */
-    n=msock_gets(lbuf,sizeof(lbuf)-1);
+    n=msock_gets(lbuf,sizeof(lbuf)-1, g_read_timeout);
     if (n < 3 )
     {
         /*errorMsg("Error reading SMTP line, read %d bytes",n);*/

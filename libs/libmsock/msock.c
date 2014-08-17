@@ -309,7 +309,7 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
 #ifdef HAVE_GETADDRINFO
     if (debug)
     {
-        (void) fprintf(stderr,"libmsock: using getaddrinfo\n");
+        (void) fprintf(stderr,"> libmsock: using getaddrinfo\n");
     }
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = PF_UNSPEC;
@@ -342,7 +342,7 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
                 {
                     if (debug)
                     {
-                        (void) fprintf(stderr," AF_UNSPEC\n");
+                        (void) fprintf(stderr,"> AF_UNSPEC\n");
                     }
                     break;
                 }
@@ -350,7 +350,7 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
                 {
                     if (debug)
                     {
-                        (void) fprintf(stderr," AF_INET IPv4\n");
+                        (void) fprintf(stderr,"> AF_INET IPv4\n");
                     }
                     break;
                 }
@@ -358,7 +358,7 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
                 {
                     if (debug)
                     {
-                        (void) fprintf(stderr," AF_INET6\n");
+                        (void) fprintf(stderr,"> AF_INET6\n");
                     }
                     break;
                 }
@@ -379,9 +379,9 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
             eno = msock_get_errno(sock_fd);
             if (debug)
             {
-                (void) fprintf(stderr," EINPROGRESS=%d,EWOULDBLOCK=%d\n",
+                (void) fprintf(stderr,"> EINPROGRESS=%d,EWOULDBLOCK=%d\n",
                         EINPROGRESS,EWOULDBLOCK);
-                (void) fprintf(stderr," connect(): socket=%d,rc=%d, errno=%d\n",
+                (void) fprintf(stderr,"> connect(): socket=%d,rc=%d, errno=%d\n",
                         sock_fd,rc,eno);
             }
             if (rc != 0)
@@ -397,7 +397,7 @@ SOCKET clientSocket(int use, char *address,int port, int connect_timeout)
                     rc = 0;
                     if (debug)
                     {
-                        (void) fprintf(stderr,"(Debug) Try socket %d\n",sock_fd);
+                        (void) fprintf(stderr,"> Try socket %d\n",sock_fd);
                     }
                     break;
                 }
@@ -539,7 +539,7 @@ int sockPuts(SOCKET sock,char *str)
     return (sockWrite(sock,str,strlen(str)));
 }
 
-int sockGets(SOCKET sockfd,char *str,size_t count)
+int sockGets(SOCKET sockfd,char *str,size_t count, int read_timeout)
 {
     int
         bytesRead;
@@ -553,6 +553,21 @@ int sockGets(SOCKET sockfd,char *str,size_t count)
 
     char
         lastRead=0;
+
+#if defined(SO_RCVTIMEO)
+    struct timeval
+        tv;
+#endif /* SO_RCVTIMEO*/
+
+#if defined(SO_RCVTIMEO)
+    tv.tv_sec = read_timeout;
+    tv.tv_usec = 0;
+    if (debug)
+    {
+        (void) fprintf(stderr,"> Setting read timeout to: %d seconds\n", read_timeout);
+    }
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval));
+#endif /* SO_RCVTIMEO*/
 
     currentPosition=str;
 
@@ -631,11 +646,11 @@ int sockGetsSSL(SSL *ssl,char *str,size_t count)
 
 /* must be called after msock_set_socket() */
 /* must be called after msock_set_ssl() if SSL is on */
-int msock_gets(char *str,size_t count)
+int msock_gets(char *str,size_t count, int read_timeout)
 {
     if (! msock_is_ssl_on())
     {
-        return(sockGets(msock_get_socket(),str,count));
+        return(sockGets(msock_get_socket(),str,count, read_timeout));
     }
     else
     {

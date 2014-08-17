@@ -36,6 +36,9 @@ static void usage(void)
 "  -cc   cc,cc..         - carbon copy address/es",
 "  +cc                   - do not ask for Carbon Copy",
 "  -ct   seconds         - Connect timeout. Default is 5 seconds",
+#if defined(SO_RCVTIMEO)
+"  -read-timeout seconds - Read timeout. Default is 5 seconds",
+#endif /* SO_RCVTIMEO */
 "  -bc   bcc,bcc..       - blind carbon copy address/es",
 "  +bc                   - do not ask for Blind carbon copy",
 "  +D                    - do not add Date header",
@@ -222,6 +225,7 @@ int main(int argc,char **argv)
 
     g_verbose=0;
     g_connect_timeout = DEFAULT_CONNECT_TIMEOUT; /* 5 secs */
+    g_read_timeout = DEFAULT_READ_TIMEOUT; /* 5 secs */
     g_quiet=0;
     g_wait_for_cr=0;
     g_do_auth=0;
@@ -1133,6 +1137,20 @@ int main(int argc,char **argv)
                             rc = 1;
                             goto ExitProcessing;
                         }
+                    }
+                }
+                else if (strncmp("read-timeout",option+1,12) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            (void) fprintf(stderr,"Error: missing to addresses for -read_timeout\n");
+                            rc = 1;
+                            goto ExitProcessing;
+                        }
+                        g_read_timeout = atoi(argv[i]);
                     }
                 }
                 else

@@ -61,6 +61,7 @@
 #define FILE_TYPE_BINARY    0x00000004
 
 #define DEFAULT_CONNECT_TIMEOUT   5 /* seconds */
+#define DEFAULT_READ_TIMEOUT      5 /* seconds */
 
 
 #ifdef EXTERN
@@ -149,6 +150,7 @@ do \
 
 EXTERN int  g_verbose;
 EXTERN int  g_connect_timeout;
+EXTERN int  g_read_timeout;
 EXTERN int  g_wait_for_cr;
 EXTERN int  g_do_ssl;
 EXTERN int  g_do_starttls;

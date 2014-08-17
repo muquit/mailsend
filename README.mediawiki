@@ -12,6 +12,16 @@ To download source/binaries, please go to the [[https://github.com/muquit/mailse
 
 '''So many versions! which version to use? I recommend use v1.17b14 in a production environment.''' If possible, please test v1.17b15 and [[https://github.com/muquit/mailsend/issues/|give your freedback]]
 
+Using git:
+
+  git clone https://github.com/muquit/mailsend.git
+
+To download development branch:
+
+  git clone -b develop https://github.com/muquit/mailsend.git mailsend_dev
+
+Development branch will be merged with the main branch every now and then when I think that the dev code is solid.
+
 == Supported Platforms ==
 
 * Microsoft Windows

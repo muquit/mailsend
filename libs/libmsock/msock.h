@@ -68,7 +68,7 @@
  * familty can be USE_IPV4, USE_IPV6 or USE_AUTO
  */
 SOCKET clientSocket(int use, char *server_addr,int port, int connect_timeout);
-int    sockGets(SOCKET,char *,size_t);
+int    sockGets(SOCKET,char *,size_t, int read_timoeut);
 int    sockPuts(SOCKET sock,char *str);
 
 void   msock_set_socket(SOCKET sock);
@@ -76,7 +76,7 @@ SOCKET msock_get_socket(void);
 void   msock_turn_ssl_on(void);
 void   msock_turn_ssl_off(void);
 int    msock_is_ssl_on(void);
-int    msock_gets(char *buf,size_t bufsiz);
+int    msock_gets(char *buf,size_t bufsiz, int connect_timeout);
 int    msock_puts(char *str);
 void   msock_close_socket(SOCKET fd);
 void   msock_close(void);
