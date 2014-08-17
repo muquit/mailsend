@@ -557,6 +557,10 @@ int sockGets(SOCKET sockfd,char *str,size_t count, int read_timeout)
 #if defined(SO_RCVTIMEO)
     struct timeval
         tv;
+#ifdef WINNT
+    DWORD
+        dwTime = read_timeout * 1000;
+#endif /* WINNT */
 #endif /* SO_RCVTIMEO*/
 
 #if defined(SO_RCVTIMEO)
@@ -566,7 +570,16 @@ int sockGets(SOCKET sockfd,char *str,size_t count, int read_timeout)
     {
         (void) fprintf(stderr,"> Setting read timeout to: %d seconds\n", read_timeout);
     }
+#ifndef WINNT
     setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval));
+#else
+    if (debug)
+    {
+        (void) fprintf(stderr,"> Windows Setting read timeout to: %d seconds\n", read_timeout);
+    }
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&dwTime, sizeof(dwTime));
+#endif 
+
 #endif /* SO_RCVTIMEO*/
 
     currentPosition=str;

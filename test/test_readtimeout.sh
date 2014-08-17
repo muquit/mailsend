@@ -19,12 +19,17 @@ if [ x"$pass" = x ]; then
     echo "SMTP_USER_PASS environment variable is not not"
     exit 1
 fi
+OS=`uname -s`
+if [ x"$OS" = x"MINGW32_NT-6.1" ]; then
+MAILSEND=mailsend.exe
+else
+MAILSEND=./mailsend
+fi
 
 N=3
 echo "mailsend should timeout after $N seconds"
-sleep 1
 # It should timeout after N seconds
-./mailsend -v -sub "testing read timeout" \
+$MAILSEND -v -sub "testing read timeout" \
         -from $FROM -to $TO \
         -smtp smtp.gmail.com -port 465 -starttls -auth \
         -user $FROM \
