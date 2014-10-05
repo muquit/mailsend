@@ -1,0 +1,69 @@
+<html>
+    <title>testing embedded image in mail</title>
+    <body>
+This is a test of embedding multiple images in HTML and relate the img
+tags in the HTML document with the images by mailsend while sending
+mail. We will embed two images side by side inside a HTML table.
+
+The real HTML file is in test/embed_image2.html, available with source distribution. The mail is sent with the script test/test_emded2.sh.
+
+The Table will look like:
+<p>
+<br>
+<pre>
+&lt;table border="1"&gt;
+    &lt;tr&gt;
+        &lt;td&gt; &lt;img src="cid:img1_deadbeefcafe" alt="inline image 1"&gt;&lt;/td&gt;
+        &lt;td&gt; &lt;img src="cid:img2_deadbeefcafe" alt="inline image 2"&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+Notice: For the img tag, only the content id is specified with cid but no 
+path of the image is specified.
+<p>
+<br>
+<table border="1">
+    <tr>
+        <td> <img src="cid:img1_deadbeefcafe" alt="inline imge 1"></td>
+        <td> <img src="cid:img2_deadbeefcafe" alt="inline imge 2"></td>
+    </tr>
+</table>
+<p>
+<br>
+<p>
+        While sending mail with mailsend, we will specify the content ids
+        ith flag -content-id for the specfic image.
+        <p>
+<b>Example:</b>
+<p>
+Note: Requires mailsend v1.17b15+. The following command is used to send this mail:
+        <pre>
+    mailsend -v -sub "Testing embedding image in HTML" 
+    -from example@gmail.com -to example@gmail.com 
+    -smtp smtp.gmail.com -port 587 -starttls -auth 
+    -user mailsend.test@gmail.com 
+    -cs ISO-8859-1 
+    -content-type "multipart/related" 
+    -mime-type text/html 
+    -disposition inline 
+    -enc-type "none" 
+    -attach "test/embedded_image2.html" 
+    -mime-type image/png 
+    -enc-type "base64" 
+    -disposition inline 
+    -content-id "img1_deadbeefcafe" 
+    -cs "none" 
+    -attach "test/blue.png"
+    -content-id "img2_deadbeefcafe" 
+    -cs "none" 
+    -attach "test/green.png"
+        </pre>
+       <p>
+       Any mail reader that understands multipart-related Content-type will
+       display the html and the image together. Without the content id, the HTML
+       and the image will show up as 2 separate attachments.
+       <p>
+       Tested with gmail, outlook and yahoo mail which can display HTML 
+       file with embedded image.
+    </body>
+</html>
