@@ -89,7 +89,7 @@ Note: No content ids are specified, they will be generated. The mail will like:
 
 [[/images/embed3.png]]
 
-If you look at the mail at gamil (Show riginal), it will look like:
+If you look at the mail at gmail (select Show original), it will look like:
 
     Subject: Embed 2 images in HTML, one below the other
     From: mailsend.test@gmail.com
