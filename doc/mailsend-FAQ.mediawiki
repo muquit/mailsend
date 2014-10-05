@@ -76,6 +76,8 @@ The HTML file [[../test/embed_image1.html]] is used to send this mail.
 
 [[/images/embed1.png]]
 
+The HTML file [[../test/embed_image2.html] is used to send this mail.
+
 [[/images/embed2.png]]
 
 To images images in HTML one below another, mailsend can be run as below:
