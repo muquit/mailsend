@@ -78,7 +78,7 @@ Two screenshots of embedded image in HTML file are shown below:
 
 To images images in HTML one below another, mailsend can be run as below:
 
-  $mailsend -sub "Embed 2 images in HTML, one below the other" \
+  $ mailsend -sub "Embed 2 images in HTML, one below the other" \
         -from mailsend@gmail.com -to mailsend@gmail.com \
         -smtp smtp.gmail.com -port 587 -starttls -auth \
         -user mailsend.test@gmail.com -cs ISO-8859-1 \
@@ -87,7 +87,7 @@ To images images in HTML one below another, mailsend can be run as below:
 
 Note: No content ids are specified, they will be generated. The mail will like:
 
-[[/imags/embed3.png]]
+[[/images/embed3.png]]
 
 If you look at the mail at gamil (Show riginal), it will look like:
 
