@@ -34,7 +34,7 @@ EOF
     @pass = ENV['SMTP_USER_PASS']
     if !@pass
       puts <<-EOF
-  Error: SMTP_USR_PASS env var is not set
+  Error: SMTP_USER_PASS env var is not set
 EOF
       exit
     end
@@ -42,7 +42,7 @@ EOF
 
   def send_mail
     html_file = Dir.pwd + "/test/embed_image1.html"
-    image = Dir.pwd + "/test/test.png"
+    image = Dir.pwd + "/test/blue.png"
     content_id = "xx_deadbeefcafe"
 
     cmd = ""
@@ -95,7 +95,7 @@ EOF
     cmd << "-attach \"#{image}\""
 
     log "run: #{cmd}"
-#    system(cmd)
+    system(cmd)
   end
 
   def doit

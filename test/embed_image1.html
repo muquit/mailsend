@@ -9,6 +9,8 @@
         </pre>
         <p>
             <img src="cid:xx_deadbeefcafe" alt="inline imge">
+<p>            
+The real HTML file is test/emabed_image1.html, available with the source distribution.
         <p>
 Notice: only content id is specified with cid, no path of image is specified.
 <p>
@@ -17,25 +19,27 @@ Notice: only content id is specified with cid, no path of image is specified.
         <p>
 <b>Example:</b>
 <p>
-Note: Requires mailsend v1.17b15+:
+Note: Requires mailsend v1.17b15+. The following command was used to
+send this mail:
         <pre>
     mailsend -v -sub "Testing embedding image in HTML" 
-    -from example@ gmail.com -to example@gmail.com 
+    -from example@gmail.com -to example@gmail.com 
     -smtp smtp.gmail.com -port 587 -starttls -auth 
-    -user mailsendreal@gmail.com 
+    -user mailsend.test@gmail.com 
     -cs ISO-8859-1 
     -content-type "multipart/related" 
     -mime-type text/html 
     -disposition inline 
     -enc-type "none" 
-    -attach "/home/muquit/svndev/mailsend/test/embedded_image.html" 
+    -attach "test/embedded_image1.html" 
     -mime-type image/png 
     -enc-type "base64" 
     -disposition inline 
     -content-id "xx_deadbeefcafe" 
     -cs "none" 
-    -attach "/home/muquit/svndev/mailsend/test/test.png"
+    -attach "test/blue.png"
         </pre>
+<p>
        <p>
        Any mail reader that understands multipart-related Content-type will
        display the html and the image together. Without the content id, the HTML

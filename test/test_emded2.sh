@@ -26,10 +26,10 @@ fi
         -content-type "multipart/related" \
         -mime-type text/html \
         -disposition inline -enc-type "none" \
-        -attach "/home/muquit/svndev/mailsend/test/embed_image2.html" \
+        -attach "test/embed_image2.html" \
         -mime-type "image/png" -enc-type "base64" \
         -disposition inline \
         -content-id "img1_deadbeefcafe" -cs "none" \
-        -attach "$HOME/test_images/test.jpg" \
+        -attach "test/blue.png" \
         -content-id "img2_deadbeefcafe" \
-        -attach "$HOME/test_images/testpattern001.png"
+        -attach "test/green.png"

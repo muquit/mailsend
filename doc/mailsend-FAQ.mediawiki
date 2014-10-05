@@ -67,6 +67,16 @@ Type any of:
     [C] QUIT
     [S] 221 2.0.0 closing connection xxxxxxxxxxxxxxxx.19
 
+== How to embed images in HTML? ==
+mailsend v1.17b15+ has has a feature to embed images inside HTML which is supported by most mail readers including Outlook. This feature can be used to embed one complicated messsage body of the mail.
+
+Two screenshots of embedded image in HTML are shown below:
+
+[[/images/embed1.png]]
+
+[[/images/embed2.png]]
+
+
 == Does mailsend support IPv6? ==
 From v1.17b1, IPv6 is supported in all platforms. If you have IPv6 (native or through tunnel), mailsend will use IPv6 automatically if the fqdn of the SMP server resolves to an IPv6 address. Or you can just specify the IPv6 address of the SMTP server.
 Example:
