@@ -76,7 +76,7 @@ Two screenshots of embedded image in HTML file are shown below:
 
 [[/images/embed2.png]]
 
-To images images in HTML one below another, mailsend can be run as below:
+To embed images in HTML one below another (without HTML file), mailsend can be run as below:
 
   $ mailsend -sub "Embed 2 images in HTML, one below the other" \
         -from mailsend@gmail.com -to mailsend@gmail.com \
