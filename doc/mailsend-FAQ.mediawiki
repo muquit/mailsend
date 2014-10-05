@@ -72,7 +72,7 @@ mailsend v1.17b15+ has has a feature to embed images inside HTML which is suppor
 
 Two screenshots of embedded image in HTML are shown below:
 
-[embed1.png [[http://muquit.com//muquit/images/mailsend_embed1.png]]]
+[embed1.png [[Image:http://muquit.com//muquit/images/mailsend_embed1.png]]]
 
 [[/images/embed2.png]]
 
