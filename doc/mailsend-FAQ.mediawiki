@@ -70,11 +70,63 @@ Type any of:
 == How to embed images in HTML? ==
 mailsend v1.17b15+ has has a feature to embed images inside HTML which is supported by most mail readers including Outlook. This feature can be used to embed one complicated messsage body of the mail.
 
-Two screenshots of embedded image in HTML are shown below:
+Two screenshots of embedded image in HTML file are shown below:
 
 [[/images/embed1.png]]
 
 [[/images/embed2.png]]
+
+To images images in HTML one below another, mailsend can be run as below:
+
+  $mailsend -sub "Embed 2 images in HTML, one below the other" \
+        -from mailsend@gmail.com -to mailsend@gmail.com \
+        -smtp smtp.gmail.com -port 587 -starttls -auth \
+        -user mailsend.test@gmail.com -cs ISO-8859-1 \
+        -embed-image "test/blue.png" \
+        -embed-image "test/green.png"
+
+Note: No content ids are specified, they will be generated. The mail will like:
+
+[[/imags/embed3.png]]
+
+If you look at the mail at gamil (Show riginal), it will look like:
+
+    Subject: Embed 2 images in HTML, one below the other
+    From: mailsend.test@gmail.com
+    Date: Sun, 05 Oct 2014 15:18:10 -0400
+    To: mailsend@gmail.com
+    X-Mailer: @(#) mailsend v1.17b15 (Unix)
+    X-Copyright: BSD. It is illegal to use this software for Spamming
+    Mime-version: 1.0
+    Content-type: multipart/related; boundary="NxSfacGEuTT0nqf7"
+
+    --NxSfacGEuTT0nqf7
+    Content-Type: multipart/alternative; boundary=Stw5amS+Ppc1NmFl
+
+    --Stw5amS+Ppc1NmFl
+    Content-Type: text/html; charset=ISO-8859-1
+
+    <img src="cid:ii1_FsOAfO89d/e04/32" alt="inline image 1"><br>
+    <img src="cid:ii2_Z5T3o06Y3iw8DIFf" alt="inline image 2"><br>
+
+    --Stw5amS+Ppc1NmFl--
+    --NxSfacGEuTT0nqf7
+    Content-Type: image/png
+    Content-ID: <ii1_FsOAfO89d/e04/32>
+    X-Attachment-Id: ii1_FsOAfO89d/e04/32
+    Content-Transfer-Encoding: base64
+
+    <base64 content here>
+    --NxSfacGEuTT0nqf7
+    Content-Type: image/png
+    Content-ID: <ii2_Z5T3o06Y3iw8DIFf>
+    X-Attachment-Id: ii2_Z5T3o06Y3iw8DIFf
+    Content-Transfer-Encoding: base64
+
+    <base64 content here>
+    --NxSfacGEuTT0nqf7--
+    --NxSfacGEuTT0nqf7--
+
 
 
 == Does mailsend support IPv6? ==

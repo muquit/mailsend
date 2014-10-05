@@ -25,5 +25,5 @@ fi
         -from $FROM -to $TO \
         -smtp smtp.gmail.com -port 587 -starttls -auth \
         -user $FROM -cs ISO-8859-1 \
-        -embed-image "$HOME/test_images/test.jpg" \
-        -embed-image "$HOME/test_images/testpattern001.png"
+        -embed-image "test/blue.png" \
+        -embed-image "test/green.png"
