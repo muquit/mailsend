@@ -214,7 +214,7 @@ In Mac OS X Mavericks as of Oct-27-2013, you have to do the following:
 
 Default installation location is /usr/local. If you want to change that:
 
-    $ /bin/ch ./configure --with-openssl=/usr --prefix=/usr/local/mailsend
+    $ /bin/sh ./configure --with-openssl=/usr --prefix=/usr/local/mailsend
     $ make clean
     $ make
     # make install
