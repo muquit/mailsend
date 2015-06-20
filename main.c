@@ -47,7 +47,7 @@ static void usage(void)
 "  -list_address file    - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
-"  -separator character  - sepatorator used with -attach. Default is comma (,)",
+"  -separator character  - separator used with -attach. Default is comma (,)",
 "                          If used must be specified before -attach",
 "  -enc-type type        - encoding type. base64, 8bit, 7bit etc.",
 "                          Default is base64. Special type is \"none\"",
