@@ -41,7 +41,7 @@
 
 #define MFL __FILE__,__LINE__
 
-#define MAILSEND_VERSION    "@(#) mailsend v1.17b15"
+#define MAILSEND_VERSION    "@(#) mailsend v1.18"
 #define MAILSEND_PROG       "mailsend"
 #define MAILSEND_AUTHOR     "muquit@muquit.com"
 #define MAILSEND_URL        "http://www.muquit.com/"
