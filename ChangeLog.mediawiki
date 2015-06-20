@@ -1,7 +1,7 @@
 __TOC__
 ===1.18===
 * Added -read-timeout flag. Default timeout is 5 seconds. When -starttls flag was used with ssl port 465 at gmail, recv() was blocked for a long time.  Fixes #61.
-'''(Aug-17-2014)'''
+'''(Jun-20-2015)'''
 
 ===1.17b15===
 * Released for testing.
