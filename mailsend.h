@@ -266,7 +266,7 @@ int         show_smtp_info(char *smtp_server,int port,char *domain);
 int         send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
                      char *smtp_server,int smtp_port,char *helo_domain,
                      char *attach_file,char *txt_msg_file,char *the_msg,
-                     int is_mime,char *rrr,char *rt,int add_dateh);
+                     int is_mime,char *rrr,char *rt,int add_dateh,char* return_path_addr);
 TheMail     *newTheMail(void);
 void        errorMsg(char *format,...);
 void        showVerbose(char *format,...);

@@ -1411,7 +1411,7 @@ static int turn_on_raw_ssl(SOCKET sfd)
 int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
              char *smtp_server,int smtp_port,char *helo_domain,
              char *attach_file,char *txt_msg_file,char *the_msg,int is_mime,char *rrr,char *rt,
-             int add_dateh)
+             int add_dateh,char* return_path_addr)
 {
     SOCKET
         sfd;
@@ -1798,7 +1798,10 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
     }
 
 MailFrom:
-    rc=smtp_MAIL_FROM(from);
+    if (return_path_addr)
+        rc=smtp_MAIL_FROM(return_path_addr);
+    else
+        rc=smtp_MAIL_FROM(from);
     if (rc != 0)
         goto cleanup;
 
