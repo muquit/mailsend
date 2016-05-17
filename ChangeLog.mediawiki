@@ -1,5 +1,8 @@
 __TOC__
 ===1.19===
+* New option <code>-rp</code> to specify return path of the sent email which can be used to specify where the bounced mails will be sent. Thanks to kullmanp for adding this feature.
+(Mar-17-2016)
+
 * In quiet mode (-q), list of one line attachments were still printed on stdout.
 * Windows version linked with OpenSSl 1.0.2h
 '''(May-17-2016)'''
