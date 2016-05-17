@@ -1,4 +1,9 @@
 __TOC__
+===1.19===
+* In quiet mode (-q), list of one line attachments were still printed on stdout.
+* Windows version linked with OpenSSl 1.0.2h
+'''(May-17-2016)'''
+
 ===1.18===
 * Added -read-timeout flag. Default timeout is 5 seconds. When -starttls flag was used with ssl port 465 at gmail, recv() was blocked for a long time.  Fixes #61.
 '''(Jun-20-2015)'''

@@ -72,6 +72,10 @@ void print_oneline_attachment_list(void)
     Attachment
         *a;
 
+    if (!g_verbose)
+    {
+        return;
+    }
     for (l=oneline_attachment_head; l; l=l->next)
     {
         a=(Attachment *) l->data;
