@@ -3,25 +3,22 @@
 # muquit@muquit.com Jan-21-2013  
 #set -x
 ME=`basename $0`
-TO=$TO
-if [ x"$TO" = x ]; then
-    echo "TO environment variable is not not"
+ARGC=$#
+if [ $ARGC != 1 ]; then
+    echo "USage: ${ME} <list file>"
     exit 1
 fi
+LIST_FILE=$1
+
+if [ ! -f ${LIST_FILE} ]; then
+    echo "File '${LIST_FILE}' does not exist"
+    exit 1
+fi
+
 FROM=$FROM
 if [ x"$FROM" = x ]; then
     echo "FROM environment variable is not not"
     exit 1
-fi
-
-CC=''
-if [ x"$Cc" != x ]; then
-    CC="-cc $Cc"
-fi
-
-BCc=''
-if [ x"$BCc" != x ]; then
-    BCc="-bc ${BCc}"
 fi
 
 pass=$SMTP_USER_PASS
@@ -47,15 +44,15 @@ VALGRIND="valgrind -v --tool=memcheck --leak-check=yes --error-limit=yes --log-f
 else
 VALGRIND=""
 fi
-#set -x
+set -x
 
-$VALGRIND $BINARY -to $TO ${CC} ${BCc} -from $FROM \
+$VALGRIND $BINARY -list-address ${LIST_FILE} -from $FROM \
  -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \
  -cs "utf-8" \
  -H "X-Priority: 1" -H "Importance: high" \
- -sub "testing mailsend" \
+ -sub "testing mailsend" +cc +bc \
  -user "$FROM" -pass "$PASS" \
  -enc-type "none" \
  -mime-type "text/plain" \
