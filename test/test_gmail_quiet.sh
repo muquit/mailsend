@@ -40,7 +40,7 @@ fi
 #set -x
 
 $VALGRIND $BINARY -to $TO -from $FROM \
- -v \
+ -q \
  -starttls -port 587 -auth \
  -smtp $SMTP \
  -cs "utf-8" \

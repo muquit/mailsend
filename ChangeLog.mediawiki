@@ -1,7 +1,15 @@
 __TOC__
-===1.17b16===
+===1.19===
+* New option <code>-rp</code> to specify the return path of the sent email which can be used where the bounced mails will be sent. Thanks to kullmanp for adding this feature.
+'''(Mar-17-2016)'''
+
+* In quiet mode (-q), list of one line attachments were still printed on stdout.
+* Windows binary linked with OpenSSl 1.0.2h
+'''(May-17-2016)'''
+
+===1.18===
 * Added -read-timeout flag. Default timeout is 5 seconds. When -starttls flag was used with ssl port 465 at gmail, recv() was blocked for a long time.  Fixes #61.
-'''(Aug-17-2014)'''
+'''(Jun-20-2015)'''
 
 ===1.17b15===
 * Released for testing.

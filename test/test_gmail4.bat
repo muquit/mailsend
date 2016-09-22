@@ -1,0 +1,1 @@
+mailsend.exe -to %1 -from %2 -sub "test from windows" -starttls -port 587 -auth -smtp smtp.gmail.com -user "%2" -pass %SMTP_USER_PASS% -separator "|" -enc-type "base64" -attach "c:\blue,comma space.png|image/png" -v

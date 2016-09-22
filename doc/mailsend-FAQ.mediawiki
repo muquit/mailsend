@@ -68,7 +68,7 @@ Type any of:
     [S] 221 2.0.0 closing connection xxxxxxxxxxxxxxxx.19
 
 == How to embed images in HTML? ==
-mailsend v1.17b15+ has has a feature to embed images inside HTML which is supported by most mail readers including Outlook. This feature can be used to embed one complicated messsage body of the mail.
+mailsend v1.17b15+ has has a feature to embed images inside HTML which is supported by most mail readers including Outlook. This feature can be used to embed one complicated messsage body of the mail. Note: <code>-msg-body file.txt</code> can embed only one text file as message body.
 
 Two screenshots of embedded image in HTML file are shown below:
 
@@ -76,11 +76,11 @@ The HTML file [[../test/embed_image1.html]] is used to send this mail.
 
 [[/images/embed1.png]]
 
-The HTML file [[../test/embed_image2.html] is used to send this mail.
+The HTML file [[../test/embed_image2.html]] is used to send this mail.
 
 [[/images/embed2.png]]
 
-To images images in HTML one below another, mailsend can be run as below:
+To embed images in HTML one below another (without HTML file), mailsend can be run as below:
 
   $ mailsend -sub "Embed 2 images in HTML, one below the other" \
         -from mailsend@gmail.com -to mailsend@gmail.com \
@@ -93,7 +93,7 @@ Note: No content ids are specified, they will be generated. The mail will like:
 
 [[/images/embed3.png]]
 
-If you look at the mail at gamil (Show riginal), it will look like:
+If you look at the mail at gmail (select Show original), it will look like:
 
     Subject: Embed 2 images in HTML, one below the other
     From: mailsend.test@gmail.com

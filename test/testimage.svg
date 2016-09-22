@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="testimage.svg"
+   inkscape:export-filename="/Users/muquit/gitdev/mailsend/test/blue.png"
+   inkscape:export-xdpi="31.704096"
+   inkscape:export-ydpi="31.704096">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,17 +28,17 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="497.85714"
+     inkscape:cx="-219.28572"
      inkscape:cy="520"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g3797"
      showgrid="false"
      showborder="false"
      inkscape:showpageshadow="false"
      inkscape:window-width="1206"
      inkscape:window-height="877"
-     inkscape:window-x="1039"
-     inkscape:window-y="120"
+     inkscape:window-x="683"
+     inkscape:window-y="53"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
@@ -45,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -86,7 +89,10 @@
          height="212.15356"
          width="425.73517"
          id="rect3789"
-         style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.75674254px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:0.75674253999999985px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/Users/muquit/gitdev/mailsend/test/red.png"
+         inkscape:export-xdpi="5.4837556"
+         inkscape:export-ydpi="5.4837556" />
       <text
          transform="scale(0.86839341,1.1515518)"
          sodipodi:linespacing="125%"
@@ -102,7 +108,7 @@
            id="tspan3795"
            y="150.61566"
            x="330.88773"
-           sodipodi:role="line">Test Imge Blue</tspan></text>
+           sodipodi:role="line">Test Image</tspan></text>
     </g>
   </g>
 </svg>

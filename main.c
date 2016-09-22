@@ -47,7 +47,7 @@ static void usage(void)
 "  -list_address file    - a file containing a list of email addresses",
 "  -log file             - write log messages to this file",
 "  -cs   character set   - for text/plain attachments (default is us-ascii)",
-"  -separator character  - sepatorator used with -attach. Default is comma (,)",
+"  -separator character  - separator used with -attach. Default is comma (,)",
 "                          If used must be specified before -attach",
 "  -enc-type type        - encoding type. base64, 8bit, 7bit etc.",
 "                          Default is base64. Special type is \"none\"",
@@ -70,6 +70,7 @@ static void usage(void)
 "  -w                    - wait for a CR after sending the mail",
 "  -rt  email_address    - add Reply-To header",
 "  -rrr email_address    - request read receipts to this address",
+"  -rp                   - return-path address",
 "  -ssl                  - SMTP over SSL",
 "  -starttls             - use STARTTLS if the server supports it",
 "  -auth                 - try CRAM-MD5,LOGIN,PLAIN in that order",
@@ -221,7 +222,8 @@ int main(int argc,char **argv)
         *cc=NULL,
         *bcc=NULL,
         *rt=NULL,
-        *rrr=NULL;
+        *rrr=NULL,
+        *return_path_addr=NULL;
 
     g_verbose=0;
     g_connect_timeout = DEFAULT_CONNECT_TIMEOUT; /* 5 secs */
@@ -1139,6 +1141,20 @@ int main(int argc,char **argv)
                         }
                     }
                 }
+                else if (strncmp("rp",option+1,2) == 0)
+                {
+                    if (*option == '-')
+                    {
+                        i++;
+                        if (i == argc)
+                        {
+                            (void) fprintf(stderr,"Error: missing return-path address for -rp\n");
+                            rc = 1;
+                            goto ExitProcessing;
+                        }
+                        return_path_addr=argv[i];
+                    }
+                }
                 else if (strncmp("read-timeout",option+1,12) == 0)
                 {
                     if (*option == '-')
@@ -1395,7 +1411,7 @@ int main(int argc,char **argv)
 
     write_log("mailsend v%s\n",MAILSEND_VERSION);
     rc=send_the_mail(from,save_to,save_cc,save_bcc,sub,smtp_server,port,
-                helo_domain,attach_file,msg_body_file,the_msg,is_mime,rrr,rt,add_dateh);
+                helo_domain,attach_file,msg_body_file,the_msg,is_mime,rrr,rt,add_dateh,return_path_addr);
 
     if (rc == 0)
     {
