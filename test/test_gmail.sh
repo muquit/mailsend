@@ -14,15 +14,14 @@ if [ x"$FROM" = x ]; then
     exit 1
 fi
 
-CC=''
 if [ x"$Cc" != x ]; then
     CC="-cc $Cc"
 fi
 
-BCc=''
-if [ x"$BCc" != x ]; then
-    BCc="-bc ${BCc}"
+if [ x"$bcc" != x ]; then
+    bcc="-bc ${bcc}"
 fi
+echo "BCc: $bcc"
 
 pass=$SMTP_USER_PASS
 if [ x"$pass" = x ]; then
@@ -47,9 +46,9 @@ VALGRIND="valgrind -v --tool=memcheck --leak-check=yes --error-limit=yes --log-f
 else
 VALGRIND=""
 fi
-#set -x
+set -x
 
-$VALGRIND $BINARY -to $TO ${CC} ${BCc} -from $FROM \
+$VALGRIND $BINARY -to $TO ${CC} ${bcc} -from $FROM \
  -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \

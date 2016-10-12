@@ -15,6 +15,13 @@ if [ ! -f ${LIST_FILE} ]; then
     exit 1
 fi
 
+TO=$TO
+if [ x"$TO" = x ]; then
+    echo "TO environment variable is not not"
+    exit 1
+fi
+
+
 FROM=$FROM
 if [ x"$FROM" = x ]; then
     echo "FROM environment variable is not not"
@@ -46,13 +53,13 @@ VALGRIND=""
 fi
 set -x
 
-$VALGRIND $BINARY -list-address ${LIST_FILE} -from $FROM \
+$VALGRIND $BINARY -t "${TO}" -list-address ${LIST_FILE} -from $FROM \
  -v \
  -starttls -port 587 -auth \
  -smtp $SMTP \
  -cs "utf-8" \
  -H "X-Priority: 1" -H "Importance: high" \
- -sub "testing mailsend" +cc +bc \
+ -sub "testing mailsend" \
  -user "$FROM" -pass "$PASS" \
  -enc-type "none" \
  -mime-type "text/plain" \

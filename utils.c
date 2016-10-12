@@ -791,6 +791,10 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     unsigned char
         hmac_md5[16];
 
+#ifdef LIBRESSL_VERSION_NUMBER
+    HMAC_CTX
+        ctx;
+#else
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
     HMAC_CTX
         ctx;
@@ -798,6 +802,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     /* OpenSSL 1.1.x*/
     HMAC_CTX
         *ctx;
+#endif
 #endif
 
     const EVP_MD
@@ -838,6 +843,13 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
 
     /* take HMAC-MD5 of the challenge*/
 
+#ifdef LIBRESSL_VERSION_NUMBER
+    md5=EVP_get_digestbyname("md5");
+    HMAC_CTX_init(&ctx);
+    HMAC_Init(&ctx,secret,strlen(secret),md5);
+    HMAC_Update(&ctx,data,data_len);
+    HMAC_Final(&ctx,hmac_md5,&hmac_len);
+#else
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
     md5=EVP_get_digestbyname("md5");
     HMAC_CTX_init(&ctx);
@@ -851,6 +863,7 @@ char *encode_cram_md5(char *challenge,char *user,char *secret)
     HMAC_Update(ctx,data,data_len);
     HMAC_Final(ctx,hmac_md5,&hmac_len);
 #endif
+#endif /* LIBRESSL_VERSION_NUMBER */
 
     /* convert the digest to hex */
     memset(hex,0,sizeof(hex));
