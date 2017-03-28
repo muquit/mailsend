@@ -781,7 +781,7 @@ int send_attachment(Attachment *a, const char *boundary)
         return(-1);
     }
 
-    (void) snprintf(buf, bufsz,"--%s\r\n",boundary);
+    (void) snprintf(buf, bufsz,"\r\n--%s\r\n",boundary);
     write_to_socket(buf);
 
     if (a->charset && strncmp(a->charset,"none", 4) != 0)
@@ -897,7 +897,7 @@ int process_attachments(const char *boundary)
         }
     }
     
-    (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
+    (void) snprintf(buf,sizeof(buf)-1,"\r\n--%s--\r\n",boundary);
     msock_puts(buf);
     showVerbose(buf);
 
@@ -988,7 +988,7 @@ int process_embeded_images(const char *boundary)
     b = boundary;
     ib = boundary;
 
-    (void) snprintf(buf, bufsz, "--%s\r\n",boundary);
+    (void) snprintf(buf, bufsz, "\r\n--%s\r\n",boundary);
     write_to_socket(buf);
 
     if (attachment_list || oneline_attachment_list)
@@ -1002,7 +1002,7 @@ int process_embeded_images(const char *boundary)
                 alternative);
         write_to_socket(buf);
 
-        (void) snprintf(buf, bufsz, "--%s\r\n",b);
+        (void) snprintf(buf, bufsz, "\r\n--%s\r\n",b);
         write_to_socket(buf);
     }
     else
@@ -1012,7 +1012,7 @@ int process_embeded_images(const char *boundary)
                 alternative);
         write_to_socket(buf);
 
-        (void) snprintf(buf, bufsz, "--%s\r\n",alternative);
+        (void) snprintf(buf, bufsz, "\r\n--%s\r\n",alternative);
         write_to_socket(buf);
     }
 
@@ -1033,7 +1033,7 @@ int process_embeded_images(const char *boundary)
         ic++;
     }
     write_to_socket("\r\n");
-    (void) snprintf(buf, bufsz, "--%s--\r\n",ib);
+    (void) snprintf(buf, bufsz, "\r\n--%s--\r\n",ib); 
     write_to_socket(buf);
 
     for (il = embed_image_list; il; il = il->next)
@@ -1044,7 +1044,7 @@ int process_embeded_images(const char *boundary)
         rc = send_attachment(a,b);
         RETURN_IF_NOT_ZERO(rc);
     }
-    (void) snprintf(buf, bufsz, "--%s--\r\n",b);
+    (void) snprintf(buf, bufsz, "\r\n--%s--\r\n",b);
     write_to_socket(buf);
     return(0);
 }
@@ -1053,7 +1053,7 @@ static void print_end_boundary(const char *boundary)
 {
     if (get_attachment_list() == NULL)
     {
-        (void) snprintf(buf,sizeof(buf)-1,"--%s--\r\n",boundary);
+        (void) snprintf(buf,sizeof(buf)-1,"\r\n--%s--\r\n",boundary);
         msock_puts(buf);
         showVerbose(buf);
         return;
@@ -1675,6 +1675,7 @@ int send_the_mail(char *from,char *to,char *cc,char *bcc,char *sub,
         (void) snprintf(buf,sizeof(buf)-1,"%s\r\n",b64);
         showVerbose("[C] %s",buf);
         msock_puts(buf);
+
         read_smtp_line();
         if (smtp_code != 235)
         {
