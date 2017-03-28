@@ -7,7 +7,7 @@
 static char
   *mailsend_copyright[] = 
   {
-"Copyright (C) 2001-2015  Muhammad Muquit (http://www.muquit.com/)",
+"Copyright (C) 2001-2017  Muhammad Muquit (http://www.muquit.com/)",
 "",
 " o Redistributions of source code must retain the above copyright notice, ",
 "this list of conditions and the following disclaimer.",
