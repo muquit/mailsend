@@ -1,4 +1,8 @@
 __TOC__
+===1.20b===
+* Merge develop branch. Fixes #108 #111
+'''(May-08-2017)'''
+
 ===1.19===
 * New option <code>-rp</code> to specify the return path of the sent email which can be used where the bounced mails will be sent. Thanks to kullmanp for adding this feature.
 '''(Mar-17-2016)'''
