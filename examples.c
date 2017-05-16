@@ -93,7 +93,7 @@ void show_examples(void)
  "  file is not us-ascii, the SMTP server has to support it. If you \n"
  "  include a binary file, result is undefined.\n"
  "\n"
- "   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com\n"
+ "   mailsend -f user@gmail -t user@example.com -smtp smtp.gmail.com\n"
  "    -port 587 -starttls -auth -user user@gmail.com -pass secret \n"
  "    -charset \"utf-8\"\n"
  "    -mime-type \"text/plain\"\n"
