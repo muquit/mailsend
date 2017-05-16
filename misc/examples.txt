@@ -62,11 +62,11 @@
   -t user@example.com -sub test
    -mime-type "text/plain" 
    -enc-type "7bit"
-   -charset "us-ascii"
+   -cs "us-ascii"
    -attach "file.txt"
 
    -enc-type "8bit"
-   -charset "iso-8859-1"
+   -cs "iso-8859-1"
    -attach "deutsch.txt"
 
   -mime-type "image/gif"
@@ -88,8 +88,8 @@
  file is not us-ascii, the SMTP server has to support it. If you 
  include a binary file, result is undefined.
 
-  mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
+  mailsend -f user@gmail -t user@example.com -smtp smtp.gmail.com
    -port 587 -starttls -auth -user user@gmail.com -pass secret 
-   -charset "utf-8"
+   -cs "utf-8"
    -mime-type "text/plain"
    -msg-body "file.txt"
