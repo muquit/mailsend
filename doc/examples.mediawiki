@@ -77,3 +77,18 @@ Only one file can be included as a body of the mail. If the file is not us-ascii
    -charset "utf-8"
    -mime-type "text/plain"
    -msg-body "file.txt"
+
+If you want to include attachments and a body, you must provide the body as inline attachment:
+
+  mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
+   -port 587 -starttls -auth -user user@gmail.com -pass secret
+   -charset "utf-8"
+   
+   -mime-type "image/gif"
+   -enc-type "base64"
+   -aname "flower.gif"
+   -attach "/usr/file.gif"
+   
+   -mime-type "text/plain"
+   -disposition "inline"
+   -msg-body "file.txt"
