@@ -91,4 +91,4 @@ If you want to include attachments and a body, you must provide the body as inli
    
    -mime-type "text/plain"
    -disposition "inline"
-   -msg-body "file.txt"
+   -attach "file.txt"
