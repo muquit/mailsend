@@ -91,7 +91,11 @@ static void usage(void)
     (void) printf(" Copyright: %.1024s\n\n",NO_SPAM_STATEMENT);
 #ifdef HAVE_OPENSSL
     (void) fprintf(stdout," (Compiled with OpenSSL version: %s)\n",
+# if OPENSSL_VERSION_NUMBER < 0x10100000L
                    SSLeay_version(SSLEAY_VERSION));
+# else
+                   OpenSSL_version(OPENSSL_VERSION));
+# endif
 #else
     (void) fprintf(stdout," (Not compiled with OpenSSL)\n");
 #endif /* HAVE_OPENSSL */
@@ -1056,9 +1060,13 @@ int main(int argc,char **argv)
                 (void) fprintf(stderr,"mailsend Version: %.1024s\n",MAILSEND_VERSION);
 #ifdef HAVE_OPENSSL
                 (void) fprintf(stderr,"Compiled with OpenSSL: %s\n",
+# if OPENSSL_VERSION_NUMBER < 0x10100000L
                                SSLeay_version(SSLEAY_VERSION));
+# else
+                               OpenSSL_version(OPENSSL_VERSION));
+# endif
 #else
-                (void) fprintf(stderr,"Not Compiled OpenSSL, some auth methods will be unavailable\n");
+                (void) fprintf(stderr,"Not Compiled with OpenSSL, some auth methods will be unavailable\n");
 #endif /* ! HAVE_OPENSSL */
                 rc = 0;
                 goto ExitProcessing;
