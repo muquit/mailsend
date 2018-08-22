@@ -89,13 +89,13 @@ ex:
 	@ruby scripts/mk_examples.rb > examples.c
 
 libmsock: libmutils
-	+make -C libs/libmsock
+	(cd libs/libmsock && make)
 
 libmutils:
-	+make -C libs/libmutils
+	(cd libs/libmutils && make)
 
 libsll:
-	+make -C libs/libsll
+	(cd libs/libsll &&  make)
 
 mlibs: libmsock libsll
 
