@@ -702,19 +702,39 @@ void print_copyright(void)
 char *get_mime_type(char *path)
 {
     char
-        *ext;
+        *npath = NULL,
+        *ext = NULL;
+
+    char
+        *text_plain = "text/plain";
     int
         i;
 
-    ext = mutilsExtensionLower(path);
+    if (path == NULL || *path == '\0')
+    {
+        return(text_plain);
+    }
+
+    /* Issue #140. path was modified */
+    npath = xStrdup(path);
+    ext = mutilsExtensionLower(npath);
     for (i=0; i < sizeof(s_mime_type)/sizeof(*s_mime_type); i++)
     {
         if (strcmp(s_mime_type[i].ext, ext) == 0)
         {
+            if (npath != NULL)
+            {
+                (void) free((char *) npath);
+            }
             return (s_mime_type[i].val);
         }
     }
-    return ("text/plain");
+    if (npath != NULL)
+    {
+        (void) free((char *) npath);
+    }
+
+    return(text_plain);
 }
 
 void show_mime_types()

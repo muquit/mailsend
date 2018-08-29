@@ -1,5 +1,8 @@
 __TOC__
-===1.20b===
+===1.20b1===
+* File path was covnerted to lower case when calculating MIME-TYPE from
+file extension. Fixes #140
+'''(Aug-29-2018)'''
 * Merge develop branch. Fixes #108 #111
 '''(May-08-2017)'''
 
