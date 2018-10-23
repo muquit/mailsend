@@ -31,7 +31,7 @@ One line messages are specified with -M. Each message can have its own MIME type
 
   -cs "iso-8859-1"
   -enc-type "8bit"
-  -M "Das Vetter ist schön!"
+  -M "Das Wetter ist schön!"
 
   -cs "Big5"
   -enc-type "base64"
