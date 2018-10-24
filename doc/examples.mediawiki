@@ -52,11 +52,11 @@ But all aspects of attachments can be controlled ('''requires mailsend v1.17b15+
   -t user@example.com -sub test
    -mime-type "text/plain"
    -enc-type "7bit"
-   -charset "us-ascii"
+   -cs "us-ascii"
    -attach "file.txt"
 
    -enc-type "8bit"
-   -charset "iso-8859-1"
+   -cs "iso-8859-1"
    -attach "deutsch.txt"
 
   -mime-type "image/gif"
@@ -74,7 +74,7 @@ Only one file can be included as a body of the mail. If the file is not us-ascii
 
   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
    -port 587 -starttls -auth -user user@gmail.com -pass secret
-   -charset "utf-8"
+   -cs "utf-8"
    -mime-type "text/plain"
    -msg-body "file.txt"
 
@@ -82,7 +82,7 @@ If you want to include attachments and a body, you must provide the body as inli
 
   mailsend -f user@gmail -t user@example.com -smtp smtp.gamil.com
    -port 587 -starttls -auth -user user@gmail.com -pass secret
-   -charset "utf-8"
+   -cs "utf-8"
    
    -mime-type "image/gif"
    -enc-type "base64"
