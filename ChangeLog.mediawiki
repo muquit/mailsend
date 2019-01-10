@@ -1,11 +1,15 @@
 __TOC__
+===1.20b2===
+* Change Content-type to Content-Type. According to RFC, mail headers are 
+not case sesitive. However, some servers wrongly think they are. MailHog 
+thinks Content-type is not valid and fails to detect MIME parts
+'''Jan-10-2019'''
 ===1.20b1===
 * File path was covnerted to lower case when calculating MIME-TYPE from
 file extension. Fixes #140
 '''(Aug-29-2018)'''
 * Merge develop branch. Fixes #108 #111
 '''(May-08-2017)'''
-
 ===1.19===
 * New option <code>-rp</code> to specify the return path of the sent email which can be used where the bounced mails will be sent. Thanks to kullmanp for adding this feature.
 '''(Mar-17-2016)'''
