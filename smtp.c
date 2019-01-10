@@ -921,7 +921,7 @@ int print_content_type_header(const char *boundary)
 
     if (*g_content_type!='\0')
     {
-      (void) snprintf(buf,sizeof(buf)-1,"Content-type: %s; boundary=\"%s\"\r\n",
+      (void) snprintf(buf,sizeof(buf)-1,"Content-Type: %s; boundary=\"%s\"\r\n",
               g_content_type,
               boundary);
       write_to_socket(buf);
@@ -934,14 +934,14 @@ int print_content_type_header(const char *boundary)
     if (oneline_attachment_list || attachment_list)
     {
         (void) snprintf(buf,sizeof(buf)-1,
-                "Content-type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
+                "Content-Type: multipart/mixed; boundary=\"%s\"\r\n", boundary);
         write_to_socket(buf);
         return(0);
     }
     if (embed_image_list)
     {
         (void) snprintf(buf,sizeof(buf)-1,
-                "Content-type: multipart/related; boundary=\"%s\"\r\n", boundary);
+                "Content-Type: multipart/related; boundary=\"%s\"\r\n", boundary);
         write_to_socket(buf);
         return(0);
     }
