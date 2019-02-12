@@ -613,7 +613,7 @@ int include_msg_body(void)
     l = msg_body_attachment_head;
     a = (Attachment *) l->data;
 
-    (void) snprintf(buf,bufsz,"Mime-version: 1.0\r\n");
+    (void) snprintf(buf,bufsz,"MIME-Version: 1.0\r\n");
     write_to_socket(buf);
 
     if (strcmp(a->charset,"none") != 0)
@@ -916,7 +916,7 @@ int print_content_type_header(const char *boundary)
         *attachment_list,
         *embed_image_list;
 
-    (void) snprintf(buf, bufsz,"Mime-version: 1.0\r\n");
+    (void) snprintf(buf, bufsz,"MIME-Version: 1.0\r\n");
     write_to_socket(buf);
 
     if (*g_content_type!='\0')
