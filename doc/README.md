@@ -1,27 +1,22 @@
-= Announcement (Feb-11-2019)
+# Announcement (Feb-11-2019)
 
-If you use mailsend, please try https://github.com/muquit/mailsend-go[mailsend-go]. Your feedback will be appreciated.
+If you use mailsend, please try [mailsend-go](https://github.com/muquit/mailsend-go). Your feedback will be appreciated.
 
 mailsend will still be maintained (critical security fixes) but no new features will be added.
 
 Thanks!
 
-= mailsend v1.19
-:experimental:
-:toc:
-:toc-placement: preamble
+# mailsend v1.19
 
-*mailsend* is a simple command line program to send mail via http://www.ietf.org/rfc/rfc0821.txt?number=821[SMTP] protocol. Long time ago, I needed to send a piece of alert mail from a program in a networked Windows machine, but could not find a simple program like this installed. So I wrote one. You might find it useful as well. The program does not use any config file and I plan to keep it that way. *From version 1.17b1+, IPv6 is supported in all platforms.* Suggestions, bug reports are always welcome. If you have any question, request or suggestion, please enter it in the https://github.com/muquit/mailsend/issues/[Issues] with appropriate label.
+**mailsend** is a simple command line program to send mail via [SMTP](http://www.ietf.org/rfc/rfc0821.txt?number=821) protocol. Long time ago, I needed to send a piece of alert mail from a program in a networked Windows machine, but could not find a simple program like this installed. So I wrote one. You might find it useful as well. The program does not use any config file and I plan to keep it that way. **From version 1.17b1+, IPv6 is supported in all platforms.** Suggestions, bug reports are always welcome. If you have any question, request or suggestion, please enter it in the [Issues](https://github.com/muquit/mailsend/issues/) with appropriate label.
 
-[[download-sourcebinary]]
-== Download source/binary
+## Download source/binary
 
-To download source/binaries, please go to the https://github.com/muquit/mailsend/releases/[releases] page.
+To download source/binaries, please go to the [releases](https://github.com/muquit/mailsend/releases/) page.
 
 Bug fixes and stable features are merged from dev branch to master branch every now and then. Clone the repo if you want the latest code.
 
-[[supported-platforms]]
-== Supported Platforms
+## Supported Platforms
 
 * Microsoft Windows
 * Linux/Unix
@@ -29,7 +24,7 @@ Bug fixes and stable features are merged from dev branch to master branch every 
 
 It should compile on any POSIX compliant system. Works on 64 bit systems.
 
-== Features
+## Features
 Few main features:
 
 * ESMTP Authentication
@@ -38,16 +33,14 @@ Few main features:
 * Embed images in HTML
 * Send mail to a list of users
 
-[[versions]]
-== Versions
-=== Latest stable version is 1.19
+## Versions
+### Latest stable version is 1.19
 
-Released on May-17-2016. Please look at: link:ChangeLog.mediawiki[ChangeLog].
+Released on May-17-2016. Please look at: [ChangeLog](ChangeLog.mediawiki).
 
+## Synopsis
 
-== Synopsis
-
-----
+```
  Version: @(#) mailsend v1.19
 
  Copyright: BSD. It is illegal to use this software for Spamming
@@ -115,27 +108,23 @@ Released on May-17-2016. Please look at: link:ChangeLog.mediawiki[ChangeLog].
  The options with * must be specified
  Environment variables:
   SMTP_USER_PASS for plain text password (-pass)
-----
+```
 
-The options with asterisk must be specified. Environment variable *SMTP_USER_PASS* can be used to set the  SMTP authentication password instead of the option +-pass+
+The options with asterisk must be specified. Environment variable **SMTP_USER_PASS** can be used to set the  SMTP authentication password instead of the option +-pass+
 
-[[how-to-compileinstall]]
-== How to compile/install
+## How to compile/install
 
-
-[[linuxunixmac-os-x]]
-=== Linux/Unix/Mac OS X
+### Linux/Unix/Mac OS X
 
 Specify the path of OpenSSL with +--with-openssl+. In most Linux systems, it is installed in +/usr+. If OpenSSL is installed in non-standard places, type +./configure --help+ for options.
 
-----
+```
    $ /bin/sh ./configure --with-openssl=/usr
-----
-
+```
 
 Default installation location is +/usr/local+. If you want to change that:
 
-----
+```
    $ /bin/sh ./configure --with-openssl=/usr --prefix=/usr/local/mailsend
    $ make clean
    $ make
@@ -144,85 +133,71 @@ Default installation location is +/usr/local+. If you want to change that:
    $ sudo make install
    Or
    $ make install DESTDIR=/foo
-----
+```
 
 The name of the binary will be mailsend. If compiled with OpenSSL, the
 support for STARTTLS and SMTP over SSL will be available.
 
-[[linux-debian-package]]
-=== Linux Debian package
+### Linux Debian package
 
 Starting from mailsend v1.18, Debian package is no longer supplied. If you want to build the Debian package yourself, after compiling mailsend, type:
 
-----
+```
    $ ruby scripts/mk_debian_package.rb
-----
+```
 
 To install the package, type:
 
-[source,java]
-----
+```java
    $ sudo dpkg -i mailsend_1.19-ubuntu_i386.deb
-----
+```
 
 To uninstall, type:
 
-[source,java]
-----
+```java
    $ sudo dpkg -r mailsend
-----
+```
 
-[[microsoft-windows]]
-=== Microsoft Windows
+### Microsoft Windows
 
+A compiled binary with SMTP authentication support for MS Windows is already supplied. However, if you need to modify something or want to compile it yourself, you will need freely available Visual Studio from Microsoft. For Visual Studio 2015 community edition, start **Developer Command Prompt for VS2015**.
 
-A compiled binary with SMTP authentication support for MS Windows is already supplied. However, if you need to modify something or want to compile it yourself, you will need freely available Visual Studio from Microsoft. For Visual Studio 2015 community edition, start *Developer Command Prompt for VS2015*.
-
-OpenSSL is required, if you need to compile with SMTP authentication support. Look at +INSTALL.32+ that comes with OpenSSL on how to compile and install OpenSSL. mailsend's +Makefile.nmake+ expects it to be installed at +c:\openssl+
+OpenSSL is required, if you need to compile with SMTP authentication support. Look at +INSTALL.32+ that comes with OpenSSL on how to compile and install OpenSSL. mailsend’s +Makefile.nmake+ expects it to be installed at +c:\openssl+
 
 To compile mailsend, open a command shell and type:
 
-----
+```
    c:\> nmake -f Makefile.nmake clean
    c:\> nmake -f Makefile.nmake
-----
+```
 
 It compiles cleanly with cygwin as well. The name of the binary will be +mailsend.exe+
 
-[[known-issues]]
-== Known Issues
-
+## Known Issues
 
 * For text or html attachments, \r\n is not added at the end of lines. Some SMTP servers (e.g. qmail) does not like that. It will be fixed in some future release.
-
 * For non ascii characters, MIME headers are not converted as per RFC2047
-
 * In Windows, non ascii characters can not be entered in subject or with +-M+ from
-command line (Works fine in Linux and Mac). *mailsend* uses standard C
+command line (Works fine in Linux and Mac). **mailsend** uses standard C
 string functions and Windows versions do not know about multibyte input
-from command line (https://github.com/muquit/mailsend/issues/14[Issue# 14]). If anyone is familiar with it, you are welcome to implement the support, unfortunately I do not have time at this time.
+from command line ([Issue# 14](https://github.com/muquit/mailsend/issues/14)). If anyone is familiar with it, you are welcome to implement the support, unfortunately I do not have time at this time.
 
-[[faq]]
-== FAQ
+## FAQ
 
+Please look at [mailsend FAQ](doc/mailsend-FAQ.mediawiki)
 
-Please look at link:doc/mailsend-FAQ.mediawiki[mailsend FAQ]
+## Examples
 
-[[examples]]
-== Examples
+Please type: +mailsend -example+ or look at [examples](doc/examples.mediawiki)
 
-
-Please type: +mailsend -example+ or look at link:doc/examples.mediawiki[examples]
-
-[[license]]
-== License
+## License
 
 BSD
 
 To display license, please type: `mailsend -copyright`
 
-----
-Copyright (C) 2001-2019  Muhammad Muquit (http://www.muquit.com/)
+```
+Copyright (C) 2001-2025  Muhammad Muquit (http://www.muquit.com/)
 
  o Redistributions of source code must retain the above copyright notice,
 this list of conditions and the following disclaimer.
@@ -247,7 +222,4 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-----
-
-'''
-This document is created with  https://github.com/asciidocfx/AsciidocFX[AsciidocFX]
+```
