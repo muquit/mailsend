@@ -64,10 +64,10 @@ $(PROGNAME) : mlibs $(OBJS)
 
 install: installdirs install-bin install-man
 
-install-bin: $(BINDIR) $(PROGNAME)
+install-bin: installdirs $(PROGNAME)
 	$(INSTALL_PROGRAM) $(PROGNAME) $(BINDIR)/$(PROGNAME)
 
-install-man:
+install-man: installdirs
 	$(INSTALL_DATA) $(MANPAGE) $(MAN1DIR)
 
 installdirs:
